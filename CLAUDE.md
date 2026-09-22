@@ -90,7 +90,7 @@ flutter test integration_test -d <deviceId> --flavor dev --dart-define=environme
 
 ## Дизайн (тема A «Диспетчер метро»)
 - Палитра — `AppColors` (спека): фон `0D131E`, сетка `1B2635`, панели `131C2B`, обводки `243349` / `33455F`, текст `E8EDF4` / `7E93B0`, опасность `FF4757`, рекорд `F2B233`, потоки red `E8503A` / amber `F2B233` / green `2EB872` / blue `3E8BE8`. Второй канал различения — значки круг / квадрат / треугольник / ромб (`LaneGlyph`).
-- Шрифт — **Space Grotesk** (переменный, 500/700, OFL, `core/resources/fonts/`, лицензия в `LicenseRegistry`). Размеры спеки (холст 1080 px) делены на 3.
+- Шрифты — **Golos Text** (интерфейс, `AppFonts.family` и `ThemeData.fontFamily`) + **Unbounded** (`AppFonts.displayFamily`: название в меню, большой счёт проигрыша). Оба переменные, 500/700, кириллица + латиница, OFL в `core/resources/fonts/`, лицензии в `LicenseRegistry` (`lib/main_common.dart`). Space Grotesk из спеки заменён — без кириллицы. Размеры спеки (холст 1080 px) делены на 3.
 - Иконки — Material rounded (`textSecondary`), без SVG и эмодзи.
 - Нативный экран запуска: фон `0D131E` и иконка со скруглением по центру (iOS storyboard + `LaunchImage.imageset`, Android `launch_background` + системный splash 12+). Картинки — `script/gen_launch_images.sh` из `store/appstore_icon_1024.png`.
 - Иконки приложения: исходник — `store/icon_rounded_1024.png` (апскейл референса 2c 512 px, **заменить на настоящий 1024**), `appstore_icon_1024.png` (сплющен на фон, без альфы), `android_adaptive_foreground_1024.png`, `playstore_icon_512.png`; наборы iOS `AppIcon` / `AppIcon-Dev`, Android mipmap + adaptive (фон — сплошной `0D131E`), dev-вариант с плашкой в `android/app/src/dev/res`.

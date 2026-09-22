@@ -26,7 +26,7 @@ Spec sizes are in px of a 1080×2340 canvas; logical px = spec / 3 (`AppDimens.f
 
 ### 1.2 Typography — `AppFonts`
 
-One family, **Space Grotesk** (variable TTF, weights 500 / 700, OFL in `core/resources/fonts/`; the OFL text is an asset registered in `LicenseRegistry`). Digits are always tabular.
+Two families: **Golos Text** for all UI (`AppFonts.family`, also `ThemeData.fontFamily`) and **Unbounded** for display text only (`AppFonts.displayFamily`: the menu title and the game-over score). Both variable TTFs, weights 500 / 700, Cyrillic + Latin, OFL in `core/resources/fonts/`; the OFL texts are assets registered in `LicenseRegistry`. Digits are always tabular. Never use `displayFamily` for buttons or body text.
 
 | Style | Spec | Where |
 |---|---|---|

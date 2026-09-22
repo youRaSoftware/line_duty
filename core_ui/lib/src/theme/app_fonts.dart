@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 
-/// Типографика: **Space Grotesk** (переменный шрифт, веса 500 / 700, OFL,
-/// `core/resources/fonts/`). Цифры — табличные. Размеры из спеки
-/// (холст 1080 px) делены на 3 — логические пиксели.
+/// Типографика: **Golos Text** для интерфейса и **Unbounded** для
+/// заголовка и большого счёта (переменные шрифты, веса 500 / 700, кириллица
+/// и латиница, OFL, `core/resources/fonts/`). Цифры — табличные. Размеры из
+/// спеки (холст 1080 px) делены на 3 — логические пиксели.
 class AppFonts {
   const AppFonts._();
 
-  static const String family = 'SpaceGrotesk';
+  /// Основной шрифт интерфейса (и `ThemeData.fontFamily`).
+  static const String family = 'GolosText';
+
+  /// Акцидентный: название в меню, счёт на экране проигрыша.
+  static const String displayFamily = 'Unbounded';
 
   static const List<FontFeature> _tabular = <FontFeature>[
     FontFeature.tabularFigures(),
@@ -45,7 +50,7 @@ class AppFonts {
 
   /// Название в меню (130 px / letter-spacing 14).
   static const TextStyle title = TextStyle(
-    fontFamily: family,
+    fontFamily: displayFamily,
     fontWeight: FontWeight.w700,
     fontSize: 44,
     height: 1.05,
@@ -64,7 +69,7 @@ class AppFonts {
 
   /// Счёт на экране проигрыша (200 px холста).
   static const TextStyle bigScore = TextStyle(
-    fontFamily: family,
+    fontFamily: displayFamily,
     fontWeight: FontWeight.w700,
     fontSize: 68,
     height: 1,

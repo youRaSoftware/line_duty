@@ -20,11 +20,16 @@ Future<void> mainCommon(Flavor flavor) async {
   // Звук + хаптика на нажатия кнопок дизайн-системы.
   ButtonFeedback.onPressed = appLocator<AudioService>().tap;
 
-  // Шрифт Space Grotesk (OFL) — в «Лицензиях» на экране настроек.
+  // Шрифты Golos Text и Unbounded (OFL) — в «Лицензиях» на экране настроек.
   LicenseRegistry.addLicense(() async* {
-    final String text = await rootBundle
-        .loadString('core/resources/fonts/OFL-SpaceGrotesk.txt');
-    yield LicenseEntryWithLineBreaks(<String>['Space Grotesk'], text);
+    for (final (String name, String file) in <(String, String)>[
+      ('Golos Text', 'OFL-GolosText.txt'),
+      ('Unbounded', 'OFL-Unbounded.txt'),
+    ]) {
+      final String text =
+          await rootBundle.loadString('core/resources/fonts/$file');
+      yield LicenseEntryWithLineBreaks(<String>[name], text);
+    }
   });
 
   // Язык: выбранный в настройках или системный (null). Источник правды —

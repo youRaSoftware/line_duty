@@ -37,8 +37,12 @@ flutter:
 
   assets:
     - core/resources/audio/
-    - core/resources/fonts/OFL-SpaceGrotesk.txt
+    - core/resources/fonts/OFL-GolosText.txt
+    - core/resources/fonts/OFL-Unbounded.txt
   fonts:
-    - family: SpaceGrotesk
+    - family: GolosText
       fonts:
-        - asset: core/resources/fonts/SpaceGrotesk[wght].ttf
+        - asset: core/resources/fonts/GolosText[wght].ttf
+    - family: Unbounded
+      fonts:
+        - asset: core/resources/fonts/Unbounded[wght].ttf
