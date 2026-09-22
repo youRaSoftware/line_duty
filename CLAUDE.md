@@ -83,7 +83,7 @@ flutter test integration_test -d <deviceId> --flavor dev --dart-define=environme
 - **core_ui/** — `AppColors`, `AppFonts`, `AppDimens`, `darkTheme`, виджеты (`AppScaffold`, `GridBackground`, `PrimaryButton`, `SecondaryButton`, `DashedButton`, `AppTextButton`, `IconSquareButton`, `AppToggleRow`, `AppOverlay`, `RecordBadge`, `LaneGlyphIcon`/`LaneGlyphPainter`)
 - **domain/** — `LaneColor` (red/amber/green/blue + `LaneGlyph`), `GameRules` (очки за доставку, продолжения), `GameStatsModel` (рекорд, забеги, доведено), `SettingsModel` (звук, вибрация, язык), интерфейсы `StatsRepository` / `SettingsRepository`
 - **data/** — Hive-провайдеры (`providers/local/`), реализации репозиториев, `DataDI.init()`
-- **features/** — `menu/` (MenuCubit, MenuForm, `MenuDemoField` — движок в демо-режиме под UI), `game/` (cubit, screen, widgets — HUD, оверлеи паузы и проигрыша; `engine/` — Flame: `line_duty_game.dart`, `unit_component.dart`, `field_components.dart` (ворота, спавны), `field_layers.dart` (маршруты/следы, палец/кольца/вспышка), `game_tuning.dart`), `settings/` (cubit, screen, widgets)
+- **features/** — `menu/` (MenuCubit, MenuForm, `MenuDemoField` — движок в демо-режиме под UI), `game/` (cubit, screen, widgets — HUD, оверлеи паузы, проигрыша и онбординга `TutorialOverlay` + иллюстрации `TutorialArt`; `engine/` — Flame: `line_duty_game.dart`, `unit_component.dart`, `field_components.dart` (ворота, спавны), `field_layers.dart` (маршруты/следы, палец/кольца/вспышка), `game_tuning.dart`), `settings/` (cubit, screen, widgets)
 - **navigation/** — `AppRouter` (go_router, стартовый `/menu`, `/game`, `/settings`, fade-переход)
 
 Паттерны и стиль — `.claude/shared/line_duty_ui_reference.md`.
@@ -106,9 +106,10 @@ flutter test integration_test -d <deviceId> --flavor dev --dart-define=environme
 
 ## Геймплей и экраны
 - Кубит (`GameCubit`): счёт, «живой» рекорд (сохраняется сразу, как счёт его превысил), статус playing/paused/gameOver, `continues` (`GameRules.continuesPerRun` = 1, пока без рекламы — бесплатно; `AppConfig.monetizationEnabled` только меняет подпись кнопки), статистика пишется при проигрыше/рестарте/закрытии, после продолжения забег второй раз не считается.
-- Форма ставит `game.paused` по статусу, уход приложения в фон — пауза. HUD: счёт `0000`, «РЕКОРД N», пауза. Оверлеи: пауза (панель: продолжить / заново / в меню, звук, вибрация), проигрыш (без панели: заголовок, СЧЁТ, бейдж рекорда, заново / в меню, пунктирная «Продолжить»).
+- **Онбординг «Как играть»**: `SettingsModel.tutorialSeen` (Hive `settingsBox`, `SettingsService.setTutorialSeen`); `GameCubit` стартует с `tutorialOpen = !tutorialSeen`, форма показывает `TutorialOverlay` (4 шага: фигуры и ворота → маршрут → опасности → счёт; «Дальше / Пропустить / Играть!») поверх поля и держит движок на паузе, `finishTutorial()` закрывает и пишет флаг. Повторно — настройки → «Как играть» (`SettingsCubit.showHelp/closeHelp`, без записи флага). Тексты — группа `tutorial` в переводах; описывать только действующие правила.
+- Форма ставит `game.paused` по статусу и по `tutorialOpen` (начальное состояние применяется в `addPostFrameCallback` — BlocListener его не видит, а пауза до attach оставит поле без первого кадра), уход приложения в фон — пауза. HUD: счёт `0000`, «РЕКОРД N», пауза. Оверлеи: пауза (панель: продолжить / заново / в меню, звук, вибрация), проигрыш (без панели: заголовок, СЧЁТ, бейдж рекорда, заново / в меню, пунктирная «Продолжить»).
 - Меню: `LINE DUTY` + подзаголовок, «Играть» со свечением, «★ РЕКОРД N», звук и настройки; переход в игру и обратно — `goNamed` (свежее меню перечитывает рекорд).
-- Настройки: звуки, вибрация, язык (системный / English / Русский), статистика (рекорд, забеги, доведено; сброс с подтверждением), версия, лицензии.
+- Настройки: звуки, вибрация, язык (системный / English / Русский), «Как играть», статистика (рекорд, забеги, доведено; сброс с подтверждением), версия, лицензии.
 
 ## Звук, хаптика, кнопки
 - `SettingsService` (`ValueNotifier<SettingsModel>`: `soundOn`, `hapticsOn`, `localeCode`), `AudioService` (SFX через `FlameAudio.play`: `tap`, `drawStart`, `deliver`, `warn`, `crash(isRecord:)`; музыки нет). Ассеты в `core/resources/audio/` синтезированы `script/gen_placeholder_audio.py` — свои, без лицензий; при замене сохранять имена.

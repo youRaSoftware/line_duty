@@ -19,6 +19,9 @@ class GameState extends Equatable {
   /// Оставшиеся продолжения после столкновения.
   final int continues;
 
+  /// Открыт онбординг «Как играть» (первый запуск); поле стоит.
+  final bool tutorialOpen;
+
   const GameState({
     this.score = 0,
     this.bestScore = 0,
@@ -27,6 +30,7 @@ class GameState extends Equatable {
     this.isNewRecord = false,
     this.wrongGate = false,
     this.continues = GameRules.continuesPerRun,
+    this.tutorialOpen = false,
   });
 
   bool get canContinue => continues > 0;
@@ -39,6 +43,7 @@ class GameState extends Equatable {
     bool? isNewRecord,
     bool? wrongGate,
     int? continues,
+    bool? tutorialOpen,
   }) {
     return GameState(
       score: score ?? this.score,
@@ -48,6 +53,7 @@ class GameState extends Equatable {
       isNewRecord: isNewRecord ?? this.isNewRecord,
       wrongGate: wrongGate ?? this.wrongGate,
       continues: continues ?? this.continues,
+      tutorialOpen: tutorialOpen ?? this.tutorialOpen,
     );
   }
 
@@ -60,5 +66,6 @@ class GameState extends Equatable {
         isNewRecord,
         wrongGate,
         continues,
+        tutorialOpen,
       ];
 }

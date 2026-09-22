@@ -68,7 +68,7 @@ Material rounded icons (`Icons.play_arrow_rounded`, `volume_up_rounded`, `settin
 
 **Feedback hook.** `ButtonFeedback.onPressed` is wired to `AudioService.tap` in `lib/main_common.dart`; never call `HapticFeedback` or play audio from `core_ui`.
 
-Feature-local widgets: `features/lib/game/widgets/` → `GameHud`, `PauseOverlay`, `GameOverOverlay`; `features/lib/menu/widgets/` → `MenuDemoField`; `features/lib/settings/widgets/` → `SettingsSection`, `SettingsValueRow`, `SettingsLinkRow`, `ResetStatsOverlay`, `LanguageOverlay`.
+Feature-local widgets: `features/lib/game/widgets/` → `GameHud`, `PauseOverlay`, `GameOverOverlay`, `TutorialOverlay` (4-step «How to play» in an `AppOverlay`, reused by settings), `TutorialArt` (step illustrations painted with the game's own primitives — `LaneGlyphPainter`, lane colours, `AppDimens` route/finger sizes; no images); `features/lib/menu/widgets/` → `MenuDemoField`; `features/lib/settings/widgets/` → `SettingsSection`, `SettingsValueRow`, `SettingsLinkRow`, `ResetStatsOverlay`, `LanguageOverlay`.
 
 ---
 

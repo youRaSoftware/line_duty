@@ -33,6 +33,10 @@ class SettingsService {
             : settings.value.copyWith(localeCode: code),
       );
 
+  /// Онбординг показан — больше не открывать на старте игры.
+  Future<void> setTutorialSeen(bool value) =>
+      _update(settings.value.copyWith(tutorialSeen: value));
+
   Future<void> _update(SettingsModel next) async {
     if (next == settings.value) return;
     settings.value = next;

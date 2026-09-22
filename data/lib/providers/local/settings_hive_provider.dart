@@ -11,14 +11,18 @@ class SettingsHiveProvider {
   /// Код языка; null — системный.
   String? get localeCode => _box.get('locale') as String?;
 
+  bool get tutorialSeen => (_box.get('tutorialSeen') as bool?) ?? false;
+
   Future<void> save({
     required bool soundOn,
     required bool hapticsOn,
     required String? localeCode,
+    required bool tutorialSeen,
   }) async {
     await _box.putAll(<String, Object>{
       'soundOn': soundOn,
       'hapticsOn': hapticsOn,
+      'tutorialSeen': tutorialSeen,
     });
     if (localeCode == null) {
       await _box.delete('locale');

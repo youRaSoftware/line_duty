@@ -37,6 +37,7 @@
     "language": "Language",
     "languageTitle": "LANGUAGE",
     "languageSystem": "System",
+    "howToPlay": "How to play",
     "stats": "STATISTICS",
     "best": "Best score",
     "gamesPlayed": "Runs",
@@ -49,5 +50,18 @@
     "resetBody": "Best score, runs and deliveries will be set to zero.",
     "resetConfirm": "Reset",
     "cancel": "Cancel"
+  },
+  "tutorial": {
+    "step1Title": "UNITS & GATES",
+    "step1": "Units of four colours roll in from the top and drive down. The glyph on a unit — circle, square, triangle or diamond — matches the gate of its colour.",
+    "step2Title": "DRAW A ROUTE",
+    "step2": "Drag a unit to draw its path: it follows the line and erases it behind. Lead the line into its own gate — the route docks and you can lift your finger. A new line on a unit replaces the old one.",
+    "step3Title": "KEEP THEM APART",
+    "step3": "Two units touching or a wrong gate ends the run. A red ring with \"!\" warns when units get too close.",
+    "step4Title": "SCORE",
+    "step4": "+10 for every unit delivered. The more you deliver, the faster they go and the more often they appear. Once per run you can continue after a mistake.",
+    "next": "NEXT",
+    "skip": "SKIP",
+    "start": "LET'S PLAY!"
   }
 }

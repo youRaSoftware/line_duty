@@ -13,6 +13,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       soundOn: _provider.soundOn,
       hapticsOn: _provider.hapticsOn,
       localeCode: _provider.localeCode,
+      tutorialSeen: _provider.tutorialSeen,
     );
   }
 
@@ -22,6 +23,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       soundOn: settings.soundOn,
       hapticsOn: settings.hapticsOn,
       localeCode: settings.localeCode,
+      tutorialSeen: settings.tutorialSeen,
     );
   }
 }

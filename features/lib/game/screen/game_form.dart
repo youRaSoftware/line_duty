@@ -8,10 +8,11 @@ import '../engine/line_duty_game.dart';
 import '../widgets/game_hud.dart';
 import '../widgets/game_over_overlay.dart';
 import '../widgets/pause_overlay.dart';
+import '../widgets/tutorial_overlay.dart';
 
 /// Игровая форма: поле ([LineDutyGame]) на весь экран, HUD поверх в safe
-/// area, оверлеи паузы и проигрыша. Движок стоит, пока статус не
-/// `playing`; уход приложения в фон ставит паузу.
+/// area, оверлеи паузы, проигрыша и онбординга. Движок стоит, пока статус
+/// не `playing` или открыт онбординг; уход приложения в фон ставит паузу.
 class GameForm extends StatefulWidget {
   /// Высота HUD — на столько спавны ниже safe area.
   static const double hudHeight = 64;
@@ -30,6 +31,15 @@ class _GameFormState extends State<GameForm> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // BlocListener не видит начальное состояние, а ставить паузу до
+    // подключения виджета нельзя — Flame тогда не отрисует первый кадр.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _syncPause(_cubit.state);
+    });
+  }
+
+  void _syncPause(GameState state) {
+    _game.paused = state.status != GameStatus.playing || state.tutorialOpen;
   }
 
   @override
@@ -67,10 +77,9 @@ class _GameFormState extends State<GameForm> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return BlocListener<GameCubit, GameState>(
-      listenWhen: (GameState a, GameState b) => a.status != b.status,
-      listener: (BuildContext context, GameState state) {
-        _game.paused = state.status != GameStatus.playing;
-      },
+      listenWhen: (GameState a, GameState b) =>
+          a.status != b.status || a.tutorialOpen != b.tutorialOpen,
+      listener: (BuildContext context, GameState state) => _syncPause(state),
       child: AppScaffold(
         body: Stack(
           fit: StackFit.expand,
@@ -101,6 +110,14 @@ class _GameFormState extends State<GameForm> with WidgetsBindingObserver {
                       onContinue: _continue,
                     );
                 }
+              },
+            ),
+            BlocBuilder<GameCubit, GameState>(
+              buildWhen: (GameState a, GameState b) =>
+                  a.tutorialOpen != b.tutorialOpen,
+              builder: (BuildContext context, GameState state) {
+                if (!state.tutorialOpen) return const SizedBox.shrink();
+                return TutorialOverlay(onDone: _cubit.finishTutorial);
               },
             ),
           ],

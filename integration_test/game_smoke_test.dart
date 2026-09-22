@@ -2,9 +2,11 @@
 //
 //   flutter test integration_test -d <deviceId> --flavor dev --dart-define=environment=dev
 //
-// Covers: menu renders → PLAY opens the game → units spawn → a finger route
+// Covers: menu renders → PLAY opens the game → first-launch tutorial pauses
+// the field and closes on the last step → units spawn → a finger route
 // drawn from a unit to its own gate delivers it (score grows) → pause /
-// resume → back to the menu → settings toggle persists.
+// resume → back to the menu → settings toggle persists → «How to play»
+// reopens the tutorial from settings.
 
 import 'package:core/core.dart';
 import 'package:core_ui/core_ui.dart';
@@ -16,6 +18,7 @@ import 'package:features/game/engine/line_duty_game.dart';
 import 'package:features/game/engine/unit_component.dart';
 import 'package:features/game/widgets/game_hud.dart';
 import 'package:features/game/widgets/pause_overlay.dart';
+import 'package:features/game/widgets/tutorial_overlay.dart';
 import 'package:features/menu/screen/menu_form.dart';
 import 'package:features/settings/screen/settings_form.dart';
 import 'package:flame/game.dart';
@@ -35,7 +38,10 @@ void main() {
       (WidgetTester tester) async {
     await mainCommon(Flavor.dev);
     addTearDown(appLocator<AudioService>().dispose);
-    await appLocator<SettingsService>().setLocale(null);
+    final SettingsService settings = appLocator<SettingsService>();
+    await settings.setLocale(null);
+    // Первый запуск — независимо от того, что осталось в Hive симулятора.
+    await settings.setTutorialSeen(false);
     await tester.pump(const Duration(milliseconds: 800));
 
     expect(find.byKey(MenuForm.playButtonKey), findsOneWidget);
@@ -50,6 +56,19 @@ void main() {
     final GameCubit cubit = BlocProvider.of<GameCubit>(
       tester.element(find.byType(GameWidget<LineDutyGame>)),
     );
+
+    // First launch: the tutorial is up and the field stands still.
+    expect(find.byKey(TutorialOverlay.nextKey), findsOneWidget);
+    expect(game.paused, isTrue);
+    expect(game.units, isEmpty);
+    for (int i = 0; i < 4; i++) {
+      await tester.tap(find.byKey(TutorialOverlay.nextKey));
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+    expect(find.byKey(TutorialOverlay.nextKey), findsNothing);
+    expect(game.paused, isFalse);
+    expect(settings.value.tutorialSeen, isTrue);
+    debugPrint('SMOKE tutorial done');
 
     // Wait for the first unit.
     await tester.pump(const Duration(milliseconds: 1500));
@@ -116,6 +135,15 @@ void main() {
         !before);
     await tester.tap(find.text(LocaleKeys.settings_sounds.tr()));
     await tester.pump(const Duration(milliseconds: 300));
+
+    // «How to play» reopens the tutorial; skip closes it.
+    await tester.tap(find.byKey(SettingsForm.howToPlayKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byKey(TutorialOverlay.skipKey), findsOneWidget);
+    await tester.tap(find.byKey(TutorialOverlay.skipKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byKey(TutorialOverlay.skipKey), findsNothing);
+
     await tester.tap(find.byKey(SettingsForm.backKey));
     await tester.pump(const Duration(milliseconds: 800));
     expect(find.byKey(MenuForm.playButtonKey), findsOneWidget);

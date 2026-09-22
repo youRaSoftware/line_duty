@@ -9,8 +9,12 @@ part 'game_state.dart';
 /// ([LineDutyGame]) сообщает о доставках и столкновениях через
 /// [GameListener]; форма по статусу ставит движок на паузу и показывает
 /// оверлеи. Рекорд «живой»: сохраняется, как только счёт его превысил.
+/// На первом запуске (`SettingsModel.tutorialSeen == false`) забег
+/// начинается с открытым онбордингом — [finishTutorial] закрывает его и
+/// запоминает флаг.
 class GameCubit extends Cubit<GameState> implements GameListener {
   final StatsRepository statsRepository;
+  final SettingsService settings;
   final AudioService audio;
 
   GameStatsModel _stats = const GameStatsModel.empty();
@@ -20,8 +24,11 @@ class GameCubit extends Cubit<GameState> implements GameListener {
   bool _counted = false;
   int _savedDelivered = 0;
 
-  GameCubit({required this.statsRepository, required this.audio})
-      : super(const GameState()) {
+  GameCubit({
+    required this.statsRepository,
+    required this.settings,
+    required this.audio,
+  }) : super(GameState(tutorialOpen: !settings.value.tutorialSeen)) {
     _init();
   }
 
@@ -84,6 +91,13 @@ class GameCubit extends Cubit<GameState> implements GameListener {
   void resume() {
     if (state.status != GameStatus.paused) return;
     _safeEmit(state.copyWith(status: GameStatus.playing));
+  }
+
+  /// Онбординг закрыт («Играть!» или «Пропустить») — больше не показываем.
+  Future<void> finishTutorial() async {
+    if (!state.tutorialOpen) return;
+    _safeEmit(state.copyWith(tutorialOpen: false));
+    await settings.setTutorialSeen(true);
   }
 
   /// Новый забег (движок сбрасывает форма).

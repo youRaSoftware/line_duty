@@ -5,8 +5,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 part 'settings_state.dart';
 
-/// Экран настроек: статистика (с подтверждаемым сбросом), версия, оверлей
-/// языка. Тумблеры звука/вибрации идут напрямую в `SettingsService`.
+/// Экран настроек: статистика (с подтверждаемым сбросом), версия, оверлеи
+/// языка и «Как играть». Тумблеры звука/вибрации идут напрямую в
+/// `SettingsService`.
 class SettingsCubit extends Cubit<SettingsState> {
   final StatsRepository statsRepository;
 
@@ -40,6 +41,10 @@ class SettingsCubit extends Cubit<SettingsState> {
   void askLanguage() => _safeEmit(state.copyWith(choosingLanguage: true));
 
   void closeLanguage() => _safeEmit(state.copyWith(choosingLanguage: false));
+
+  void showHelp() => _safeEmit(state.copyWith(showingHelp: true));
+
+  void closeHelp() => _safeEmit(state.copyWith(showingHelp: false));
 
   Future<void> confirmReset() async {
     await statsRepository.saveStats(const GameStatsModel.empty());

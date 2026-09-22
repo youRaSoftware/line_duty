@@ -17,11 +17,15 @@ class _Stats implements StatsRepository {
 }
 
 class _Settings implements SettingsRepository {
-  @override
-  Future<SettingsModel> getSettings() async => const SettingsModel.empty();
+  SettingsModel settings;
+
+  _Settings([this.settings = const SettingsModel.empty()]);
 
   @override
-  Future<void> saveSettings(SettingsModel settings) async {}
+  Future<SettingsModel> getSettings() async => settings;
+
+  @override
+  Future<void> saveSettings(SettingsModel next) async => settings = next;
 }
 
 class _SilentAudio extends AudioService {
@@ -30,19 +34,62 @@ class _SilentAudio extends AudioService {
 
 Future<void> _settle() => Future<void>.delayed(Duration.zero);
 
+/// Сервис настроек поверх фейка, уже загруженный.
+Future<SettingsService> _service(_Settings repo) async {
+  final SettingsService service = SettingsService(repo);
+  await service.init();
+  return service;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   late _Stats stats;
+  late _Settings settingsRepo;
   late GameCubit cubit;
 
   setUp(() async {
     stats = _Stats(const GameStatsModel(bestScore: 30, gamesPlayed: 2));
-    cubit = GameCubit(statsRepository: stats, audio: _SilentAudio());
+    settingsRepo = _Settings(const SettingsModel.empty().copyWith(
+      tutorialSeen: true,
+    ));
+    cubit = GameCubit(
+      statsRepository: stats,
+      settings: await _service(settingsRepo),
+      audio: _SilentAudio(),
+    );
     await _settle();
   });
 
   tearDown(() => cubit.close());
+
+  test('first launch opens the tutorial; finishing it saves the flag',
+      () async {
+    final _Settings fresh = _Settings();
+    final GameCubit first = GameCubit(
+      statsRepository: stats,
+      settings: await _service(fresh),
+      audio: _SilentAudio(),
+    );
+    expect(first.state.tutorialOpen, isTrue);
+    expect(first.state.status, GameStatus.playing);
+    await first.finishTutorial();
+    expect(first.state.tutorialOpen, isFalse);
+    expect(fresh.settings.tutorialSeen, isTrue);
+    await first.close();
+
+    final GameCubit second = GameCubit(
+      statsRepository: stats,
+      settings: await _service(fresh),
+      audio: _SilentAudio(),
+    );
+    expect(second.state.tutorialOpen, isFalse, reason: 'seen once');
+    await second.close();
+  });
+
+  test('tutorial does not open once it has been seen', () {
+    expect(cubit.state.tutorialOpen, isFalse);
+  });
 
   test('loads the best score', () {
     expect(cubit.state.bestScore, 30);

@@ -197,7 +197,7 @@ Overlays shown on top of the game (pause, game over, future «settings» sheet) 
 
 ## 8. Copy
 
-All user-visible text is a Russian literal in the widget (no localization layer). Uppercase labels are written uppercase. Cubits never produce UI text.
+No literals in widgets: every user-visible string is `context.tr(LocaleKeys.x)` with the key added to **both** `core/resources/translations/en-US.json` and `ru-RU.json` (same structure), then `script/prebuild_script.sh` regenerates `LocaleKeys`. Uppercase labels are uppercase in the translation, not via `toUpperCase()`. Placeholders via `namedArgs:`. Cubits never produce UI text.
 
 ## After creation
 

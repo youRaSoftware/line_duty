@@ -3,6 +3,7 @@ import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 
+import '../../game/widgets/tutorial_overlay.dart';
 import '../cubit/settings_cubit.dart';
 import '../widgets/language_overlay.dart';
 import '../widgets/reset_stats_overlay.dart';
@@ -10,13 +11,15 @@ import '../widgets/settings_link_row.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/settings_value_row.dart';
 
-/// Экран настроек: секции «Звук» (звуки, вибрация), «Игра» (язык),
+/// Экран настроек: секции «Звук» (звуки, вибрация), «Игра» (язык, «Как
+/// играть»),
 /// «Статистика» (рекорд, забеги, доведено; сброс), «О приложении» (версия,
 /// лицензии). Тумблеры привязаны к [SettingsService.settings], статистика,
 /// версия и оверлеи — в [SettingsCubit].
 class SettingsForm extends StatelessWidget {
   static const Key backKey = Key('settings_back');
   static const Key languageRowKey = Key('settings_language');
+  static const Key howToPlayKey = Key('settings_how_to_play');
 
   const SettingsForm({super.key});
 
@@ -95,6 +98,11 @@ class SettingsForm extends StatelessWidget {
                             value: languageName,
                             onPressed: cubit.askLanguage,
                           ),
+                          SettingsLinkRow(
+                            key: howToPlayKey,
+                            label: context.tr(LocaleKeys.settings_howToPlay),
+                            onPressed: cubit.showHelp,
+                          ),
                         ],
                       ),
                       const SizedBox(height: 20),
@@ -164,6 +172,7 @@ class SettingsForm extends StatelessWidget {
               },
               onCancel: cubit.closeLanguage,
             ),
+          if (state.showingHelp) TutorialOverlay(onDone: cubit.closeHelp),
         ],
       ),
     );
