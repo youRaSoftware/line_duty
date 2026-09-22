@@ -1,0 +1,53 @@
+{
+  "app": {
+    "title": "LINE DUTY",
+    "subtitle": "DRAW ROUTES · KEEP THEM APART"
+  },
+  "menu": {
+    "play": "PLAY",
+    "best": "BEST {score}"
+  },
+  "hud": {
+    "best": "BEST {score}"
+  },
+  "pause": {
+    "title": "PAUSE",
+    "resume": "RESUME",
+    "restart": "RESTART",
+    "menu": "MENU",
+    "sound": "Sound",
+    "vibration": "Vibration"
+  },
+  "gameOver": {
+    "title": "COLLISION",
+    "wrongGate": "WRONG GATE",
+    "score": "SCORE",
+    "newRecord": "NEW RECORD",
+    "restart": "RESTART",
+    "menu": "MENU",
+    "continueAd": "CONTINUE · AD",
+    "continueFree": "CONTINUE"
+  },
+  "settings": {
+    "title": "SETTINGS",
+    "sound": "SOUND",
+    "sounds": "Sounds",
+    "vibration": "Vibration",
+    "game": "GAME",
+    "language": "Language",
+    "languageTitle": "LANGUAGE",
+    "languageSystem": "System",
+    "stats": "STATISTICS",
+    "best": "Best score",
+    "gamesPlayed": "Runs",
+    "delivered": "Delivered",
+    "reset": "Reset statistics",
+    "about": "ABOUT",
+    "version": "Version",
+    "licenses": "Licenses",
+    "resetTitle": "RESET STATISTICS?",
+    "resetBody": "Best score, runs and deliveries will be set to zero.",
+    "resetConfirm": "Reset",
+    "cancel": "Cancel"
+  }
+}

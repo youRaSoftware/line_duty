@@ -1,0 +1,28 @@
+# Changelog
+
+Все значимые user-facing изменения в Line Duty. / All notable user-facing changes to Line Duty.
+
+Формат / Format: [Keep a Changelog](https://keepachangelog.com/1.1.0/) · Versioning: [SemVer](https://semver.org/).
+
+При выпуске новой версии в стор переименовать `[Unreleased]` в `[X.Y.Z] — YYYY-MM-DD` (версия = `version:` в `pubspec.yaml`) и завести новый пустой `[Unreleased]` сверху. Тексты для сторов складывать в `.claude/my_docs/release_notes_X.Y.Z.txt`.
+On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh empty `[Unreleased]` on top.
+
+## [Unreleased]
+
+### RU
+
+**Что нового:**
+
+- Новое: игра «Диспетчер» — фигуры четырёх цветов выезжают сверху, рисуй им пальцем маршруты до ворот своего цвета; маршрут стирается за фигурой, красное кольцо предупреждает о сближении, касание двух фигур или чужие ворота — конец забега
+- Новое: меню с живым демо-полем, счёт и рекорд в игре, пауза (звук, вибрация), экран проигрыша с бейджем «Новый рекорд» и одним бесплатным продолжением
+- Новое: настройки — звуки, вибрация, язык (English / Русский), статистика (рекорд, забеги, доведённые фигуры) со сбросом, версия и лицензии
+- Новое: тёмная тема «Диспетчер метро», шрифт Space Grotesk, иконка приложения и экран запуска
+
+### EN
+
+**What's new:**
+
+- New: the dispatcher game — units of four colours roll in from the top, draw their routes with a finger to the gate of their colour; the route erases behind the unit, a red ring warns of a near miss, two units touching or a wrong gate ends the run
+- New: menu with a live demo field, score and best in game, pause (sound, vibration), game-over screen with a "New record" badge and one free continue
+- New: settings — sounds, vibration, language (English / Русский), statistics (best, runs, delivered) with reset, version and licenses
+- New: dark "Metro dispatcher" theme, Space Grotesk font, app icon and launch screen

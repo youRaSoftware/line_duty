@@ -1,0 +1,53 @@
+{
+  "app": {
+    "title": "LINE DUTY",
+    "subtitle": "РИСУЙ МАРШРУТЫ · НЕ СТАЛКИВАЙ"
+  },
+  "menu": {
+    "play": "ИГРАТЬ",
+    "best": "РЕКОРД {score}"
+  },
+  "hud": {
+    "best": "РЕКОРД {score}"
+  },
+  "pause": {
+    "title": "ПАУЗА",
+    "resume": "ПРОДОЛЖИТЬ",
+    "restart": "ЗАНОВО",
+    "menu": "В МЕНЮ",
+    "sound": "Звук",
+    "vibration": "Вибрация"
+  },
+  "gameOver": {
+    "title": "СТОЛКНОВЕНИЕ",
+    "wrongGate": "НЕ ТЕ ВОРОТА",
+    "score": "СЧЁТ",
+    "newRecord": "НОВЫЙ РЕКОРД",
+    "restart": "ЗАНОВО",
+    "menu": "В МЕНЮ",
+    "continueAd": "ПРОДОЛЖИТЬ · РЕКЛАМА",
+    "continueFree": "ПРОДОЛЖИТЬ"
+  },
+  "settings": {
+    "title": "НАСТРОЙКИ",
+    "sound": "ЗВУК",
+    "sounds": "Звуки",
+    "vibration": "Вибрация",
+    "game": "ИГРА",
+    "language": "Язык",
+    "languageTitle": "ЯЗЫК",
+    "languageSystem": "Системный",
+    "stats": "СТАТИСТИКА",
+    "best": "Рекорд",
+    "gamesPlayed": "Забегов",
+    "delivered": "Доведено фигур",
+    "reset": "Сбросить статистику",
+    "about": "О ПРИЛОЖЕНИИ",
+    "version": "Версия",
+    "licenses": "Лицензии",
+    "resetTitle": "СБРОСИТЬ СТАТИСТИКУ?",
+    "resetBody": "Рекорд, забеги и доведённые фигуры обнулятся.",
+    "resetConfirm": "Сбросить",
+    "cancel": "Отмена"
+  }
+}

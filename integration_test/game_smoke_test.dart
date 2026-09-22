@@ -1,0 +1,124 @@
+// Smoke test for the real app on a device / simulator:
+//
+//   flutter test integration_test -d <deviceId> --flavor dev --dart-define=environment=dev
+//
+// Covers: menu renders → PLAY opens the game → units spawn → a finger route
+// drawn from a unit to its own gate delivers it (score grows) → pause /
+// resume → back to the menu → settings toggle persists.
+
+import 'package:core/core.dart';
+import 'package:core_ui/core_ui.dart';
+import 'package:domain/domain.dart';
+import 'package:features/game/cubit/game_cubit.dart';
+import 'package:features/game/engine/field_components.dart';
+import 'package:features/game/engine/game_tuning.dart';
+import 'package:features/game/engine/line_duty_game.dart';
+import 'package:features/game/engine/unit_component.dart';
+import 'package:features/game/widgets/game_hud.dart';
+import 'package:features/game/widgets/pause_overlay.dart';
+import 'package:features/menu/screen/menu_form.dart';
+import 'package:features/settings/screen/settings_form.dart';
+import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:line_duty/main_common.dart';
+
+void main() {
+  final IntegrationTestWidgetsFlutterBinding binding =
+      IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // Real-time frames: with the default policy the engine only ticks on
+  // pump(), so pump(3 s) would step the game once with dt = 3 s.
+  binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
+
+  testWidgets('menu → game → route to gate → pause → settings',
+      (WidgetTester tester) async {
+    await mainCommon(Flavor.dev);
+    addTearDown(appLocator<AudioService>().dispose);
+    await appLocator<SettingsService>().setLocale(null);
+    await tester.pump(const Duration(milliseconds: 800));
+
+    expect(find.byKey(MenuForm.playButtonKey), findsOneWidget);
+    await tester.tap(find.byKey(MenuForm.playButtonKey));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.byKey(GameHud.pauseButtonKey), findsOneWidget);
+
+    final GameWidget<LineDutyGame> widget =
+        tester.widget<GameWidget<LineDutyGame>>(
+            find.byType(GameWidget<LineDutyGame>));
+    final LineDutyGame game = widget.game!;
+    final GameCubit cubit = BlocProvider.of<GameCubit>(
+      tester.element(find.byType(GameWidget<LineDutyGame>)),
+    );
+
+    // Wait for the first unit.
+    await tester.pump(const Duration(milliseconds: 1500));
+    expect(game.units, isNotEmpty, reason: 'a unit spawned');
+    final UnitComponent unit = game.units.first;
+    final GateComponent gate =
+        game.gates.firstWhere((GateComponent g) => g.color == unit.color);
+    debugPrint(
+        'SMOKE unit ${unit.color} at ${unit.position}, gate at ${gate.position}');
+
+    // Drag from the unit straight to its gate (screen = field × zoom).
+    final Rect canvas = tester.getRect(find.byType(GameWidget<LineDutyGame>));
+    final double zoom = canvas.width / AppDimens.fieldWidth;
+    Offset toScreen(Vector2 p) => canvas.topLeft + Offset(p.x, p.y) * zoom;
+    final Vector2 target = gate.position - Vector2(0, gate.size.y);
+    final TestGesture gesture =
+        await tester.startGesture(toScreen(unit.position));
+    await tester.pump(const Duration(milliseconds: 40));
+    const int steps = 12;
+    for (int i = 1; i <= steps; i++) {
+      final Vector2 p = unit.position + (target - unit.position) * (i / steps);
+      await gesture.moveTo(toScreen(p));
+      await tester.pump(const Duration(milliseconds: 30));
+    }
+    expect(identical(game.drawing, unit), isTrue, reason: 'the unit is picked');
+    expect(unit.route, isNotEmpty);
+    await gesture.up();
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(game.drawing, isNull);
+
+    // The unit rides the route into its gate.
+    final double seconds =
+        unit.position.distanceTo(target) / GameTuning.speedStart + 1.5;
+    await tester.pump(Duration(milliseconds: (seconds * 1000).round()));
+    expect(cubit.state.score, greaterThanOrEqualTo(GameRules.scorePerDelivery),
+        reason: 'delivered → score');
+    debugPrint('SMOKE delivered, score ${cubit.state.score}');
+
+    // Pause → resume.
+    await tester.tap(find.byKey(GameHud.pauseButtonKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byKey(PauseOverlay.resumeKey), findsOneWidget);
+    expect(game.paused, isTrue);
+    await tester.tap(find.byKey(PauseOverlay.resumeKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(game.paused, isFalse);
+
+    // Pause → menu.
+    await tester.tap(find.byKey(GameHud.pauseButtonKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.text(LocaleKeys.pause_menu.tr()));
+    await tester.pump(const Duration(milliseconds: 800));
+    expect(find.byKey(MenuForm.playButtonKey), findsOneWidget);
+
+    // Settings: sound toggle persists.
+    await tester.tap(find.byKey(MenuForm.settingsButtonKey));
+    await tester.pump(const Duration(milliseconds: 800));
+    expect(find.byKey(SettingsForm.backKey), findsOneWidget);
+    final bool before = appLocator<SettingsService>().value.soundOn;
+    await tester.tap(find.text(LocaleKeys.settings_sounds.tr()));
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(appLocator<SettingsService>().value.soundOn, !before);
+    expect((await appLocator<SettingsRepository>().getSettings()).soundOn,
+        !before);
+    await tester.tap(find.text(LocaleKeys.settings_sounds.tr()));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.tap(find.byKey(SettingsForm.backKey));
+    await tester.pump(const Duration(milliseconds: 800));
+    expect(find.byKey(MenuForm.playButtonKey), findsOneWidget);
+    debugPrint('SMOKE OK');
+  });
+}
