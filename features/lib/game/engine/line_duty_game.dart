@@ -225,21 +225,18 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     return c;
   }
 
-  /// Ворота: фигура, дошедшая до линии ворот, либо доставлена (свои), либо
-  /// разбилась (чужие / мимо).
+  /// Ворота: фигура, дошедшая до линии ворот, попадает в ближайшие по X
+  /// ворота, которые задевает (см. [GameTuning.gateCatchSlack]) — свои
+  /// принимают, чужие (или ни одни) разбивают.
   void _checkGates() {
     if (gates.isEmpty) return;
     final double line = gates.first.top;
     for (final UnitComponent u in List<UnitComponent>.of(units)) {
       if (u.position.y + u.radius < line) continue;
-      GateComponent? hit;
-      for (final GateComponent g in gates) {
-        if (g.containsX(u.position.x)) {
-          hit = g;
-          break;
-        }
-      }
-      if (hit != null && hit.color == u.color) {
+      final GateComponent hit = _nearestGate(u.position.x);
+      final bool touching = (hit.position.x - u.position.x).abs() <=
+          hit.size.x / 2 + GameTuning.gateCatchSlack;
+      if (touching && hit.color == u.color) {
         _deliver(u, hit);
       } else if (demo) {
         _respawnDemo(u);
@@ -247,6 +244,14 @@ class LineDutyGame extends FlameGame with DragCallbacks {
         _crash(u, null, wrongGate: true);
       }
     }
+  }
+
+  GateComponent _nearestGate(double x) {
+    GateComponent best = gates.first;
+    for (final GateComponent g in gates) {
+      if ((g.position.x - x).abs() < (best.position.x - x).abs()) best = g;
+    }
+    return best;
   }
 
   void _deliver(UnitComponent u, GateComponent gate) {

@@ -106,6 +106,25 @@ void main() {
     expect(listener.crashWrongGate, isTrue);
   });
 
+  test('a unit whose centre is in the gap still enters the gate it touches',
+      () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    final GateComponent green = game.gates[2];
+    // Центр на 6 ед. левее левого края зелёных ворот — в зазоре, но фигура
+    // (радиус 16) задевает ворота краем.
+    final double x = green.position.x - green.size.x / 2 - 6;
+    _put(game, LaneColor.green, x, green.top - 5);
+    await _tick(game, 0.3);
+    expect(game.frozen, isFalse);
+    expect(listener.delivered, 1);
+    expect(green.pulse, greaterThan(0));
+
+    // Тот же зазор, но фигура чужого цвета — разбивается о ближайшие ворота.
+    _put(game, LaneColor.red, x, green.top - 5);
+    await _tick(game, 0.3);
+    expect(game.frozen, isTrue);
+  });
+
   test('finger over its own gate docks the route and ends the gesture',
       () async {
     final (LineDutyGame game, _Listener listener) = await _game();

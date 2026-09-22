@@ -17,6 +17,7 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - Новое: меню с живым демо-полем, счёт и рекорд в игре, пауза (звук, вибрация), экран проигрыша с бейджем «Новый рекорд» и одним бесплатным продолжением
 - Новое: настройки — звуки, вибрация, язык (English / Русский), статистика (рекорд, забеги, доведённые фигуры) со сбросом, версия и лицензии
 - Новое: тёмная тема «Диспетчер метро», шрифты Unbounded и Golos Text (с кириллицей), иконка приложения и экран запуска
+- Исправлено: фигура, задевшая свои ворота краем, больше не разбивается «не о те ворота» из-за зазора между воротами
 - Новое: маршрут стыкуется с воротами — доведи линию до своих ворот, и она закончится входом в них, ворота подсветятся, а палец можно отпустить
 
 ### EN
@@ -27,4 +28,5 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - New: menu with a live demo field, score and best in game, pause (sound, vibration), game-over screen with a "New record" badge and one free continue
 - New: settings — sounds, vibration, language (English / Русский), statistics (best, runs, delivered) with reset, version and licenses
 - New: dark "Metro dispatcher" theme, Unbounded and Golos Text fonts (Cyrillic included), app icon and launch screen
+- Fixed: a unit that touches its own gate with its edge no longer crashes as "wrong gate" because of the gap between gates
 - New: routes dock to gates — draw the line into a gate of the unit's colour and it ends right at the gate entrance, the gate lights up and you can lift your finger
