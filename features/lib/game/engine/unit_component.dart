@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:core_ui/core_ui.dart';
@@ -135,22 +136,18 @@ class UnitComponent extends PositionComponent
     }
   }
 
+  /// Направление движения в радианах (вниз = π/2) — для спрайтов темы.
+  /// Сам компонент не вращается (`angle` Flame = 0): хитбокс и значок
+  /// остаются осевыми, поворачивает только скин.
+  double get headingAngle => math.atan2(heading.y, heading.x);
+
   @override
   void render(Canvas canvas) {
-    final Color fill = AppColors.lane(color);
-    final Rect rect = Offset.zero & size.toSize();
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-          rect, const Radius.circular(AppDimens.unitRadius)),
-      Paint()..color = fill,
-    );
-    LaneGlyphPainter.draw(
+    game.skin.paintUnit(
       canvas,
-      color.glyph,
-      center: rect.center,
-      radius: radius * 0.42,
-      color: AppColors.white,
-      strokeWidth: 2,
+      center: Offset(size.x / 2, size.y / 2),
+      angle: headingAngle,
+      color: color,
     );
   }
 }

@@ -87,7 +87,7 @@ class SecondaryButton extends StatelessWidget {
 
 ## Design system rules
 
-- Colors only from `AppColors`; if a color is missing, **add a constant** to `app_colors.dart` (with the hex from the spec) — never inline `Color(0xFF…)`.
+- Colors only from `AppColors` (runtime getters over the current `AppPalette`); if a token is missing, **add it to `AppPalette`** (every theme in `app_palette.dart`) and a getter to `app_colors.dart` — never inline `Color(0xFF…)`. Never use `AppColors.x` inside `const` (widgets, `Icon`, `TextStyle`, constructor defaults); painters reading colours must `shouldRepaint => true`.
 - Text styles only via `AppFonts.x.copyWith(...)`; tabular digits for anything numeric.
 - Shared sizes from `AppDimens` (`buttonHeight`, `iconButtonSize`, `panelRadius`, `panelPadding`, `minTapTarget`); one-off paddings may be inline.
 - Tap targets ≥ 44 px (`AppDimens.minTapTarget`).

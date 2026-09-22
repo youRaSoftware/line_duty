@@ -11,6 +11,7 @@ import 'package:flutter/material.dart' show Color, Colors;
 import 'field_components.dart';
 import 'field_layers.dart';
 import 'game_tuning.dart';
+import 'skins/field_skin.dart';
 import 'unit_component.dart';
 
 /// Кому движок сообщает о событиях забега (в игре — `GameCubit`; в демо
@@ -71,6 +72,16 @@ class LineDutyGame extends FlameGame with DragCallbacks {
   LineDutyGame({this.listener, this.demo = false, math.Random? random})
       : random = random ?? math.Random();
 
+  FieldSkin _skin = FieldSkins.metro;
+
+  /// Скин текущей темы ([AppColors.current]); компоненты читают его в
+  /// `render`, так что смена темы видна на следующем кадре.
+  FieldSkin get skin {
+    final String id = AppColors.current.id;
+    if (_skin.id != id) _skin = FieldSkins.byId(id);
+    return _skin;
+  }
+
   double get fieldWidth => AppDimens.fieldWidth;
 
   double get fieldHeight => size.y / _zoom;
@@ -100,6 +111,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
   Future<void> onLoad() async {
     camera.viewfinder.anchor = Anchor.topLeft;
     camera.viewfinder.position = Vector2.zero();
+    world.add(DecorLayer());
     world.add(RouteLayer());
     world.add(OverlayLayer());
     for (int i = 0; i < GameTuning.spawnFractions.length; i++) {

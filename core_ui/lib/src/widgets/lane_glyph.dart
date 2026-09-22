@@ -12,13 +12,15 @@ class LaneGlyphIcon extends StatelessWidget {
   final LaneGlyph glyph;
   final double size;
   final bool filled;
-  final Color color;
+
+  /// null — [AppColors.glyph] текущей темы.
+  final Color? color;
 
   const LaneGlyphIcon({
     required this.glyph,
     this.size = 16,
     this.filled = false,
-    this.color = AppColors.white,
+    this.color,
     super.key,
   });
 
@@ -26,7 +28,11 @@ class LaneGlyphIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size.square(size),
-      painter: _GlyphPainter(glyph: glyph, filled: filled, color: color),
+      painter: _GlyphPainter(
+        glyph: glyph,
+        filled: filled,
+        color: color ?? AppColors.glyph,
+      ),
     );
   }
 }

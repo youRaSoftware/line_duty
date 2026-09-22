@@ -14,6 +14,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       hapticsOn: _provider.hapticsOn,
       localeCode: _provider.localeCode,
       tutorialSeen: _provider.tutorialSeen,
+      themeId: _provider.themeId ?? SettingsModel.defaultThemeId,
     );
   }
 
@@ -24,6 +25,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       hapticsOn: settings.hapticsOn,
       localeCode: settings.localeCode,
       tutorialSeen: settings.tutorialSeen,
+      themeId: settings.themeId,
     );
   }
 }

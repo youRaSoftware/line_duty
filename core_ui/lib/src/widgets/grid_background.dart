@@ -10,9 +10,12 @@ class GridBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const IgnorePointer(
+    return IgnorePointer(
       child: RepaintBoundary(
-        child: CustomPaint(painter: GridPainter(), size: Size.infinite),
+        child: CustomPaint(
+          painter: GridPainter(color: AppColors.gridDot),
+          size: Size.infinite,
+        ),
       ),
     );
   }
@@ -24,9 +27,9 @@ class GridPainter extends CustomPainter {
   final Color color;
 
   const GridPainter({
+    required this.color,
     this.step = AppDimens.gridStep,
     this.dot = AppDimens.gridDot,
-    this.color = AppColors.gridDot,
   });
 
   @override

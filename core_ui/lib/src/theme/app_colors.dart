@@ -1,54 +1,54 @@
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 
-/// Палитра темы A «Диспетчер метро» (спека, «Палитра»). Тёмная, одна.
-class AppColors {
-  const AppColors._();
+import 'app_palette.dart';
 
-  /// Фон поля и всех экранов.
-  static const Color bgField = Color(0xFF0D131E);
+/// Цвета текущей темы — статические геттеры над [current] ([AppPalette]).
+/// Тему ставит `App` через [apply] по `SettingsModel.themeId` до
+/// построения дерева; движок и painter'ы читают геттеры на каждом кадре и
+/// подхватывают смену темы сами.
+///
+/// **Нельзя** использовать `AppColors.x` в `const`-выражениях и в
+/// дефолтах параметров `const`-конструкторов — значение меняется в рантайме.
+/// Painter'ы, читающие цвета, должны возвращать `shouldRepaint => true`.
+abstract final class AppColors {
+  static AppPalette _current = AppPalettes.metro;
 
-  /// Точки сетки фона.
-  static const Color gridDot = Color(0xFF1B2635);
+  static AppPalette get current => _current;
 
-  /// Панели и обводки UI.
-  static const Color panel = Color(0xFF131C2B);
-  static const Color stroke = Color(0xFF243349);
-  static const Color strokeSecondary = Color(0xFF33455F);
+  static void apply(AppPalette palette) => _current = palette;
 
-  static const Color textPrimary = Color(0xFFE8EDF4);
-  static const Color textSecondary = Color(0xFF7E93B0);
+  static Color get bgField => _current.bgField;
+  static Color get gridDot => _current.gridDot;
+  static Color get decor => _current.decor;
+  static Color get panel => _current.panel;
+  static Color get stroke => _current.stroke;
+  static Color get strokeSecondary => _current.strokeSecondary;
+  static Color get textPrimary => _current.textPrimary;
+  static Color get textSecondary => _current.textSecondary;
 
-  /// Заливка светлых кнопок («Играть», «Заново»); текст на них — [bgField].
-  static const Color buttonLight = Color(0xFFE8EDF4);
+  /// «Играть» / «Заново»; текст на них — [buttonText].
+  static Color get buttonLight => _current.buttonLight;
+  static Color get buttonText => _current.buttonText;
+  static Color get danger => _current.danger;
+  static Color get pickup => _current.pickup;
+  static Color get accent => _current.accent;
+  static Color get scrim => _current.scrim;
+  static Color get record => _current.record;
 
-  /// Опасность: кольцо сближения, вспышка столкновения.
-  static const Color danger = Color(0xFFFF4757);
+  /// Значок в фигуре.
+  static Color get glyph => _current.glyph;
 
-  /// Затемнение экрана проигрыша (82 %).
-  static const Color scrim = Color(0xD1090D14);
+  /// Точка и кольцо пальца.
+  static Color get finger => _current.finger;
 
-  /// Бейдж «Новый рекорд» — янтарный.
-  static const Color record = Color(0xFFF2B233);
-
-  static const Color white = Color(0xFFFFFFFF);
-
-  static const Color laneRed = Color(0xFFE8503A);
-  static const Color laneAmber = Color(0xFFF2B233);
-  static const Color laneGreen = Color(0xFF2EB872);
-  static const Color laneBlue = Color(0xFF3E8BE8);
+  /// Ореол под линией у пальца (с прозрачностью).
+  static Color get fingerHalo => _current.fingerHalo;
+  static Color get laneRed => _current.laneRed;
+  static Color get laneAmber => _current.laneAmber;
+  static Color get laneGreen => _current.laneGreen;
+  static Color get laneBlue => _current.laneBlue;
 
   /// Цвет потока: фигура, её линия и ворота.
-  static Color lane(LaneColor color) {
-    switch (color) {
-      case LaneColor.red:
-        return laneRed;
-      case LaneColor.amber:
-        return laneAmber;
-      case LaneColor.green:
-        return laneGreen;
-      case LaneColor.blue:
-        return laneBlue;
-    }
-  }
+  static Color lane(LaneColor color) => _current.lane(color);
 }

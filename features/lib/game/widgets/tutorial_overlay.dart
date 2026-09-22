@@ -95,7 +95,7 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
                   width: i == _step ? 18 : 7,
                   height: 7,
                   decoration: BoxDecoration(
-                    color: i == _step ? AppColors.laneBlue : AppColors.stroke,
+                    color: i == _step ? AppColors.accent : AppColors.stroke,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),

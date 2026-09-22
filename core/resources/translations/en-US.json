@@ -63,5 +63,9 @@
     "next": "NEXT",
     "skip": "SKIP",
     "start": "LET'S PLAY!"
+  },
+  "themes": {
+    "metro": "Metro",
+    "city": "City"
   }
 }

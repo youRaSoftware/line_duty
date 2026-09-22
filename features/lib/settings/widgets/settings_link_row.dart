@@ -38,7 +38,7 @@ class SettingsLinkRow extends StatelessWidget {
                   ),
                   const SizedBox(width: 2),
                 ],
-                const Icon(
+                Icon(
                   Icons.chevron_right_rounded,
                   size: 24,
                   color: AppColors.textSecondary,

@@ -12,17 +12,20 @@ Tokens are plain `static const` classes in `core_ui/lib/src/theme/`, re-exported
 
 Spec sizes are in px of a 1080×2340 canvas; logical px = spec / 3 (`AppDimens.fieldWidth` = 360).
 
-### 1.1 Colors — `AppColors`
+### 1.1 Colors — `AppColors` over `AppPalette`
 
-| Group | Constants |
+Colours are **runtime**: `AppColors.x` are static getters over `AppColors.current` (an `AppPalette` from `AppPalettes`, chosen by `SettingsModel.themeId`; `App` applies it before building and remounts the tree by palette key). Tokens (Metro values shown; every theme defines all of them in `core_ui/lib/src/theme/app_palette.dart`):
+
+| Group | Tokens |
 |---|---|
-| Surfaces | `bgField` `#0D131E` (every screen), `panel` `#131C2B` (spawners, overlay panels, settings cards), `gridDot` `#1B2635` |
+| Surfaces | `bgField` `#0D131E` (+ optional `bgFieldEnd` gradient; use `AppColors.current.background`), `panel` `#131C2B` (spawners, overlay panels, settings cards), `gridDot` `#1B2635`, `decor` (background decor, painted by the skin) |
 | Lines | `stroke` `#243349` (icon buttons, panels, spawners), `strokeSecondary` `#33455F` (secondary / dashed buttons) |
-| Text | `textPrimary` `#E8EDF4`, `textSecondary` `#7E93B0`, `buttonLight` `#E8EDF4` (light button fill; its label is `bgField`) |
-| Semantic | `danger` `#FF4757` (warning ring, crash flash, DEV banner), `record` `#F2B233` (record badge), `scrim` `#D1090D14` (82 % game-over dim), `white` |
-| Lanes | `laneRed` `#E8503A`, `laneAmber` `#F2B233`, `laneGreen` `#2EB872`, `laneBlue` `#3E8BE8`; `AppColors.lane(LaneColor)` |
+| Text | `textPrimary` `#E8EDF4`, `textSecondary` `#7E93B0`, `buttonLight` (= `textPrimary`, light button fill) with label `buttonText` (= `bgField`) |
+| Semantic | `danger` (warning ring, crash flash, DEV banner), `record` (record badge), `scrim` (game-over dim), `accent` (toggle on, step dots, check marks), `pickup` (bonuses) |
+| Field | `glyph` (glyph inside a unit), `finger` (finger dot/ring — dark on light themes), `fingerHalo` (halo under the line, alpha included) |
+| Lanes | `laneRed/Amber/Green/Blue`; `AppColors.lane(LaneColor)` |
 
-**Rule:** never write `Color(0xFF…)` / `Colors.x` in `features/` — add a constant to `AppColors`.
+**Rules:** never write `Color(0xFF…)` / `Colors.x` in `features/` or `core_ui/` widgets — add a token to `AppPalette` and a getter to `AppColors`. Never put `AppColors.x` in a `const` expression or a `const` constructor default (it is not a constant). Painters that read colours return `shouldRepaint => true`. No literal white: use `glyph` / `finger`.
 
 ### 1.2 Typography — `AppFonts`
 

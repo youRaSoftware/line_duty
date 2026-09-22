@@ -4,10 +4,13 @@ import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:flame/components.dart';
 
-/// Ворота потока (спека: 200×130 r24, обводка 8 px цветом, заливка 16 %,
-/// внутри — залитый белый значок). [pulse] — вспышка при доставке,
-/// [armed] — к воротам пристыкован маршрут (заливка ярче).
-class GateComponent extends PositionComponent {
+import 'line_duty_game.dart';
+
+/// Ворота потока (спека: зона 200×130; вид рисует скин темы). [pulse] —
+/// вспышка при доставке, [armed] — к воротам пристыкован маршрут (заливка
+/// ярче).
+class GateComponent extends PositionComponent
+    with HasGameReference<LineDutyGame> {
   final LaneColor color;
   double pulse = 0;
   bool armed = false;
@@ -36,38 +39,19 @@ class GateComponent extends PositionComponent {
 
   @override
   void render(Canvas canvas) {
-    final Color c = AppColors.lane(color);
-    final Rect rect = Offset.zero & size.toSize();
-    final RRect rrect = RRect.fromRectAndRadius(
-      rect,
-      const Radius.circular(AppDimens.gateRadius),
-    );
     final double base = armed ? 0.34 : 0.16;
-    canvas.drawRRect(
-      rrect,
-      Paint()..color = c.withValues(alpha: base + (0.66 - base) * pulse),
-    );
-    canvas.drawRRect(
-      rrect,
-      Paint()
-        ..color = c
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.7,
-    );
-    LaneGlyphPainter.draw(
+    game.skin.paintGate(
       canvas,
-      color.glyph,
-      center: rect.center,
-      radius: 7.5,
-      color: AppColors.white,
-      filled: true,
+      size: size.toSize(),
+      color: color,
+      fill: base + (0.66 - base) * pulse,
     );
   }
 }
 
-/// Спавн (спека: 160×88 r20, заливка `panel`, обводка 4 px `stroke`) с
-/// шевроном вниз под ним.
-class SpawnerComponent extends PositionComponent {
+/// Спавн (спека: 160×88 r20) с шевроном вниз под ним; вид рисует скин.
+class SpawnerComponent extends PositionComponent
+    with HasGameReference<LineDutyGame> {
   SpawnerComponent({required Vector2 position})
       : super(
           position: position,
@@ -80,28 +64,5 @@ class SpawnerComponent extends PositionComponent {
       position + Vector2(0, size.y / 2 + AppDimens.unitSize / 2);
 
   @override
-  void render(Canvas canvas) {
-    final Rect rect = Offset.zero & size.toSize();
-    final RRect rrect = RRect.fromRectAndRadius(
-      rect,
-      const Radius.circular(AppDimens.spawnRadius),
-    );
-    canvas.drawRRect(rrect, Paint()..color = AppColors.panel);
-    final Paint stroke = Paint()
-      ..color = AppColors.stroke
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.4
-      ..strokeCap = StrokeCap.round;
-    canvas.drawRRect(rrect, stroke);
-    // Шеврон под спавном.
-    final double cx = rect.center.dx;
-    final double y = rect.bottom + 8;
-    canvas.drawPath(
-      Path()
-        ..moveTo(cx - 6, y)
-        ..lineTo(cx, y + 5)
-        ..lineTo(cx + 6, y),
-      stroke..strokeWidth = 2,
-    );
-  }
+  void render(Canvas canvas) => game.skin.paintSpawner(canvas, size.toSize());
 }

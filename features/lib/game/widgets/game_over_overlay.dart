@@ -82,7 +82,7 @@ class GameOverOverlay extends StatelessWidget {
                     ? LocaleKeys.gameOver_continueAd
                     : LocaleKeys.gameOver_continueFree,
               ),
-              icon: const Icon(
+              icon: Icon(
                 Icons.play_circle_outline_rounded,
                 size: 20,
                 color: AppColors.textSecondary,

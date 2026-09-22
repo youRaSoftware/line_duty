@@ -11,11 +11,17 @@ class SettingsModel extends Equatable {
   /// Онбординг «Как играть» показан (первый запуск пройден).
   final bool tutorialSeen;
 
+  /// Тема оформления (`AppPalettes` в core_ui); домен хранит только id.
+  final String themeId;
+
+  static const String defaultThemeId = 'metro';
+
   const SettingsModel({
     required this.soundOn,
     required this.hapticsOn,
     this.localeCode,
     this.tutorialSeen = false,
+    this.themeId = defaultThemeId,
   });
 
   const SettingsModel.empty() : this(soundOn: true, hapticsOn: true);
@@ -28,16 +34,18 @@ class SettingsModel extends Equatable {
     String? localeCode,
     bool resetLocale = false,
     bool? tutorialSeen,
+    String? themeId,
   }) {
     return SettingsModel(
       soundOn: soundOn ?? this.soundOn,
       hapticsOn: hapticsOn ?? this.hapticsOn,
       localeCode: resetLocale ? null : (localeCode ?? this.localeCode),
       tutorialSeen: tutorialSeen ?? this.tutorialSeen,
+      themeId: themeId ?? this.themeId,
     );
   }
 
   @override
   List<Object?> get props =>
-      <Object?>[soundOn, hapticsOn, localeCode, tutorialSeen];
+      <Object?>[soundOn, hapticsOn, localeCode, tutorialSeen, themeId];
 }

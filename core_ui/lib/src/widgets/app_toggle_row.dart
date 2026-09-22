@@ -45,7 +45,7 @@ class AppToggleRow extends StatelessWidget {
                   padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(_pillHeight / 2),
-                    color: value ? AppColors.laneBlue : AppColors.stroke,
+                    color: value ? AppColors.accent : AppColors.stroke,
                   ),
                   child: AnimatedAlign(
                     duration: const Duration(milliseconds: 180),
@@ -55,7 +55,7 @@ class AppToggleRow extends StatelessWidget {
                     child: Container(
                       width: _knob,
                       height: _knob,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.textPrimary,
                       ),

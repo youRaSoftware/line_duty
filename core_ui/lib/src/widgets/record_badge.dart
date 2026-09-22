@@ -22,7 +22,7 @@ class RecordBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const Icon(Icons.star_rounded, size: 18, color: AppColors.record),
+          Icon(Icons.star_rounded, size: 18, color: AppColors.record),
           const SizedBox(width: 6),
           Text(
             label,

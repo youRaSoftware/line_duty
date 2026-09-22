@@ -6,7 +6,8 @@
 // the field and closes on the last step → units spawn → a finger route
 // drawn from a unit to its own gate delivers it (score grows) → pause /
 // resume → back to the menu → settings toggle persists → «How to play»
-// reopens the tutorial from settings.
+// reopens the tutorial from settings → picking a theme in the menu applies
+// the palette and persists.
 
 import 'package:core/core.dart';
 import 'package:core_ui/core_ui.dart';
@@ -20,6 +21,7 @@ import 'package:features/game/widgets/game_hud.dart';
 import 'package:features/game/widgets/pause_overlay.dart';
 import 'package:features/game/widgets/tutorial_overlay.dart';
 import 'package:features/menu/screen/menu_form.dart';
+import 'package:features/menu/widgets/menu_theme_strip.dart';
 import 'package:features/settings/screen/settings_form.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -147,6 +149,31 @@ void main() {
     await tester.tap(find.byKey(SettingsForm.backKey));
     await tester.pump(const Duration(milliseconds: 800));
     expect(find.byKey(MenuForm.playButtonKey), findsOneWidget);
+
+    // Theme strip: «City» applies the palette live and persists.
+    final String themeBefore = settings.value.themeId;
+    await tester.tap(find.byKey(MenuThemeStrip.keyFor('city')));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(settings.value.themeId, 'city');
+    expect(
+        (await appLocator<SettingsRepository>().getSettings()).themeId, 'city');
+    expect(AppColors.current.id, 'city');
+    expect(find.byKey(MenuForm.playButtonKey), findsOneWidget,
+        reason: 'menu survives the remount');
+    final GridPainter grid = tester
+        .widget<CustomPaint>(find
+            .descendant(
+              of: find.byType(GridBackground),
+              matching: find.byType(CustomPaint),
+            )
+            .first)
+        .painter! as GridPainter;
+    expect(grid.color, AppPalettes.city.gridDot,
+        reason: 'const widgets repaint after the theme remount');
+    await tester.pump(const Duration(seconds: 2)); // screenshot window
+    await settings.setThemeId(themeBefore);
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(AppColors.current.id, themeBefore);
     debugPrint('SMOKE OK');
   });
 }

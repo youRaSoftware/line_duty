@@ -78,5 +78,5 @@ class _DashedBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DashedBorderPainter old) => false;
+  bool shouldRepaint(_DashedBorderPainter old) => true;
 }

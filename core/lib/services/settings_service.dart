@@ -37,6 +37,10 @@ class SettingsService {
   Future<void> setTutorialSeen(bool value) =>
       _update(settings.value.copyWith(tutorialSeen: value));
 
+  /// Тема оформления (id из `AppPalettes`).
+  Future<void> setThemeId(String id) =>
+      _update(settings.value.copyWith(themeId: id));
+
   Future<void> _update(SettingsModel next) async {
     if (next == settings.value) return;
     settings.value = next;

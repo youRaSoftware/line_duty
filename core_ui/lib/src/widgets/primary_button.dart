@@ -7,7 +7,7 @@ import 'app_pressable.dart';
 import 'button_label.dart';
 
 /// Светлая кнопка (спека: «Играть» 720×190 r44 со свечением 18 %, «Заново»
-/// 660×150 r36): заливка [AppColors.buttonLight], текст [AppColors.bgField].
+/// 660×150 r36): заливка [AppColors.buttonLight], текст [AppColors.buttonText].
 /// При нажатии сжимается до 97 % и слегка темнеет. [glow] — мягкое свечение
 /// вокруг (только у «Играть»).
 class PrimaryButton extends StatelessWidget {

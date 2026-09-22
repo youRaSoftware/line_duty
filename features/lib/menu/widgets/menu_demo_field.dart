@@ -6,8 +6,9 @@ import '../../game/engine/line_duty_game.dart';
 /// Демо-поле под меню (спека 2b): две фигуры ездят по случайным маршрутам
 /// на 50 % яркости, тапы не перехватывает.
 class MenuDemoField extends StatefulWidget {
-  /// Высота нижней полосы меню (кнопки 50 + отступы), свободной от ворот.
-  static const double bottomReserve = 110;
+  /// Высота нижней полосы меню (лента тем + кнопки + отступы), свободной
+  /// от ворот демо.
+  static const double bottomReserve = 205;
 
   const MenuDemoField({super.key});
 

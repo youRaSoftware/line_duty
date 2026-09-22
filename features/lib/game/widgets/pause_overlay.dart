@@ -48,7 +48,7 @@ class PauseOverlay extends StatelessWidget {
             label: context.tr(LocaleKeys.pause_menu),
             onPressed: onMenu,
           ),
-          const Divider(color: AppColors.stroke),
+          Divider(color: AppColors.stroke),
           ValueListenableBuilder<SettingsModel>(
             valueListenable: settings.settings,
             builder: (BuildContext context, SettingsModel value, Widget? _) {

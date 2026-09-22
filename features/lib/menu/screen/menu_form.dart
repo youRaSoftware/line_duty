@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 
 import '../cubit/menu_cubit.dart';
 import '../widgets/menu_demo_field.dart';
+import '../widgets/menu_theme_strip.dart';
 
 /// Главное меню (спека 2b): живое демо-поле на 50 % яркости под
 /// интерфейсом, название, подзаголовок, «Играть» со свечением, рекорд со
-/// звездой, снизу звук и настройки. Колонка не шире [contentMaxWidth].
+/// звездой, снизу лента тем ([MenuThemeStrip]), звук и настройки. Колонка
+/// не шире [contentMaxWidth].
 class MenuForm extends StatelessWidget {
   static const double contentMaxWidth = 400;
   static const Key playButtonKey = Key('menu_play');
@@ -56,10 +58,10 @@ class MenuForm extends StatelessWidget {
                         height: AppDimens.playButtonHeight,
                         radius: AppDimens.playButtonRadius,
                         glow: true,
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.play_arrow_rounded,
                           size: 26,
-                          color: AppColors.bgField,
+                          color: AppColors.buttonText,
                         ),
                         onPressed: () => context.goNamed('game'),
                       ),
@@ -67,7 +69,7 @@ class MenuForm extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          const Icon(
+                          Icon(
                             Icons.star_outline_rounded,
                             size: 20,
                             color: AppColors.textSecondary,
@@ -89,22 +91,33 @@ class MenuForm extends StatelessWidget {
                         valueListenable: settings.settings,
                         builder: (BuildContext context, SettingsModel value,
                             Widget? _) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              IconSquareButton(
-                                key: soundButtonKey,
-                                icon: value.soundOn
-                                    ? Icons.volume_up_rounded
-                                    : Icons.volume_off_rounded,
-                                onPressed: () =>
-                                    settings.setSoundOn(!value.soundOn),
+                              MenuThemeStrip(
+                                selectedId: value.themeId,
+                                onSelect: settings.setThemeId,
                               ),
-                              const SizedBox(width: 12),
-                              IconSquareButton(
-                                key: settingsButtonKey,
-                                icon: Icons.settings_outlined,
-                                onPressed: () => context.pushNamed('settings'),
+                              const SizedBox(height: 18),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  IconSquareButton(
+                                    key: soundButtonKey,
+                                    icon: value.soundOn
+                                        ? Icons.volume_up_rounded
+                                        : Icons.volume_off_rounded,
+                                    onPressed: () =>
+                                        settings.setSoundOn(!value.soundOn),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  IconSquareButton(
+                                    key: settingsButtonKey,
+                                    icon: Icons.settings_outlined,
+                                    onPressed: () =>
+                                        context.pushNamed('settings'),
+                                  ),
+                                ],
                               ),
                             ],
                           );

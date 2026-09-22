@@ -8,6 +8,16 @@ import 'game_tuning.dart';
 import 'line_duty_game.dart';
 import 'unit_component.dart';
 
+/// Самый нижний слой: декор фона темы (схемы, лучи, пятна) на всё поле.
+class DecorLayer extends Component with HasGameReference<LineDutyGame> {
+  DecorLayer() : super(priority: -20);
+
+  @override
+  void render(Canvas canvas) {
+    game.skin.paintDecor(canvas, Size(game.fieldWidth, game.fieldHeight));
+  }
+}
+
 /// Слой под фигурами: маршруты (линия цветом фигуры), стёртые следы
 /// (пунктир 30 %, гаснет) и ореол линии под пальцем.
 class RouteLayer extends Component with HasGameReference<LineDutyGame> {
@@ -27,7 +37,7 @@ class RouteLayer extends Component with HasGameReference<LineDutyGame> {
         canvas.drawPath(
           path,
           Paint()
-            ..color = AppColors.white.withValues(alpha: 0.12)
+            ..color = AppColors.fingerHalo
             ..style = PaintingStyle.stroke
             ..strokeWidth = AppDimens.routeWidth + AppDimens.routeHalo
             ..strokeCap = StrokeCap.round
@@ -98,12 +108,12 @@ class OverlayLayer extends Component with HasGameReference<LineDutyGame> {
     if (f == null) return;
     final Offset c = Offset(f.x, f.y);
     canvas.drawCircle(
-        c, AppDimens.fingerDot / 2, Paint()..color = AppColors.white);
+        c, AppDimens.fingerDot / 2, Paint()..color = AppColors.finger);
     canvas.drawCircle(
       c,
       AppDimens.fingerRing / 2,
       Paint()
-        ..color = AppColors.white.withValues(alpha: 0.65)
+        ..color = AppColors.finger.withValues(alpha: 0.65)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.7,
     );

@@ -5,6 +5,8 @@ import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 
+import '../engine/skins/field_skin.dart';
+
 /// Шаги онбординга — по одной иллюстрации на каждый.
 enum TutorialStep { units, route, danger, score }
 
@@ -32,27 +34,28 @@ class TutorialArt extends StatelessWidget {
   }
 }
 
-/// Общие кисти: фигура, ворота, пунктир — в масштабе иллюстрации
-/// (фигура 26 px вместо 32 ед. поля).
+/// Общие кисти: фигура и ворота рисуются скином текущей темы в масштабе
+/// иллюстрации (фигура 26 px вместо 32 ед. поля), пунктир — свой.
 abstract final class _Art {
   static const double unit = 26;
-  static const double gateW = 46;
-  static const double gateH = 28;
+  static const double unitScale = unit / AppDimens.unitSize;
+  static const double gateScale = 0.69;
+  static const double gateW = AppDimens.gateWidth * gateScale;
+  static const double gateH = AppDimens.gateHeight * gateScale;
 
-  static void unitAt(Canvas canvas, Offset c, LaneColor color) {
-    final Rect rect = Rect.fromCenter(center: c, width: unit, height: unit);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, const Radius.circular(7.5)),
-      Paint()..color = AppColors.lane(color),
-    );
-    LaneGlyphPainter.draw(
-      canvas,
-      color.glyph,
-      center: c,
-      radius: unit / 2 * 0.42,
-      color: AppColors.white,
-      strokeWidth: 1.8,
-    );
+  static FieldSkin get skin => FieldSkins.byId(AppColors.current.id);
+
+  static void unitAt(
+    Canvas canvas,
+    Offset c,
+    LaneColor color, {
+    double angle = math.pi / 2,
+  }) {
+    canvas.save();
+    canvas.translate(c.dx, c.dy);
+    canvas.scale(unitScale);
+    skin.paintUnit(canvas, center: Offset.zero, angle: angle, color: color);
+    canvas.restore();
   }
 
   static void gateAt(
@@ -61,27 +64,16 @@ abstract final class _Art {
     LaneColor color, {
     double fill = 0.16,
   }) {
-    final Color lane = AppColors.lane(color);
-    final RRect rrect = RRect.fromRectAndRadius(
-      Rect.fromCenter(center: c, width: gateW, height: gateH),
-      const Radius.circular(6),
-    );
-    canvas.drawRRect(rrect, Paint()..color = lane.withValues(alpha: fill));
-    canvas.drawRRect(
-      rrect,
-      Paint()
-        ..color = lane
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
-    );
-    LaneGlyphPainter.draw(
+    canvas.save();
+    canvas.translate(c.dx - gateW / 2, c.dy - gateH / 2);
+    canvas.scale(gateScale);
+    skin.paintGate(
       canvas,
-      color.glyph,
-      center: c,
-      radius: 5.5,
-      color: AppColors.white,
-      filled: true,
+      size: const Size(AppDimens.gateWidth, AppDimens.gateHeight),
+      color: color,
+      fill: fill,
     );
+    canvas.restore();
   }
 
   static void dashed(
@@ -129,7 +121,7 @@ class _UnitsPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_UnitsPainter old) => false;
+  bool shouldRepaint(_UnitsPainter old) => true;
 }
 
 /// Фигура на середине маршрута: за ней гаснущий пунктирный след, впереди
@@ -149,7 +141,8 @@ class _RoutePainter extends CustomPainter {
           size.width * 0.45, 12, size.width * 0.42, 70, entry.dx, entry.dy);
     final PathMetric metric = route.computeMetrics().first;
     final double split = metric.length * 0.38;
-    final Offset unit = metric.getTangentForOffset(split)!.position;
+    final Tangent tangent = metric.getTangentForOffset(split)!;
+    final Offset unit = tangent.position;
 
     _Art.gateAt(canvas, gate, color, fill: 0.34);
     _Art.dashed(
@@ -170,24 +163,24 @@ class _RoutePainter extends CustomPainter {
         ..strokeWidth = AppDimens.routeWidth
         ..strokeCap = StrokeCap.round,
     );
-    _Art.unitAt(canvas, unit, color);
+    _Art.unitAt(canvas, unit, color, angle: -tangent.angle);
     canvas.drawCircle(
       entry,
       AppDimens.fingerDot / 2,
-      Paint()..color = AppColors.white,
+      Paint()..color = AppColors.finger,
     );
     canvas.drawCircle(
       entry,
       AppDimens.fingerRing / 2,
       Paint()
-        ..color = AppColors.white.withValues(alpha: 0.65)
+        ..color = AppColors.finger.withValues(alpha: 0.65)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.7,
     );
   }
 
   @override
-  bool shouldRepaint(_RoutePainter old) => false;
+  bool shouldRepaint(_RoutePainter old) => true;
 }
 
 /// Слева две фигуры в красном кольце «!», справа фигура над чужими
@@ -236,7 +229,7 @@ class _DangerPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DangerPainter old) => false;
+  bool shouldRepaint(_DangerPainter old) => true;
 }
 
 /// Фигура въезжает во вспыхнувшие ворота, рядом «+10».
@@ -271,5 +264,5 @@ class _ScorePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_ScorePainter old) => false;
+  bool shouldRepaint(_ScorePainter old) => true;
 }

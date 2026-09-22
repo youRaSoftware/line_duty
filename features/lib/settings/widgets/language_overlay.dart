@@ -90,10 +90,10 @@ class _LanguageRow extends StatelessWidget {
                   ),
                 ),
                 if (selected)
-                  const Icon(
+                  Icon(
                     Icons.check_rounded,
                     size: 22,
-                    color: AppColors.laneBlue,
+                    color: AppColors.accent,
                   ),
               ],
             ),
