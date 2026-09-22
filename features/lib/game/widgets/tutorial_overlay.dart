@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'tutorial_art.dart';
 
-/// «Как играть»: четыре шага (фигуры и ворота → маршрут → опасности →
-/// счёт) с иллюстрациями из примитивов игры, точки, «Дальше» / «Играть!» и
+/// «Как играть»: пять шагов (фигуры и ворота → маршрут → опасности →
+/// счёт → бонусы) с иллюстрациями из примитивов игры, точки, «Дальше» / «Играть!» и
 /// «Пропустить». Показывается поверх поля на первом запуске и из настроек.
 class TutorialOverlay extends StatefulWidget {
   static const Key nextKey = Key('tutorial_next');
@@ -41,6 +41,11 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
       TutorialStep.score,
       LocaleKeys.tutorial_step4Title,
       LocaleKeys.tutorial_step4,
+    ),
+    (
+      TutorialStep.bonus,
+      LocaleKeys.tutorial_step5Title,
+      LocaleKeys.tutorial_step5,
     ),
   ];
 

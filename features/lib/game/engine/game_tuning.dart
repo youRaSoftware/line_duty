@@ -65,6 +65,32 @@ abstract final class GameTuning {
   /// «Продолжить» убирает фигуры в этом радиусе от точки столкновения.
   static const double continueClearRadius = 90;
 
+  // --- Бонусы-пикапы (спека § 5) -------------------------------------------
+
+  /// Первый пикап — через столько секунд после старта; дальше — раз в
+  /// [pickupEvery] ± [pickupJitter]. Пикап живёт [pickupLife] секунд.
+  static const double firstPickupDelay = 12;
+  static const double pickupEvery = 20;
+  static const double pickupJitter = 4;
+  static const double pickupLife = 8;
+
+  /// Шестиугольник 110 px холста и кольцо ожидания Ø184.
+  static const double pickupRadius = 18.3;
+  static const double pickupRingRadius = 30.7;
+
+  /// Не ближе 150 px (50 ед.) к воротам и спавнам и не под фигурой.
+  static const double pickupKeepOut = 50;
+  static const double pickupUnitClearance = 40;
+
+  /// Длительности эффектов и «призрака» после сработавшего щита (фигура
+  /// проходит сквозь других, пока разъезжаются).
+  static const double freezeSeconds = 3;
+  static const double multiplierSeconds = 10;
+  static const double shieldGhostSeconds = 1.2;
+
+  /// Вспышка подбора / срабатывания щита.
+  static const double burstSeconds = 0.5;
+
   // --- Разметка поля ------------------------------------------------------
 
   /// Центр спавнов — ниже верхнего отступа (HUD) на столько.

@@ -142,6 +142,17 @@ void main() {
     expect(stats.stats.gamesPlayed, 3);
   });
 
+  test('doubled delivery scores ×2 and a bonus toast comes and goes', () async {
+    cubit.onDelivered(doubled: true);
+    expect(cubit.state.score,
+        GameRules.scorePerDelivery * GameRules.bonusMultiplier);
+    cubit.onBonusPicked(BonusKind.freeze);
+    expect(cubit.state.bonusToast, BonusKind.freeze);
+    await Future<void>.delayed(
+        GameCubit.toastDuration + const Duration(milliseconds: 100));
+    expect(cubit.state.bonusToast, isNull);
+  });
+
   test('pause and resume only from the matching status', () {
     cubit.pause();
     expect(cubit.state.status, GameStatus.paused);

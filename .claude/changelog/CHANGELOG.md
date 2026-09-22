@@ -19,6 +19,7 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - Новое: тёмная тема «Диспетчер метро», шрифты Unbounded и Golos Text (с кириллицей), иконка приложения и экран запуска
 - Исправлено: фигура, задевшая свои ворота краем, больше не разбивается «не о те ворота» из-за зазора между воротами
 - Новое: темы оформления — к тёмному «Метро» добавились «Город» с автобусами и парковками, «Аквариум» с рыбками и гротами, «Муравейник» с муравьями и холмиками и «Сад» с божьими коровками и листьями; выбор темы в меню, тема запоминается
+- Новое: бонусы — на поле появляются шестиугольники, проведи через них фигуру: заморозка на 3 с, щит от одного столкновения, очки ×2 на 10 с, автопилот до своих ворот; индикаторы эффектов у счёта и бейдж подбора
 - Новое: обучение «Как играть» при первом запуске — четыре шага с картинками про фигуры и ворота, маршруты, опасности и счёт; открывается снова из настроек
 - Новое: маршрут стыкуется с воротами — доведи линию до своих ворот, и она закончится входом в них, ворота подсветятся, а палец можно отпустить
 
@@ -32,5 +33,6 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - New: dark "Metro dispatcher" theme, Unbounded and Golos Text fonts (Cyrillic included), app icon and launch screen
 - Fixed: a unit that touches its own gate with its edge no longer crashes as "wrong gate" because of the gap between gates
 - New: visual themes — "City" with buses and parking bays, "Aquarium" with fish and grottos, "Anthill" with ants and mounds and "Garden" with ladybugs and leaves join the dark "Metro"; pick a theme in the menu, the choice is remembered
+- New: bonuses — hexagons appear on the field, drive a unit through one: freeze for 3 s, a shield against one collision, points ×2 for 10 s, autopilot to its own gate; effect indicators next to the score and a pickup badge
 - New: a "How to play" tutorial on first launch — four illustrated steps about units and gates, routes, dangers and scoring; reopen it any time from settings
 - New: routes dock to gates — draw the line into a gate of the unit's colour and it ends right at the gate entrance, the gate lights up and you can lift your finger

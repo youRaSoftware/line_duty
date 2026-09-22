@@ -5,18 +5,27 @@ import 'package:domain/domain.dart';
 import 'package:features/game/engine/field_components.dart';
 import 'package:features/game/engine/game_tuning.dart';
 import 'package:features/game/engine/line_duty_game.dart';
+import 'package:features/game/engine/pickup_component.dart';
 import 'package:features/game/engine/unit_component.dart';
 import 'package:flame/components.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _Listener implements GameListener {
   int delivered = 0;
+  int doubledDeliveries = 0;
   int warnings = 0;
   int routes = 0;
   bool? crashWrongGate;
+  final List<BonusKind> bonuses = <BonusKind>[];
 
   @override
-  void onDelivered() => delivered++;
+  void onDelivered({bool doubled = false}) {
+    delivered++;
+    if (doubled) doubledDeliveries++;
+  }
+
+  @override
+  void onBonusPicked(BonusKind kind) => bonuses.add(kind);
 
   @override
   void onWarning() => warnings++;
@@ -224,6 +233,101 @@ void main() {
       expect(u.position.x,
           inInclusiveRange(u.radius, AppDimens.fieldWidth - u.radius));
     }
+  });
+
+  test('a pickup appears after the first delay away from gates and spawners',
+      () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    await _tick(game, GameTuning.firstPickupDelay + 0.5);
+    final PickupComponent? p = game.pickup;
+    // Пикап мог сразу подобрать случайно проезжавший юнит.
+    if (p == null) {
+      expect(listener.bonuses, isNotEmpty);
+      return;
+    }
+    for (final GateComponent g in game.gates) {
+      expect(g.position.distanceTo(p.position),
+          greaterThan(GameTuning.pickupKeepOut));
+    }
+    for (final SpawnerComponent s in game.spawners) {
+      expect(s.exit.distanceTo(p.position),
+          greaterThanOrEqualTo(GameTuning.pickupKeepOut));
+    }
+  });
+
+  test('a pickup nobody reaches expires after its life', () async {
+    final (LineDutyGame game, _) = await _game();
+    game.spawnPickupNow(BonusKind.multiplier, Vector2(340, 640));
+    await _tick(game, 0.5);
+    expect(game.pickup, isNotNull);
+    await _tick(game, GameTuning.pickupLife + 0.5);
+    expect(game.pickup, isNull);
+  });
+
+  test('freeze stops every unit for freezeSeconds; drawing still works',
+      () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    final UnitComponent u = _put(game, LaneColor.red, 100, 300);
+    game.spawnPickupNow(BonusKind.freeze, Vector2(100, 300));
+    game.update(1 / 60);
+    expect(listener.bonuses, <BonusKind>[BonusKind.freeze]);
+    expect(game.pickup, isNull);
+    expect(game.freezeActive, isTrue);
+    final double y = u.position.y;
+    await _tick(game, 1);
+    expect(u.position.y, closeTo(y, 0.01), reason: 'frozen');
+    game.routeStart(u.position.clone());
+    expect(game.drawing, same(u), reason: 'drawing allowed while frozen');
+    game.routeEnd();
+    await _tick(game, GameTuning.freezeSeconds);
+    expect(game.freezeActive, isFalse);
+    expect(u.position.y, greaterThan(y));
+  });
+
+  test('multiplier doubles deliveries while it lasts', () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    final GateComponent red = game.gates.first;
+    _put(game, LaneColor.red, 100, 300);
+    game.spawnPickupNow(BonusKind.multiplier, Vector2(100, 300));
+    game.update(1 / 60);
+    expect(game.multiplierActive, isTrue);
+    _put(game, LaneColor.red, red.position.x, red.top - 5);
+    await _tick(game, 0.3);
+    expect(listener.delivered, 1);
+    expect(listener.doubledDeliveries, 1);
+    await _tick(game, GameTuning.multiplierSeconds);
+    expect(game.multiplierActive, isFalse);
+  });
+
+  test('shield forgives one collision and then wears off', () async {
+    final (LineDutyGame game, _) = await _game();
+    final UnitComponent a = _put(game, LaneColor.red, 100, 300);
+    game.spawnPickupNow(BonusKind.shield, Vector2(100, 300));
+    game.update(1 / 60);
+    expect(a.shielded, isTrue);
+    expect(game.shieldActive, isTrue);
+    final UnitComponent b =
+        _put(game, LaneColor.blue, 100, 300 + GameTuning.crashDistance - 2);
+    game.update(1 / 60);
+    expect(game.frozen, isFalse, reason: 'shield absorbed the collision');
+    expect(a.shielded, isFalse);
+    expect(a.ghostLeft, greaterThan(0));
+    // Разъехались — щита больше нет, следующее касание разбивает.
+    b.position.y = a.position.y + 200;
+    await _tick(game, GameTuning.shieldGhostSeconds + 0.2);
+    expect(a.ghostLeft, 0);
+    b.position.setFrom(a.position + Vector2(0, GameTuning.crashDistance - 2));
+    game.update(1 / 60);
+    expect(game.frozen, isTrue);
+  });
+
+  test('autopilot routes the collecting unit to its own gate', () async {
+    final (LineDutyGame game, _) = await _game();
+    final UnitComponent u = _put(game, LaneColor.green, 200, 300);
+    game.spawnPickupNow(BonusKind.autopilot, Vector2(200, 300));
+    game.update(1 / 60);
+    expect(u.route, isNotEmpty);
+    expect(u.docked?.color, LaneColor.green);
   });
 
   test('demo mode routes units to their own gates and never crashes', () async {

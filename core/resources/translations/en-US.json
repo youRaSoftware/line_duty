@@ -60,6 +60,8 @@
     "step3": "Two units touching or a wrong gate ends the run. A red ring with \"!\" warns when units get too close.",
     "step4Title": "SCORE",
     "step4": "+10 for every unit delivered. The more you deliver, the faster they go and the more often they appear. Once per run you can continue after a mistake.",
+    "step5Title": "BONUSES",
+    "step5": "Hexagons appear on the field — drive a unit through one. Freeze stops everyone for 3 s, Shield forgives one collision, ×2 doubles points for 10 s, Autopilot drives the unit to its gate.",
     "next": "NEXT",
     "skip": "SKIP",
     "start": "LET'S PLAY!"
@@ -70,5 +72,11 @@
     "aquarium": "Aquarium",
     "anthill": "Anthill",
     "garden": "Garden"
+  },
+  "bonus": {
+    "freeze": "Freeze",
+    "shield": "Shield",
+    "multiplier": "Points ×2",
+    "autopilot": "Autopilot"
   }
 }

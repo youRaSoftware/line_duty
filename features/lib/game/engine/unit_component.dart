@@ -36,6 +36,12 @@ class UnitComponent extends PositionComponent
   /// Фигура уже сталкивалась (заморожена вспышкой).
   bool crashed = false;
 
+  /// Несёт щит: следующее столкновение прощается.
+  bool shielded = false;
+
+  /// После сработавшего щита фигура столько секунд «призрак»: сквозь других.
+  double ghostLeft = 0;
+
   /// Сколько маршрутов игрок нарисовал этой фигуре (демо рисует само).
   int routesDrawn = 0;
 
@@ -83,6 +89,11 @@ class UnitComponent extends PositionComponent
   @override
   void update(double dt) {
     if (crashed || game.frozen) return;
+    if (ghostLeft > 0) ghostLeft = (ghostLeft - dt).clamp(0, ghostLeft);
+    if (game.freezeActive) {
+      _pruneTrace();
+      return;
+    }
     double remaining = game.unitSpeed * dt;
     while (remaining > 0 && route.isNotEmpty) {
       final Vector2 to = route.first - position;
@@ -146,6 +157,13 @@ class UnitComponent extends PositionComponent
 
   @override
   void render(Canvas canvas) {
+    final bool ghost = ghostLeft > 0;
+    if (ghost) {
+      canvas.saveLayer(
+        null,
+        Paint()..color = const Color(0xFFFFFFFF).withValues(alpha: 0.45),
+      );
+    }
     game.skin.paintUnit(
       canvas,
       center: Offset(size.x / 2, size.y / 2),
@@ -153,5 +171,6 @@ class UnitComponent extends PositionComponent
       color: color,
       time: game.time + phase,
     );
+    if (ghost) canvas.restore();
   }
 }

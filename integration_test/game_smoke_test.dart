@@ -63,7 +63,7 @@ void main() {
     expect(find.byKey(TutorialOverlay.nextKey), findsOneWidget);
     expect(game.paused, isTrue);
     expect(game.units, isEmpty);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
       await tester.tap(find.byKey(TutorialOverlay.nextKey));
       await tester.pump(const Duration(milliseconds: 400));
     }

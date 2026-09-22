@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:domain/domain.dart';
 
@@ -24,6 +26,10 @@ class GameCubit extends Cubit<GameState> implements GameListener {
   bool _counted = false;
   int _savedDelivered = 0;
 
+  /// Бейдж бонуса держится столько и гаснет.
+  static const Duration toastDuration = Duration(milliseconds: 1200);
+  Timer? _toastTimer;
+
   GameCubit({
     required this.statsRepository,
     required this.settings,
@@ -46,9 +52,10 @@ class GameCubit extends Cubit<GameState> implements GameListener {
   // --- GameListener --------------------------------------------------------
 
   @override
-  void onDelivered() {
+  void onDelivered({bool doubled = false}) {
     if (state.status != GameStatus.playing) return;
-    final int score = state.score + GameRules.scorePerDelivery;
+    final int score = state.score +
+        GameRules.scorePerDelivery * (doubled ? GameRules.bonusMultiplier : 1);
     final int best = score > state.bestScore ? score : state.bestScore;
     _safeEmit(state.copyWith(
       score: score,
@@ -64,6 +71,17 @@ class GameCubit extends Cubit<GameState> implements GameListener {
 
   @override
   void onWarning() => audio.warn();
+
+  @override
+  void onBonusPicked(BonusKind kind) {
+    if (state.status != GameStatus.playing) return;
+    _safeEmit(state.copyWith(bonusToast: kind));
+    audio.deliver();
+    _toastTimer?.cancel();
+    _toastTimer = Timer(toastDuration, () {
+      if (state.bonusToast == kind) _safeEmit(state.copyWith(clearToast: true));
+    });
+  }
 
   @override
   void onRouteStarted() => audio.drawStart();
@@ -139,6 +157,7 @@ class GameCubit extends Cubit<GameState> implements GameListener {
 
   @override
   Future<void> close() {
+    _toastTimer?.cancel();
     if (state.status != GameStatus.gameOver) _saveRun();
     return super.close();
   }

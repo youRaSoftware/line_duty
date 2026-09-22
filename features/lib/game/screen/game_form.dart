@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../cubit/game_cubit.dart';
 import '../engine/line_duty_game.dart';
+import '../widgets/bonus_toast.dart';
 import '../widgets/game_hud.dart';
 import '../widgets/game_over_overlay.dart';
 import '../widgets/pause_overlay.dart';
@@ -86,6 +87,20 @@ class _GameFormState extends State<GameForm> with WidgetsBindingObserver {
           children: <Widget>[
             GameWidget<LineDutyGame>(game: _game),
             const SafeArea(child: GameHud()),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: GameForm.hudHeight + 6),
+                  child: BlocBuilder<GameCubit, GameState>(
+                    buildWhen: (GameState a, GameState b) =>
+                        a.bonusToast != b.bonusToast,
+                    builder: (BuildContext context, GameState state) =>
+                        BonusToast(kind: state.bonusToast),
+                  ),
+                ),
+              ),
+            ),
             BlocBuilder<GameCubit, GameState>(
               buildWhen: (GameState a, GameState b) =>
                   a.status != b.status || a.continues != b.continues,

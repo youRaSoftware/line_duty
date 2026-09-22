@@ -11,15 +11,20 @@ import 'package:flutter/material.dart' show Color, Colors;
 import 'field_components.dart';
 import 'field_layers.dart';
 import 'game_tuning.dart';
+import 'pickup_component.dart';
 import 'skins/field_skin.dart';
 import 'unit_component.dart';
 
 /// Кому движок сообщает о событиях забега (в игре — `GameCubit`; в демо
 /// меню слушателя нет).
 abstract interface class GameListener {
-  void onDelivered();
+  /// Доставка; [doubled] — под бонусом «×2».
+  void onDelivered({bool doubled = false});
   void onWarning();
   void onRouteStarted();
+
+  /// Фигура проехала через пикап.
+  void onBonusPicked(BonusKind kind);
 
   /// Столкновение или чужие ворота — забег окончен (после вспышки).
   void onCrash({required bool wrongGate});
@@ -46,6 +51,18 @@ class LineDutyGame extends FlameGame with DragCallbacks {
 
   /// Кольца сближения на этот кадр (середины пар).
   final List<Vector2> warnings = <Vector2>[];
+
+  /// Пикап на поле (не больше одного) и таймер до следующего.
+  PickupComponent? pickup;
+  double _pickupIn = GameTuning.firstPickupDelay;
+
+  /// Активные эффекты: секунды заморозки и «×2»; щит — на фигуре.
+  double freezeLeft = 0;
+  double multiplierLeft = 0;
+
+  /// Вспышка подбора / щита: точка и возраст.
+  Vector2? burstAt;
+  double burstAge = 0;
 
   /// Фигура, которой сейчас рисуют маршрут, и точка пальца.
   UnitComponent? drawing;
@@ -89,6 +106,15 @@ class LineDutyGame extends FlameGame with DragCallbacks {
   double get _zoom => size.x / AppDimens.fieldWidth;
 
   bool get frozen => crashPoint != null;
+
+  bool get freezeActive => freezeLeft > 0;
+
+  bool get multiplierActive => multiplierLeft > 0;
+
+  bool get shieldActive => units.any((UnitComponent u) => u.shielded);
+
+  /// Верхний отступ (HUD) в единицах поля — там рисуются индикаторы эффектов.
+  double get topInset => _topInset;
 
   /// Скорость фигур: растёт с числом доведённых.
   double get unitSpeed {
@@ -174,18 +200,124 @@ class LineDutyGame extends FlameGame with DragCallbacks {
       }
       return;
     }
-    _spawnIn -= dt;
-    if (_spawnIn <= 0) {
-      if (_spawn()) {
-        _spawnIn = demo ? GameTuning.demoRespawnDelay : _spawnInterval;
-      } else {
-        // Не получилось (под спавном занято) — попробовать чуть позже.
-        _spawnIn = 0.25;
+    burstAge += dt;
+    if (freezeLeft > 0) freezeLeft = (freezeLeft - dt).clamp(0, freezeLeft);
+    if (multiplierLeft > 0) {
+      multiplierLeft = (multiplierLeft - dt).clamp(0, multiplierLeft);
+    }
+    if (!freezeActive) {
+      _spawnIn -= dt;
+      if (_spawnIn <= 0) {
+        if (_spawn()) {
+          _spawnIn = demo ? GameTuning.demoRespawnDelay : _spawnInterval;
+        } else {
+          // Не получилось (под спавном занято) — попробовать чуть позже.
+          _spawnIn = 0.25;
+        }
       }
     }
+    if (!demo) _tickPickup(dt);
     _checkGates();
     _checkProximity();
     _armGates();
+  }
+
+  // --- Бонусы ---------------------------------------------------------------
+
+  void _tickPickup(double dt) {
+    final PickupComponent? p = pickup;
+    if (p != null) {
+      if (p.expired) {
+        _removePickup();
+        return;
+      }
+      for (final UnitComponent u in units) {
+        if (u.position.distanceTo(p.position) < p.radius + u.radius) {
+          _collect(u, p);
+          return;
+        }
+      }
+      return;
+    }
+    _pickupIn -= dt;
+    if (_pickupIn <= 0) {
+      _pickupIn = _spawnPickup()
+          ? GameTuning.pickupEvery +
+              (random.nextDouble() * 2 - 1) * GameTuning.pickupJitter
+          : 1;
+    }
+  }
+
+  /// Случайный бонус в случайной точке не ближе [GameTuning.pickupKeepOut]
+  /// к воротам и спавнам и не под фигурой; false — места не нашлось.
+  bool _spawnPickup() {
+    if (!hasLayout || gates.isEmpty) return false;
+    final double top = _topInset + GameTuning.spawnRowOffset + 40;
+    final double bottom = gates.first.top - 30;
+    if (bottom - top < 60) return false;
+    for (int attempt = 0; attempt < 20; attempt++) {
+      final Vector2 at = Vector2(
+        30 + random.nextDouble() * (fieldWidth - 60),
+        top + random.nextDouble() * (bottom - top),
+      );
+      if (_pickupSpotFree(at)) {
+        spawnPickupNow(
+          BonusKind.values[random.nextInt(BonusKind.values.length)],
+          at,
+        );
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool _pickupSpotFree(Vector2 at) {
+    for (final GateComponent g in gates) {
+      if (g.position.distanceTo(at) < GameTuning.pickupKeepOut + g.size.x / 2) {
+        return false;
+      }
+    }
+    for (final SpawnerComponent s in spawners) {
+      if (s.exit.distanceTo(at) < GameTuning.pickupKeepOut) return false;
+    }
+    for (final UnitComponent u in units) {
+      if (u.position.distanceTo(at) < GameTuning.pickupUnitClearance) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Поставить пикап [kind] в точку [at] (тесты и отладка).
+  @visibleForTesting
+  void spawnPickupNow(BonusKind kind, Vector2 at) {
+    _removePickup();
+    final PickupComponent p = PickupComponent(kind: kind, position: at);
+    pickup = p;
+    world.add(p);
+  }
+
+  void _removePickup() {
+    pickup?.removeFromParent();
+    pickup = null;
+  }
+
+  void _collect(UnitComponent u, PickupComponent p) {
+    burstAt = p.position.clone();
+    burstAge = 0;
+    switch (p.kind) {
+      case BonusKind.freeze:
+        freezeLeft = GameTuning.freezeSeconds;
+      case BonusKind.shield:
+        u.shielded = true;
+      case BonusKind.multiplier:
+        multiplierLeft = GameTuning.multiplierSeconds;
+      case BonusKind.autopilot:
+        _autoRoute(u);
+        if (identical(drawing, u)) routeEnd();
+    }
+    _removePickup();
+    listener?.onBonusPicked(p.kind);
   }
 
   /// Ворота с пристыкованным маршрутом подсвечены.
@@ -270,7 +402,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     gate.pulse = 1;
     _remove(u);
     delivered++;
-    listener?.onDelivered();
+    listener?.onDelivered(doubled: multiplierActive);
   }
 
   void _checkProximity() {
@@ -280,8 +412,18 @@ class LineDutyGame extends FlameGame with DragCallbacks {
       for (int j = i + 1; j < units.length; j++) {
         final UnitComponent a = units[i];
         final UnitComponent b = units[j];
+        if (a.ghostLeft > 0 || b.ghostLeft > 0) continue;
         final double d = a.position.distanceTo(b.position);
         if (d < GameTuning.crashDistance) {
+          if (a.shielded || b.shielded) {
+            // Щит прощает: держатель на время становится призраком.
+            final UnitComponent holder = a.shielded ? a : b;
+            holder.shielded = false;
+            holder.ghostLeft = GameTuning.shieldGhostSeconds;
+            burstAt = holder.position.clone();
+            burstAge = 0;
+            continue;
+          }
           _crash(a, b, wrongGate: false);
           return;
         }
@@ -331,6 +473,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     }
     crashPoint = null;
     _spawnIn = GameTuning.firstSpawnDelay;
+    _clearEffects();
   }
 
   /// Новый забег с пустым полем.
@@ -344,6 +487,15 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     _lastColor = null;
     _sameColorRun = 0;
     warnings.clear();
+    _clearEffects();
+  }
+
+  void _clearEffects() {
+    freezeLeft = 0;
+    multiplierLeft = 0;
+    burstAt = null;
+    _removePickup();
+    _pickupIn = GameTuning.firstPickupDelay;
   }
 
   // --- Рисование маршрута ------------------------------------------------

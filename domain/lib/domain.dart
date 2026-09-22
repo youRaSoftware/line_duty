@@ -1,3 +1,4 @@
+export 'enums/bonus_kind.dart';
 export 'enums/lane_color.dart';
 export 'models/game_rules.dart';
 export 'models/game_stats_model.dart';

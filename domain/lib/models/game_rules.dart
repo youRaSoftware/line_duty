@@ -6,4 +6,7 @@ abstract final class GameRules {
 
   /// Продолжений после столкновения за один забег.
   static const int continuesPerRun = 1;
+
+  /// Множитель очков под бонусом «×2».
+  static const int bonusMultiplier = 2;
 }

@@ -22,6 +22,9 @@ class GameState extends Equatable {
   /// Открыт онбординг «Как играть» (первый запуск); поле стоит.
   final bool tutorialOpen;
 
+  /// Бейдж только что подобранного бонуса (гаснет через 1.2 с).
+  final BonusKind? bonusToast;
+
   const GameState({
     this.score = 0,
     this.bestScore = 0,
@@ -31,6 +34,7 @@ class GameState extends Equatable {
     this.wrongGate = false,
     this.continues = GameRules.continuesPerRun,
     this.tutorialOpen = false,
+    this.bonusToast,
   });
 
   bool get canContinue => continues > 0;
@@ -44,6 +48,8 @@ class GameState extends Equatable {
     bool? wrongGate,
     int? continues,
     bool? tutorialOpen,
+    BonusKind? bonusToast,
+    bool clearToast = false,
   }) {
     return GameState(
       score: score ?? this.score,
@@ -54,6 +60,7 @@ class GameState extends Equatable {
       wrongGate: wrongGate ?? this.wrongGate,
       continues: continues ?? this.continues,
       tutorialOpen: tutorialOpen ?? this.tutorialOpen,
+      bonusToast: clearToast ? null : (bonusToast ?? this.bonusToast),
     );
   }
 
@@ -67,5 +74,6 @@ class GameState extends Equatable {
         wrongGate,
         continues,
         tutorialOpen,
+        bonusToast,
       ];
 }

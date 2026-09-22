@@ -4,8 +4,11 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:flame/components.dart';
 
+import 'package:domain/domain.dart';
+
 import 'game_tuning.dart';
 import 'line_duty_game.dart';
+import 'pickup_component.dart';
 import 'unit_component.dart';
 
 /// Самый нижний слой: декор фона темы (схемы, лучи, пятна) на всё поле.
@@ -102,9 +105,112 @@ class OverlayLayer extends Component with HasGameReference<LineDutyGame> {
 
   @override
   void render(Canvas canvas) {
+    _renderEffects(canvas);
     _renderWarnings(canvas);
     _renderFinger(canvas);
     _renderCrash(canvas);
+    _renderBurst(canvas);
+    _renderEffectPills(canvas);
+  }
+
+  /// Щит — ореол вокруг держателя; заморозка — кольцо вокруг каждой фигуры.
+  void _renderEffects(Canvas canvas) {
+    final Color pickup = AppColors.pickup;
+    for (final UnitComponent u in game.units) {
+      final Offset c = Offset(u.position.x, u.position.y);
+      if (u.shielded) {
+        canvas.drawCircle(
+          c,
+          u.radius + 7,
+          Paint()
+            ..color = pickup.withValues(alpha: 0.25)
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+        );
+        canvas.drawCircle(
+          c,
+          u.radius + 5,
+          Paint()
+            ..color = pickup.withValues(alpha: 0.85)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2,
+        );
+      }
+      if (game.freezeActive) {
+        canvas.drawCircle(
+          c,
+          u.radius + 4,
+          Paint()
+            ..color = pickup.withValues(alpha: 0.6)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.6,
+        );
+      }
+    }
+  }
+
+  /// Вспышка подбора: расходящееся кольцо цветом пикапа.
+  void _renderBurst(Canvas canvas) {
+    final Vector2? at = game.burstAt;
+    if (at == null || game.burstAge > GameTuning.burstSeconds) return;
+    final double t = game.burstAge / GameTuning.burstSeconds;
+    canvas.drawCircle(
+      Offset(at.x, at.y),
+      GameTuning.pickupRadius + 40 * t,
+      Paint()
+        ..color = AppColors.pickup.withValues(alpha: 0.8 * (1 - t))
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3 * (1 - t) + 0.5,
+    );
+  }
+
+  /// Индикаторы активных эффектов по центру строки HUD: шестиугольник с
+  /// пиктограммой, у таймеров — дуга оставшегося времени.
+  void _renderEffectPills(Canvas canvas) {
+    final List<(BonusKind, double?)> active = <(BonusKind, double?)>[
+      if (game.freezeActive)
+        (BonusKind.freeze, game.freezeLeft / GameTuning.freezeSeconds),
+      if (game.shieldActive) (BonusKind.shield, null),
+      if (game.multiplierActive)
+        (
+          BonusKind.multiplier,
+          game.multiplierLeft / GameTuning.multiplierSeconds,
+        ),
+    ];
+    if (active.isEmpty) return;
+    const double step = 34;
+    final double y = game.topInset - 30;
+    double x = game.fieldWidth / 2 - step * (active.length - 1) / 2;
+    for (final (BonusKind kind, double? left) in active) {
+      final Offset c = Offset(x, y);
+      canvas.drawCircle(c, 13, Paint()..color = AppColors.panel);
+      BonusPainter.hexagon(
+        canvas,
+        center: c,
+        radius: 9.5,
+        color: AppColors.pickup,
+      );
+      BonusPainter.icon(
+        canvas,
+        kind,
+        center: c,
+        radius: 4.6,
+        color: AppColors.pickup,
+      );
+      if (left != null) {
+        canvas.drawArc(
+          Rect.fromCircle(center: c, radius: 13),
+          -math.pi / 2,
+          2 * math.pi * left,
+          false,
+          Paint()
+            ..color = AppColors.pickup
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.7
+            ..strokeCap = StrokeCap.round,
+        );
+      }
+      x += step;
+    }
   }
 
   void _renderFinger(Canvas canvas) {

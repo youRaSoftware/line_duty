@@ -5,10 +5,11 @@ import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 
+import '../engine/pickup_component.dart';
 import '../engine/skins/field_skin.dart';
 
 /// Шаги онбординга — по одной иллюстрации на каждый.
-enum TutorialStep { units, route, danger, score }
+enum TutorialStep { units, route, danger, score, bonus }
 
 /// Иллюстрация шага «Как играть», нарисованная примитивами игры: фигуры со
 /// значками, ворота, линия маршрута со следом, палец, кольцо «!» и вспышка
@@ -29,6 +30,7 @@ class TutorialArt extends StatelessWidget {
         TutorialStep.route => const _RoutePainter(),
         TutorialStep.danger => const _DangerPainter(),
         TutorialStep.score => const _ScorePainter(),
+        TutorialStep.bonus => const _BonusPainter(),
       },
     );
   }
@@ -265,4 +267,37 @@ class _ScorePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ScorePainter old) => true;
+}
+
+/// Четыре пикапа с пиктограммами: заморозка, щит, ×2, автопилот.
+class _BonusPainter extends CustomPainter {
+  const _BonusPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const List<double> fr = <double>[0.14, 0.38, 0.62, 0.86];
+    for (int i = 0; i < BonusKind.values.length; i++) {
+      final Offset c = Offset(size.width * fr[i], size.height / 2);
+      canvas.drawCircle(
+        c,
+        30,
+        Paint()
+          ..color = AppColors.pickup.withValues(alpha: 0.35)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.4,
+      );
+      BonusPainter.hexagon(canvas,
+          center: c, radius: 22, color: AppColors.pickup);
+      BonusPainter.icon(
+        canvas,
+        BonusKind.values[i],
+        center: c,
+        radius: 11,
+        color: AppColors.pickup,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_BonusPainter old) => true;
 }
