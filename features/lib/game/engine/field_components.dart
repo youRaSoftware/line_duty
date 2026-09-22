@@ -5,10 +5,12 @@ import 'package:domain/domain.dart';
 import 'package:flame/components.dart';
 
 /// Ворота потока (спека: 200×130 r24, обводка 8 px цветом, заливка 16 %,
-/// внутри — залитый белый значок). [pulse] — вспышка при доставке.
+/// внутри — залитый белый значок). [pulse] — вспышка при доставке,
+/// [armed] — к воротам пристыкован маршрут (заливка ярче).
 class GateComponent extends PositionComponent {
   final LaneColor color;
   double pulse = 0;
+  bool armed = false;
 
   GateComponent({required this.color, required Vector2 position})
       : super(
@@ -23,6 +25,10 @@ class GateComponent extends PositionComponent {
 
   bool containsX(double x) => (x - position.x).abs() <= size.x / 2;
 
+  /// Зона стыковки: над воротами по X и не выше кромки на [margin].
+  bool inDockZone(Vector2 p, {double margin = 0}) =>
+      containsX(p.x) && p.y >= top - margin;
+
   @override
   void update(double dt) {
     if (pulse > 0) pulse = (pulse - dt * 2.2).clamp(0, 1);
@@ -36,9 +42,10 @@ class GateComponent extends PositionComponent {
       rect,
       const Radius.circular(AppDimens.gateRadius),
     );
+    final double base = armed ? 0.34 : 0.16;
     canvas.drawRRect(
       rrect,
-      Paint()..color = c.withValues(alpha: 0.16 + 0.5 * pulse),
+      Paint()..color = c.withValues(alpha: base + (0.66 - base) * pulse),
     );
     canvas.drawRRect(
       rrect,

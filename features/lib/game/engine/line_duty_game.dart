@@ -173,6 +173,17 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     }
     _checkGates();
     _checkProximity();
+    _armGates();
+  }
+
+  /// Ворота с пристыкованным маршрутом подсвечены.
+  void _armGates() {
+    for (final GateComponent g in gates) {
+      g.armed = false;
+    }
+    for (final UnitComponent u in units) {
+      if (u.route.isNotEmpty) u.docked?.armed = true;
+    }
   }
 
   bool _spawn() {
@@ -338,8 +349,33 @@ class LineDutyGame extends FlameGame with DragCallbacks {
   @override
   void onDragStart(DragStartEvent event) {
     super.onDragStart(event);
+    routeStart(_toField(event.canvasPosition));
+  }
+
+  @override
+  void onDragUpdate(DragUpdateEvent event) {
+    super.onDragUpdate(event);
+    // Именно start: Flame считает `canvasEndPosition` как позицию + дельту,
+    // то есть на шаг впереди настоящего пальца.
+    routeMove(_toField(event.canvasStartPosition));
+  }
+
+  @override
+  void onDragEnd(DragEndEvent event) {
+    super.onDragEnd(event);
+    routeEnd();
+  }
+
+  @override
+  void onDragCancel(DragCancelEvent event) {
+    super.onDragCancel(event);
+    routeEnd();
+  }
+
+  /// Палец лёг на поле (координаты поля): если под ним фигура — ей рисуется
+  /// новый маршрут, старый стирается.
+  void routeStart(Vector2 p) {
     if (paused || frozen || demo) return;
-    final Vector2 p = _toField(event.canvasPosition);
     final UnitComponent? unit = _pick(p);
     if (unit == null) return;
     unit.beginRoute();
@@ -348,30 +384,38 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     listener?.onRouteStarted();
   }
 
-  @override
-  void onDragUpdate(DragUpdateEvent event) {
-    super.onDragUpdate(event);
+  /// Палец ведёт маршрут. Над своими воротами маршрут стыкуется: заканчивается
+  /// входом в ворота и жест завершается сам — поверх ворот линия не рисуется.
+  /// Чужие ворота не стыкуют: линия идёт как есть, приезд туда — конец забега.
+  void routeMove(Vector2 p) {
     final UnitComponent? unit = drawing;
     if (unit == null || paused || frozen) return;
-    final Vector2 p = _toField(event.canvasEndPosition);
     p.x = p.x.clamp(unit.radius, fieldWidth - unit.radius);
     p.y = p.y.clamp(unit.radius, fieldHeight - unit.radius);
+    final GateComponent? own = _dockGateAt(p, unit.color);
+    if (own != null) {
+      unit.dockTo(own, p.x);
+      routeEnd();
+      return;
+    }
     finger = p;
     unit.addRoutePoint(p);
   }
 
-  @override
-  void onDragEnd(DragEndEvent event) {
-    super.onDragEnd(event);
+  /// Палец отпущен: маршрут остаётся как нарисован.
+  void routeEnd() {
     drawing = null;
     finger = null;
   }
 
-  @override
-  void onDragCancel(DragCancelEvent event) {
-    super.onDragCancel(event);
-    drawing = null;
-    finger = null;
+  GateComponent? _dockGateAt(Vector2 p, LaneColor color) {
+    for (final GateComponent g in gates) {
+      if (g.color == color &&
+          g.inDockZone(p, margin: GameTuning.gateDockMargin)) {
+        return g;
+      }
+    }
+    return null;
   }
 
   // --- Демо ----------------------------------------------------------------
@@ -381,7 +425,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     final GateComponent gate =
         gates.firstWhere((GateComponent g) => g.color == unit.color);
     final Vector2 from = unit.position;
-    final Vector2 to = gate.position - Vector2(0, gate.size.y);
+    final Vector2 to = Vector2(gate.position.x, gate.top);
     final int n = 2 + random.nextInt(2);
     unit.route.clear();
     for (int i = 1; i <= n; i++) {
@@ -392,7 +436,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
       unit.route
           .add(Vector2(x.clamp(unit.radius, fieldWidth - unit.radius), y));
     }
-    unit.route.add(to);
+    unit.dockTo(gate, to.x);
   }
 
   void _respawnDemo(UnitComponent u) => _remove(u);

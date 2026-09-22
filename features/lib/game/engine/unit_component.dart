@@ -4,6 +4,7 @@ import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:flame/components.dart';
 
+import 'field_components.dart';
 import 'game_tuning.dart';
 import 'line_duty_game.dart';
 
@@ -16,8 +17,9 @@ class TracePoint {
 }
 
 /// Фигура потока: едет сама по [heading] (по умолчанию вниз); если игрок
-/// нарисовал [route], едет по нему, съедая точки и оставляя [trace]. За
-/// концом маршрута продолжает в направлении последнего отрезка. Боковые
+/// нарисовал [route], едет по нему, съедая точки и оставляя [trace]. Маршрут,
+/// доведённый до своих ворот, [docked] — заканчивается точкой входа в них.
+/// За концом маршрута продолжает в направлении последнего отрезка. Боковые
 /// края поля разворачивают её вниз. Ворота проверяет игра.
 class UnitComponent extends PositionComponent
     with HasGameReference<LineDutyGame> {
@@ -25,6 +27,10 @@ class UnitComponent extends PositionComponent
   final Vector2 heading = Vector2(0, 1);
   final List<Vector2> route = <Vector2>[];
   final List<TracePoint> trace = <TracePoint>[];
+
+  /// Ворота, к которым пристыкован маршрут (его последняя точка — вход в
+  /// них); null — маршрут не доведён или его нет.
+  GateComponent? docked;
 
   /// Фигура уже сталкивалась (заморожена вспышкой).
   bool crashed = false;
@@ -44,6 +50,7 @@ class UnitComponent extends PositionComponent
   /// Новый маршрут игрока: старый стирается, след остаётся.
   void beginRoute() {
     route.clear();
+    docked = null;
     routesDrawn++;
   }
 
@@ -51,6 +58,22 @@ class UnitComponent extends PositionComponent
     final Vector2 last = route.isEmpty ? position : route.last;
     if (last.distanceTo(p) < GameTuning.routePointSpacing) return;
     route.add(p.clone());
+  }
+
+  /// Завершить маршрут входом в [gate]: по X — где палец, но целиком внутри
+  /// ворот, по Y — их верхняя кромка. Дальше точки не добавляются.
+  void dockTo(GateComponent gate, double x) {
+    final double half = gate.size.x / 2 - radius;
+    final Vector2 entry = Vector2(
+      x.clamp(gate.position.x - half, gate.position.x + half),
+      gate.top,
+    );
+    // Не дублировать вход, если палец уже стоит ровно на нём.
+    if (route.isNotEmpty && route.last.distanceTo(entry) < 1e-3) {
+      route.removeLast();
+    }
+    route.add(entry);
+    docked = gate;
   }
 
   @override
@@ -108,6 +131,7 @@ class UnitComponent extends PositionComponent
     if (bumped) {
       heading.setValues(0, 1);
       route.clear();
+      docked = null;
     }
   }
 

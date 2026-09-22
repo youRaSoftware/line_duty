@@ -106,6 +106,72 @@ void main() {
     expect(listener.crashWrongGate, isTrue);
   });
 
+  test('finger over its own gate docks the route and ends the gesture',
+      () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    final GateComponent red = game.gates.first;
+    final UnitComponent u = _put(game, LaneColor.red, 100, 500);
+    game.routeStart(Vector2(100, 500));
+    expect(game.drawing, same(u));
+    expect(listener.routes, 1);
+    // Ведём к левому краю красных ворот и заходим чуть выше кромки.
+    final double edgeX = red.position.x - red.size.x / 2 + 2;
+    for (double y = 510; y < red.top - 20; y += 10) {
+      game.routeMove(
+          Vector2(100 + (edgeX - 100) * (y - 500) / (red.top - 500), y));
+    }
+    game.routeMove(Vector2(edgeX, red.top - GameTuning.gateDockMargin + 1));
+    expect(u.docked, same(red));
+    expect(game.drawing, isNull, reason: 'gesture closed by docking');
+    expect(game.finger, isNull);
+    expect(u.route.last.y, closeTo(red.top, 1e-3));
+    expect(u.route.last.x, closeTo(edgeX + u.radius - 2, 1e-3),
+        reason: 'entry is pulled inside the gate by the unit radius');
+    // Дальнейшие точки не добавляются.
+    final int n = u.route.length;
+    game.routeMove(Vector2(edgeX, red.top + 20));
+    expect(u.route, hasLength(n));
+    game.update(1 / 60);
+    expect(red.armed, isTrue);
+    await _tick(game, 8);
+    expect(game.frozen, isFalse);
+    expect(listener.delivered, 1);
+    expect(game.units, isNot(contains(u)));
+    expect(red.armed, isFalse);
+  });
+
+  test('a foreign gate does not dock: the line goes on and the run ends',
+      () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    final GateComponent blue = game.gates.last;
+    final UnitComponent u =
+        _put(game, LaneColor.red, blue.position.x, blue.top - 60);
+    game.routeStart(u.position.clone());
+    game.routeMove(Vector2(blue.position.x, blue.top - 30));
+    game.routeMove(Vector2(blue.position.x, blue.top + 10));
+    expect(u.docked, isNull);
+    expect(game.drawing, same(u), reason: 'gesture still live');
+    expect(u.route.last.y, greaterThan(blue.top));
+    game.routeEnd();
+    await _tick(game, 4 + GameTuning.crashFreeze);
+    expect(listener.crashWrongGate, isTrue);
+  });
+
+  test('a new gesture undocks the unit', () async {
+    final (LineDutyGame game, _) = await _game();
+    final GateComponent red = game.gates.first;
+    final UnitComponent u = _put(game, LaneColor.red, 100, 200);
+    u.beginRoute();
+    u.dockTo(red, red.position.x);
+    game.update(1 / 60);
+    expect(red.armed, isTrue);
+    game.routeStart(u.position.clone());
+    expect(u.docked, isNull);
+    expect(u.route, isEmpty);
+    game.update(1 / 60);
+    expect(red.armed, isFalse);
+  });
+
   test('two units touching crash; continue clears them and the run goes on',
       () async {
     final (LineDutyGame game, _Listener listener) = await _game();
@@ -148,5 +214,8 @@ void main() {
     await _tick(game, 60);
     expect(game.frozen, isFalse);
     expect(game.units.length, lessThanOrEqualTo(GameTuning.demoUnits));
+    for (final UnitComponent u in game.units) {
+      expect(u.docked?.color, u.color, reason: 'demo routes are docked');
+    }
   });
 }
