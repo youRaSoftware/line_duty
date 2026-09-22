@@ -39,6 +39,9 @@ class UnitComponent extends PositionComponent
   /// Сколько маршрутов игрок нарисовал этой фигуре (демо рисует само).
   int routesDrawn = 0;
 
+  /// Сдвиг фазы анимации спрайта, чтобы фигуры не двигались синхронно.
+  final double phase = (identityHashCode(Object()) % 628) / 100;
+
   UnitComponent({required this.color, required Vector2 position})
       : super(
           position: position,
@@ -148,6 +151,7 @@ class UnitComponent extends PositionComponent
       center: Offset(size.x / 2, size.y / 2),
       angle: headingAngle,
       color: color,
+      time: game.time + phase,
     );
   }
 }

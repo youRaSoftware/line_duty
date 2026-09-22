@@ -66,6 +66,9 @@
   },
   "themes": {
     "metro": "Metro",
-    "city": "City"
+    "city": "City",
+    "aquarium": "Aquarium",
+    "anthill": "Anthill",
+    "garden": "Garden"
   }
 }

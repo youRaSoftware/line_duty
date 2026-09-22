@@ -21,6 +21,8 @@ abstract final class AppColors {
   static Color get bgField => _current.bgField;
   static Color get gridDot => _current.gridDot;
   static Color get decor => _current.decor;
+  static Color get decor2 => _current.decor2;
+  static Color get structure => _current.structure;
   static Color get panel => _current.panel;
   static Color get stroke => _current.stroke;
   static Color get strokeSecondary => _current.strokeSecondary;

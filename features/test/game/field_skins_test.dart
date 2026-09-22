@@ -27,12 +27,15 @@ void main() {
       final Canvas canvas = Canvas(recorder);
       for (final LaneColor color in LaneColor.values) {
         for (final double angle in <double>[0, math.pi / 2, -2.3]) {
-          skin.paintUnit(
-            canvas,
-            center: const Offset(50, 50),
-            angle: angle,
-            color: color,
-          );
+          for (final double time in <double>[0, 0.1, 1.7]) {
+            skin.paintUnit(
+              canvas,
+              center: const Offset(50, 50),
+              angle: angle,
+              color: color,
+              time: time,
+            );
+          }
         }
         for (final double fill in <double>[0.16, 0.34, 0.66]) {
           skin.paintGate(
@@ -45,7 +48,7 @@ void main() {
       }
       skin.paintSpawner(
           canvas, const Size(AppDimens.spawnWidth, AppDimens.spawnHeight));
-      skin.paintDecor(canvas, const Size(360, 780));
+      skin.paintDecor(canvas, const Size(360, 780), time: 3.2);
       expect(recorder.endRecording(), isNotNull, reason: skin.id);
     }
   });

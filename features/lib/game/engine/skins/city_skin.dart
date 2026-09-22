@@ -26,6 +26,7 @@ class CitySkin extends FieldSkin {
     required Offset center,
     required double angle,
     required LaneColor color,
+    double time = 0,
   }) {
     final Color body = AppColors.lane(color);
     final Color dark = AppColors.textPrimary;
@@ -129,7 +130,7 @@ class CitySkin extends FieldSkin {
   }
 
   @override
-  void paintDecor(Canvas canvas, Size field) {
+  void paintDecor(Canvas canvas, Size field, {double time = 0}) {
     final double w = field.width;
     final double h = field.height;
     final Paint paint = Paint()

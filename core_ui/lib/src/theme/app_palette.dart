@@ -14,8 +14,13 @@ class AppPalette {
   final Color? bgFieldEnd;
   final Color gridDot;
 
-  /// Цвет декора фона (схемы, лучи, пятна) — рисует скин темы.
+  /// Цвета декора фона (схемы, лучи, пятна / песок, камешки, травинки) —
+  /// рисует скин темы.
   final Color decor;
+  final Color decor2;
+
+  /// Материал построек темы: грот, холмик, лист под воротами.
+  final Color structure;
   final Color panel;
   final Color stroke;
   final Color strokeSecondary;
@@ -55,6 +60,8 @@ class AppPalette {
     this.bgFieldEnd,
     required this.gridDot,
     required this.decor,
+    required this.decor2,
+    required this.structure,
     required this.panel,
     required this.stroke,
     required this.strokeSecondary,
@@ -119,6 +126,8 @@ abstract final class AppPalettes {
     bgField: Color(0xFF0D131E),
     gridDot: Color(0xFF1B2635),
     decor: Color(0xFF1B2635),
+    decor2: Color(0xFF1B2635),
+    structure: Color(0xFF131C2B),
     panel: Color(0xFF131C2B),
     stroke: Color(0xFF243349),
     strokeSecondary: Color(0xFF33455F),
@@ -145,6 +154,8 @@ abstract final class AppPalettes {
     bgField: Color(0xFFF3F1EC),
     gridDot: Color(0xFFDAD6CC),
     decor: Color(0xFFE4E0D6),
+    decor2: Color(0xFFE4E0D6),
+    structure: Color(0xFFFFFFFF),
     panel: Color(0xFFFFFFFF),
     stroke: Color(0xFFC9C3B6),
     strokeSecondary: Color(0xFFB3AC9E),
@@ -164,7 +175,98 @@ abstract final class AppPalettes {
     laneBlue: Color(0xFF2F6FD0),
   );
 
-  static const List<AppPalette> all = <AppPalette>[metro, city];
+  /// «Аквариум» — рыбки (спека § 4.2): тёмная, градиент.
+  static const AppPalette aquarium = AppPalette(
+    id: 'aquarium',
+    brightness: Brightness.dark,
+    bgField: Color(0xFF0F3B4C),
+    bgFieldEnd: Color(0xFF0A222E),
+    gridDot: Color(0xFF1A4D5E),
+    decor: Color(0xFFBFE8F0),
+    decor2: Color(0xFF1D3D47),
+    structure: Color(0xFF071820),
+    panel: Color(0xFF0C2F3D),
+    stroke: Color(0xFF2A5B69),
+    strokeSecondary: Color(0xFF3A6F7E),
+    textPrimary: Color(0xFFDFF0F2),
+    textSecondary: Color(0xFF8FB6BF),
+    danger: Color(0xFFFF6B6B),
+    pickup: Color(0xFFF4FBFC),
+    accent: Color(0xFF5EA9F0),
+    record: Color(0xFF5EA9F0),
+    glyph: Color(0xFFFFFFFF),
+    finger: Color(0xFFDFF0F2),
+    fingerHalo: Color(0x1AFFFFFF),
+    scrim: Color(0xD1090D14),
+    laneRed: Color(0xFF4FD1A5),
+    laneAmber: Color(0xFF5EA9F0),
+    laneGreen: Color(0xFFA08CF0),
+    laneBlue: Color(0xFFE9C25C),
+  );
+
+  /// «Муравейник» — муравьи (спека § 4.3): светлая, тёплая.
+  static const AppPalette anthill = AppPalette(
+    id: 'anthill',
+    brightness: Brightness.light,
+    bgField: Color(0xFFF0E0C2),
+    gridDot: Color(0xFFE0CCA6),
+    decor: Color(0xFFE7D3AE),
+    decor2: Color(0xFFD9C29A),
+    structure: Color(0xFF7C5636),
+    panel: Color(0xFFE7D3AE),
+    stroke: Color(0xFFB89B72),
+    strokeSecondary: Color(0xFFA88A62),
+    textPrimary: Color(0xFF3A2417),
+    textSecondary: Color(0xFF7A5A38),
+    danger: Color(0xFF2A1A10),
+    pickup: Color(0xFF2F8F9D),
+    accent: Color(0xFF2F8F9D),
+    record: Color(0xFFD89E27),
+    glyph: Color(0xFFF6EEDC),
+    finger: Color(0xFF3A2417),
+    fingerHalo: Color(0x1A3A2417),
+    scrim: Color(0xB31A2230),
+    laneRed: Color(0xFFC0492B),
+    laneAmber: Color(0xFFD89E27),
+    laneGreen: Color(0xFF6F8A2B),
+    laneBlue: Color(0xFF96487E),
+  );
+
+  /// «Сад» — божьи коровки (спека § 4.4): светлая, зелёная.
+  static const AppPalette garden = AppPalette(
+    id: 'garden',
+    brightness: Brightness.light,
+    bgField: Color(0xFFE9EFD8),
+    gridDot: Color(0xFFD3DDBA),
+    decor: Color(0xFFD3DDBA),
+    decor2: Color(0xFFC4D0A6),
+    structure: Color(0xFF6F8A2B),
+    panel: Color(0xFFF4F7EA),
+    stroke: Color(0xFFB9C69A),
+    strokeSecondary: Color(0xFFA3B283),
+    textPrimary: Color(0xFF2A1A10),
+    textSecondary: Color(0xFF5C6B3E),
+    danger: Color(0xFF2A1A10),
+    pickup: Color(0xFF2F8F9D),
+    accent: Color(0xFF2F8F9D),
+    record: Color(0xFFE0A11B),
+    glyph: Color(0xFFFFFFFF),
+    finger: Color(0xFF2A1A10),
+    fingerHalo: Color(0x1A2A1A10),
+    scrim: Color(0xB31A2230),
+    laneRed: Color(0xFFD8432E),
+    laneAmber: Color(0xFFE0A11B),
+    laneGreen: Color(0xFF3E8BE8),
+    laneBlue: Color(0xFF96487E),
+  );
+
+  static const List<AppPalette> all = <AppPalette>[
+    metro,
+    city,
+    aquarium,
+    anthill,
+    garden,
+  ];
 
   /// По идентификатору; неизвестный — [metro] (миграция настроек).
   static AppPalette byId(String? id) {

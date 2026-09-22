@@ -14,7 +14,11 @@ class DecorLayer extends Component with HasGameReference<LineDutyGame> {
 
   @override
   void render(Canvas canvas) {
-    game.skin.paintDecor(canvas, Size(game.fieldWidth, game.fieldHeight));
+    game.skin.paintDecor(
+      canvas,
+      Size(game.fieldWidth, game.fieldHeight),
+      time: game.time,
+    );
   }
 }
 

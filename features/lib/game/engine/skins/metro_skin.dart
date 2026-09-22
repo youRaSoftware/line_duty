@@ -20,6 +20,7 @@ class MetroSkin extends FieldSkin {
     required Offset center,
     required double angle,
     required LaneColor color,
+    double time = 0,
   }) {
     final Rect rect = Rect.fromCenter(
       center: center,

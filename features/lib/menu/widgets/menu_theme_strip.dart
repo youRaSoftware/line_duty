@@ -74,6 +74,12 @@ class _ThemeCard extends StatelessWidget {
     switch (palette.id) {
       case 'city':
         return context.tr(LocaleKeys.themes_city);
+      case 'aquarium':
+        return context.tr(LocaleKeys.themes_aquarium);
+      case 'anthill':
+        return context.tr(LocaleKeys.themes_anthill);
+      case 'garden':
+        return context.tr(LocaleKeys.themes_garden);
       case 'metro':
       default:
         return context.tr(LocaleKeys.themes_metro);
