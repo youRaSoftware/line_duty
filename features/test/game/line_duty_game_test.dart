@@ -135,6 +135,20 @@ void main() {
     expect(game.frozen, isTrue);
   });
 
+  test('a docked route running along the gate line is not judged early',
+      () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    final GateComponent red = game.gates[0];
+    // Едет над воротами почти горизонтально мимо янтарных к своим красным.
+    final UnitComponent u = _put(game, LaneColor.red, 150, red.top - 12);
+    u.beginRoute();
+    u.addRoutePoint(Vector2(70, red.top - 12));
+    u.dockTo(red, 60);
+    await _tick(game, 5);
+    expect(game.frozen, isFalse, reason: 'was riding to its own gate');
+    expect(listener.delivered, 1);
+  });
+
   test('a unit touching both its own and a nearer foreign gate is delivered',
       () async {
     final (LineDutyGame game, _Listener listener) = await _game();

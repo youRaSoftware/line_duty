@@ -369,16 +369,22 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     return c;
   }
 
-  /// Ворота: фигура, дошедшая до линии ворот, сначала проверяется на **свои**
-  /// ворота — задевает их краем (см. [GameTuning.gateCatchSlack]) →
-  /// доставлена, даже если ближайшие по центру чужие. Иначе — чужие
-  /// ближайшие (или ни одни) разбивают. Зоны захвата соседних ворот
-  /// перекрываются на ~12 ед., и спорная полоса решается в пользу игрока.
+  /// Ворота: фигура судится, когда её **центр** пересёк линию ворот (не край
+  /// хитбокса — иначе фигуру, едущую вдоль ворот к своим, осудят напротив
+  /// чужих). Пристыкованная к своим воротам фигура с недоеденным маршрутом
+  /// не судится: маршрут кончается ровно на входе. На линии сначала
+  /// проверяются **свои** ворота — задевает их краем (см.
+  /// [GameTuning.gateCatchSlack]) → доставлена, даже если ближайшие по
+  /// центру чужие. Иначе — конец забега.
   void _checkGates() {
     if (gates.isEmpty) return;
     final double line = gates.first.top;
     for (final UnitComponent u in List<UnitComponent>.of(units)) {
-      if (u.position.y + u.radius < line) continue;
+      if (u.position.y < line) continue;
+      final GateComponent? dock = u.docked;
+      if (dock != null && dock.color == u.color && u.route.isNotEmpty) {
+        continue;
+      }
       final GateComponent own =
           gates.firstWhere((GateComponent g) => g.color == u.color);
       if (_touchesGate(u, own)) {

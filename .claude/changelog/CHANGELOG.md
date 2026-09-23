@@ -18,6 +18,7 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - Новое: настройки — звуки, вибрация, язык (English / Русский), статистика (рекорд, забеги, доведённые фигуры) со сбросом, версия и лицензии
 - Новое: тёмная тема «Диспетчер метро», шрифты Unbounded и Golos Text (с кириллицей), иконка приложения и экран запуска
 - Исправлено: фигура, задевшая свои ворота краем, больше не разбивается «не о те ворота» из-за зазора между воротами или потому что соседние ворота оказались чуть ближе
+- Исправлено: фигура, едущая по маршруту вдоль ворот к своим, больше не разбивается «не о те ворота» напротив чужих — ворота судятся по центру фигуры и только когда она доехала до входа
 - Исправлено: столкновения считаются по форме фигуры темы — вытянутые автобусы, муравьи и рыбки сталкиваются бортами и носами как нарисованы, а не по невидимому кругу
 - Исправлено: в «Аквариуме» третий цвет рыбок стал маджента вместо лавандового, который путался с синим
 - Новое: темы оформления — к тёмному «Метро» добавились «Город» с автобусами и парковками, «Аквариум» с рыбками и гротами, «Муравейник» с муравьями и холмиками и «Сад» с божьими коровками и листьями; выбор темы в меню, тема запоминается
@@ -34,6 +35,7 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - New: settings — sounds, vibration, language (English / Русский), statistics (best, runs, delivered) with reset, version and licenses
 - New: dark "Metro dispatcher" theme, Unbounded and Golos Text fonts (Cyrillic included), app icon and launch screen
 - Fixed: a unit that touches its own gate with its edge no longer crashes as "wrong gate" because of the gap between gates or because the neighbouring gate happened to be slightly closer
+- Fixed: a unit riding its route along the gate row towards its own gate no longer crashes as "wrong gate" in front of a foreign one — gates are judged by the unit's centre and only once it has arrived at the entrance
 - Fixed: collisions follow the shape of the theme's unit — elongated buses, ants and fish collide the way they are drawn instead of by an invisible circle
 - Fixed: the third fish colour in "Aquarium" is now magenta instead of a lavender that looked too close to blue
 - New: visual themes — "City" with buses and parking bays, "Aquarium" with fish and grottos, "Anthill" with ants and mounds and "Garden" with ladybugs and leaves join the dark "Metro"; pick a theme in the menu, the choice is remembered
