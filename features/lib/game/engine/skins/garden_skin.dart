@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../gate_shape.dart';
 import '../hit_capsule.dart';
 import 'field_skin.dart';
 
@@ -22,6 +23,10 @@ class GardenSkin extends FieldSkin {
   /// Панцирь r 18 — круг чуть меньше; лапки декоративные.
   @override
   HitCapsule get hitbox => const HitCapsule.circle(16.5);
+
+  /// Кольцо на листе (r 17.3 + штрих), центр на 2 ед. ниже центра зоны.
+  @override
+  GateShape get gateShape => const RingGateShape(r: 20.5, dy: 2);
 
   @override
   void paintUnit(

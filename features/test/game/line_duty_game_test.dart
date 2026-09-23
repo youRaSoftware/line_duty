@@ -78,8 +78,7 @@ void main() {
         closeTo(780 - 20 - GameTuning.gateRowOffset, 0.01));
   });
 
-  test('unit follows its route point by point and keeps the last heading',
-      () async {
+  test('unit follows its route point by point and then heads down', () async {
     final (LineDutyGame game, _) = await _game();
     final UnitComponent u = _put(game, LaneColor.red, 100, 200);
     u.beginRoute();
@@ -93,9 +92,55 @@ void main() {
     expect(u.trace, hasLength(1));
     await _tick(game, 60 / GameTuning.speedStart + 0.5);
     expect(u.route, isEmpty);
-    // За концом маршрута — дальше вниз (последний отрезок вертикальный).
+    // За концом маршрута — вниз.
     expect(u.heading.y, closeTo(1, 1e-6));
     expect(u.position.y, greaterThan(260));
+  });
+
+  test(
+      'past the end of a sideways route the unit turns down and the magnet '
+      'pulls it into its own gate', () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    final GateComponent red = game.gates.first;
+    // Маршрут заканчивается горизонтальным отрезком над красными воротами,
+    // чуть левее центра входа.
+    final UnitComponent u = _put(game, LaneColor.red, 120, red.top - 120);
+    u.beginRoute();
+    u.addRoutePoint(Vector2(80, red.top - 120));
+    u.addRoutePoint(Vector2(red.position.x - 20, red.top - 120));
+    await _tick(game, 2.5);
+    expect(u.route, isEmpty);
+    expect(u.heading.y, closeTo(1, 1e-6), reason: 'turned down, not on');
+    await _tick(game, 4);
+    expect(game.frozen, isFalse);
+    expect(listener.delivered, 1, reason: 'magnet steered it into the gate');
+  });
+
+  test(
+      'riding along the gate row above the bases is safe; entering a '
+      'foreign base or dropping below the row is not', () async {
+    final (LineDutyGame game, _) = await _game();
+    final GateComponent amber = game.gates[1];
+    // Красная фигура едет вправо ровно над янтарной базой, чуть выше зоны.
+    final UnitComponent u =
+        _put(game, LaneColor.red, amber.position.x - 40, amber.top - 20);
+    u.beginRoute();
+    u.addRoutePoint(Vector2(amber.position.x + 60, amber.top - 20));
+    await _tick(game, 1.5);
+    expect(game.frozen, isFalse, reason: 'touching a foreign zone is fine');
+    // Заезд центром в чужую базу — конец.
+    u.route.clear();
+    u.position.setValues(amber.position.x, amber.top + 10);
+    game.update(1 / 60);
+    expect(game.frozen, isTrue);
+    game.reset();
+    // Промах: в зазоре между базами вниз до низа ряда.
+    final UnitComponent m = _put(game, LaneColor.green, 95, amber.top - 5);
+    await _tick(game, 0.5);
+    expect(game.frozen, isFalse, reason: 'still inside the row, not judged');
+    await _tick(game, 1.5);
+    expect(game.frozen, isTrue, reason: 'went past the bases');
+    expect(m.crashed, isTrue);
   });
 
   test('matching gate delivers, wrong gate ends the run', () async {
@@ -129,9 +174,10 @@ void main() {
     expect(listener.delivered, 1);
     expect(green.pulse, greaterThan(0));
 
-    // Тот же зазор, но фигура чужого цвета — разбивается о ближайшие ворота.
+    // Тот же зазор, но фигура чужого цвета: никого своего не задевает, едет
+    // вниз мимо баз и разбивается под рядом ворот.
     _put(game, LaneColor.red, x, green.top - 5);
-    await _tick(game, 0.3);
+    await _tick(game, 2);
     expect(game.frozen, isTrue);
   });
 
@@ -165,9 +211,10 @@ void main() {
     _put(game, LaneColor.amber, x, red.top - 5);
     await _tick(game, 0.3);
     expect(listener.delivered, 2);
-    // А зелёная здесь никого своего не задевает — разбивается.
+    // А зелёная здесь никого своего не задевает — едет вниз мимо баз и
+    // разбивается под рядом ворот.
     _put(game, LaneColor.green, x, red.top - 5);
-    await _tick(game, 0.3);
+    await _tick(game, 2);
     expect(game.frozen, isTrue);
   });
 
@@ -179,8 +226,13 @@ void main() {
     final (LineDutyGame game, _) = await _game();
     // Два автобуса едут вправо, борт к борту: центры на 30 ед., корпуса по
     // 28 в ширину — зазор 4, столкновения нет.
+    // Маршруты вправо держат курс (без маршрута фигура поворачивает вниз).
     final UnitComponent a = _put(game, LaneColor.red, 100, 300);
     final UnitComponent b = _put(game, LaneColor.blue, 100, 330);
+    a.beginRoute();
+    a.addRoutePoint(Vector2(300, 300));
+    b.beginRoute();
+    b.addRoutePoint(Vector2(300, 330));
     a.heading.setValues(1, 0);
     b.heading.setValues(1, 0);
     expect(a.gapTo(b), greaterThan(0));
@@ -189,6 +241,9 @@ void main() {
     // Те же 30 ед. нос к хвосту вдоль курса — корпуса по 46.7 в длину
     // перекрываются, столкновение.
     b.position.setValues(130, 300);
+    b.route
+      ..clear()
+      ..add(Vector2(300, 300));
     a.heading.setValues(1, 0);
     b.heading.setValues(1, 0);
     expect(a.gapTo(b), lessThan(0));

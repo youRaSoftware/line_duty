@@ -369,27 +369,27 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     return c;
   }
 
-  /// Ворота: фигура судится, когда её **центр** пересёк линию ворот (не край
-  /// хитбокса — иначе фигуру, едущую вдоль ворот к своим, осудят напротив
-  /// чужих). Пристыкованная к своим воротам фигура с недоеденным маршрутом
-  /// не судится: маршрут кончается ровно на входе. На линии сначала
-  /// проверяются **свои** ворота — задевает их краем (см.
-  /// [GameTuning.gateCatchSlack]) → доставлена, даже если ближайшие по
-  /// центру чужие. Иначе — конец забега.
+  /// Ворота по форме базы скина ([FieldSkin.gateShape]):
+  /// 1. **свои ловят** — хитбокс фигуры задел форму своих ворот (с любой
+  ///    стороны) → доставка;
+  /// 2. **чужие убивают только при заезде** — центр фигуры внутри формы
+  ///    чужих ворот → «Не те ворота»; проезд вдоль ряда и касание краем
+  ///    безопасны;
+  /// 3. **мимо** — центр опустился ниже низа ряда ворот, не попав ни в одни
+  ///    → тоже конец забега.
   void _checkGates() {
     if (gates.isEmpty) return;
-    final double line = gates.first.top;
+    final double bottom = gates.first.top + gates.first.size.y;
     for (final UnitComponent u in List<UnitComponent>.of(units)) {
-      if (u.position.y < line) continue;
-      final GateComponent? dock = u.docked;
-      if (dock != null && dock.color == u.color && u.route.isNotEmpty) {
+      final GateComponent own = gateFor(u.color);
+      if (u.gapToGate(own) < 0) {
+        _deliver(u, own);
         continue;
       }
-      final GateComponent own =
-          gates.firstWhere((GateComponent g) => g.color == u.color);
-      if (_touchesGate(u, own)) {
-        _deliver(u, own);
-      } else if (demo) {
+      final bool entered =
+          gates.any((GateComponent g) => g != own && g.holds(u.position));
+      if (!entered && u.position.y < bottom) continue;
+      if (demo) {
         _respawnDemo(u);
       } else {
         _crash(u, null, wrongGate: true);
@@ -397,9 +397,9 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     }
   }
 
-  bool _touchesGate(UnitComponent u, GateComponent g) =>
-      (g.position.x - u.position.x).abs() <=
-      g.size.x / 2 + GameTuning.gateCatchSlack;
+  /// Ворота цвета [color].
+  GateComponent gateFor(LaneColor color) =>
+      gates.firstWhere((GateComponent g) => g.color == color);
 
   void _deliver(UnitComponent u, GateComponent gate) {
     gate.pulse = 1;

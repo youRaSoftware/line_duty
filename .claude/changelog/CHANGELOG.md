@@ -18,6 +18,8 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - Новое: настройки — звуки, вибрация, язык (English / Русский), статистика (рекорд, забеги, доведённые фигуры) со сбросом, версия и лицензии
 - Новое: тёмная тема «Диспетчер метро», шрифты Unbounded и Golos Text (с кириллицей), иконка приложения и экран запуска
 - Исправлено: фигура, задевшая свои ворота краем, больше не разбивается «не о те ворота» из-за зазора между воротами или потому что соседние ворота оказались чуть ближе
+- Изменено: базы ловят по своей форме — арка, холмик, кольцо или прямоугольник, как нарисовано: свои ворота принимают фигуру, едва она их задела, чужие разбивают только при заезде внутрь, проезд вдоль ряда безопасен, а фигура, ушедшая ниже ряда мимо всех баз, разбивается
+- Изменено: когда нарисованный маршрут кончается, фигура едет строго вниз, а над своими воротами сама доворачивает ко входу
 - Исправлено: фигура, едущая по маршруту вдоль ворот к своим, больше не разбивается «не о те ворота» напротив чужих — ворота судятся по центру фигуры и только когда она доехала до входа
 - Исправлено: столкновения считаются по форме фигуры темы — вытянутые автобусы, муравьи и рыбки сталкиваются бортами и носами как нарисованы, а не по невидимому кругу
 - Исправлено: в «Аквариуме» третий цвет рыбок стал маджента вместо лавандового, который путался с синим
@@ -35,6 +37,8 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - New: settings — sounds, vibration, language (English / Русский), statistics (best, runs, delivered) with reset, version and licenses
 - New: dark "Metro dispatcher" theme, Unbounded and Golos Text fonts (Cyrillic included), app icon and launch screen
 - Fixed: a unit that touches its own gate with its edge no longer crashes as "wrong gate" because of the gap between gates or because the neighbouring gate happened to be slightly closer
+- Changed: bases catch by their drawn shape — arch, mound, ring or rectangle: your own gate takes a unit as soon as it touches, a foreign gate only kills when the unit drives inside, riding along the row is safe, and a unit that drops below the row past every base crashes
+- Changed: when a drawn route ends the unit heads straight down, and above its own gate it steers itself into the entrance
 - Fixed: a unit riding its route along the gate row towards its own gate no longer crashes as "wrong gate" in front of a foreign one — gates are judged by the unit's centre and only once it has arrived at the entrance
 - Fixed: collisions follow the shape of the theme's unit — elongated buses, ants and fish collide the way they are drawn instead of by an invisible circle
 - Fixed: the third fish colour in "Aquarium" is now magenta instead of a lavender that looked too close to blue

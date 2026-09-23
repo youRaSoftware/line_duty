@@ -11,6 +11,16 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   tearDown(() => AppColors.apply(AppPalettes.metro));
 
+  test('every skin has a gate shape that contains the zone centre', () {
+    for (final FieldSkin skin in FieldSkins.all) {
+      const Size zone = Size(AppDimens.gateWidth, AppDimens.gateHeight);
+      expect(skin.gateShape.contains(const Offset(33.35, 30), zone), isTrue,
+          reason: skin.id);
+      expect(skin.gateShape.contains(const Offset(-20, -20), zone), isFalse,
+          reason: skin.id);
+    }
+  });
+
   test('every palette has a skin and byId falls back to metro', () {
     for (final AppPalette palette in AppPalettes.all) {
       expect(FieldSkins.byId(palette.id).id, palette.id);

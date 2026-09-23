@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../gate_shape.dart';
 import '../hit_capsule.dart';
 import 'field_skin.dart';
 
@@ -22,6 +23,10 @@ class AnthillSkin extends FieldSkin {
   /// декоративные.
   @override
   HitCapsule get hitbox => const HitCapsule(halfLength: 14, radius: 11);
+
+  /// Купол холмика: вся ширина зоны, вершина на ~22 ед. над кромкой.
+  @override
+  GateShape get gateShape => const DomeGateShape(a: 33.35, b: 22);
 
   @override
   void paintUnit(

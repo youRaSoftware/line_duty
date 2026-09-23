@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../gate_shape.dart';
 import '../hit_capsule.dart';
 import 'field_skin.dart';
 
@@ -24,6 +25,10 @@ class AquariumSkin extends FieldSkin {
   @override
   HitCapsule get hitbox =>
       const HitCapsule(offset: -6, halfLength: 10, radius: 14);
+
+  /// Арка 63.3 в ширину и 35 в высоту от нижней кромки — как нарисована.
+  @override
+  GateShape get gateShape => const DomeGateShape(a: 31.65, b: 35);
 
   @override
   void paintUnit(

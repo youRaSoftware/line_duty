@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../gate_shape.dart';
 import '../hit_capsule.dart';
 import 'anthill_skin.dart';
 import 'aquarium_skin.dart';
@@ -24,6 +25,11 @@ abstract class FieldSkin {
   /// Хитбокс фигуры по силуэту спрайта (ориентирован по движению): по нему
   /// считаются столкновения, кольцо «!» и подбор пикапов.
   HitCapsule get hitbox;
+
+  /// Форма базы под капотом — совпадает с нарисованной: свои ворота ловят
+  /// фигуру, когда её хитбокс задел форму; чужие разбивают, когда центр
+  /// фигуры внутри формы.
+  GateShape get gateShape => const RectGateShape();
 
   /// Фигура с центром [center]; [angle] — направление движения в радианах
   /// (вниз = π/2), [time] — секунды для анимации (хвост, лапки). Значок

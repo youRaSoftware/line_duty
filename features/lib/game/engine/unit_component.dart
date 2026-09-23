@@ -21,8 +21,9 @@ class TracePoint {
 /// Фигура потока: едет сама по [heading] (по умолчанию вниз); если игрок
 /// нарисовал [route], едет по нему, съедая точки и оставляя [trace]. Маршрут,
 /// доведённый до своих ворот, [docked] — заканчивается точкой входа в них.
-/// За концом маршрута продолжает в направлении последнего отрезка. Боковые
-/// края поля разворачивают её вниз. Ворота проверяет игра.
+/// За концом маршрута поворачивает **вниз** (маршрут — временное
+/// отклонение), а над своими воротами доворачивает к центру входа (магнит).
+/// Боковые края поля разворачивают её вниз. Ворота проверяет игра.
 class UnitComponent extends PositionComponent
     with HasGameReference<LineDutyGame> {
   final LaneColor color;
@@ -131,9 +132,36 @@ class UnitComponent extends PositionComponent
         remaining = 0;
       }
     }
-    if (remaining > 0) position.add(heading * remaining);
+    if (remaining > 0) {
+      if (route.isEmpty) heading.setValues(0, 1);
+      position.add(heading * remaining);
+      if (route.isEmpty) _magnet(dt);
+    }
     _keepInside();
     _pruneTrace();
+  }
+
+  /// Без маршрута над своими воротами — плавно к центру входа.
+  void _magnet(double dt) {
+    final GateComponent gate = game.gateFor(color);
+    final double dx = gate.position.x - position.x;
+    if (position.y >= gate.top ||
+        dx.abs() > gate.size.x / 2 + GameTuning.gateMagnetSlack) {
+      return;
+    }
+    final double step = GameTuning.gateMagnetSpeed * dt;
+    position.x += dx.clamp(-step, step);
+  }
+
+  /// Зазор между хитбоксом и формой базы [gate] (< 0 — задела).
+  double gapToGate(GateComponent gate) {
+    final (Vector2 p0, Vector2 p1) = hitbox.segment(position, heading);
+    double best = double.infinity;
+    for (int i = 0; i <= 4; i++) {
+      final Vector2 p = p0 + (p1 - p0) * (i / 4);
+      best = math.min(best, gate.distanceTo(p));
+    }
+    return best - hitbox.radius;
   }
 
   void _consume() {

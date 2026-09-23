@@ -4,6 +4,7 @@ import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:flame/components.dart';
 
+import 'gate_shape.dart';
 import 'line_duty_game.dart';
 
 /// Ворота потока (спека: зона 200×130; вид рисует скин темы). [pulse] —
@@ -31,6 +32,19 @@ class GateComponent extends PositionComponent
   /// Зона стыковки: над воротами по X и не выше кромки на [margin].
   bool inDockZone(Vector2 p, {double margin = 0}) =>
       containsX(p.x) && p.y >= top - margin;
+
+  /// Форма базы скина в локальных координатах зоны.
+  GateShape get shape => game.skin.gateShape;
+
+  Offset _local(Vector2 world) => Offset(
+      world.x - position.x + size.x / 2, world.y - position.y + size.y / 2);
+
+  /// Знаковое расстояние от точки мира до формы базы (< 0 — внутри).
+  double distanceTo(Vector2 world) =>
+      shape.distance(_local(world), size.toSize());
+
+  /// Центр фигуры внутри формы базы (не путать с `containsPoint` Flame).
+  bool holds(Vector2 world) => distanceTo(world) <= 0;
 
   @override
   void update(double dt) {
