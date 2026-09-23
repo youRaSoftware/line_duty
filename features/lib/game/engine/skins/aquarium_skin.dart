@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../hit_capsule.dart';
 import 'field_skin.dart';
 
 /// «Аквариум» — рыбки (спека § 4.2, референсы 7e / 6d). Рыбка плывёт
@@ -18,6 +19,11 @@ class AquariumSkin extends FieldSkin {
 
   @override
   String get id => 'aquarium';
+
+  /// Тело r 16.7 плюс хвост до −30 ед.: капсула, смещённая к хвосту.
+  @override
+  HitCapsule get hitbox =>
+      const HitCapsule(offset: -6, halfLength: 10, radius: 14);
 
   @override
   void paintUnit(

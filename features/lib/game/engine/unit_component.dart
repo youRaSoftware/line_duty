@@ -7,6 +7,7 @@ import 'package:flame/components.dart';
 
 import 'field_components.dart';
 import 'game_tuning.dart';
+import 'hit_capsule.dart';
 import 'line_duty_game.dart';
 
 /// Точка стёртого следа: где фигура проехала и когда.
@@ -55,7 +56,25 @@ class UnitComponent extends PositionComponent
           anchor: Anchor.center,
         );
 
+  /// Радиус базового круга (32 ед.): захват пальцем, край поля, ворота.
   double get radius => AppDimens.unitSize / 2;
+
+  /// Хитбокс по силуэту спрайта текущей темы.
+  HitCapsule get hitbox => game.skin.hitbox;
+
+  /// Зазор между хитбоксами (< 0 — столкновение).
+  double gapTo(UnitComponent other) => HitCapsule.gap(
+        hitbox,
+        position,
+        heading,
+        other.hitbox,
+        other.position,
+        other.heading,
+      );
+
+  /// Зазор от хитбокса до точки (< 0 — точка внутри).
+  double gapToPoint(Vector2 point) =>
+      hitbox.gapToPoint(position, heading, point);
 
   /// Новый маршрут игрока: старый стирается, след остаётся.
   void beginRoute() {

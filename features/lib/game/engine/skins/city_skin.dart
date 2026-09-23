@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../hit_capsule.dart';
 import 'field_skin.dart';
 
 /// «Город» — автобусы (спека § 4.1, референсы 7b / 6b). Автобус 140×84 px
@@ -19,6 +20,10 @@ class CitySkin extends FieldSkin {
 
   @override
   String get id => 'city';
+
+  /// Корпус 46.7×28: капсула вдоль курса, чуть уже борта.
+  @override
+  HitCapsule get hitbox => const HitCapsule(halfLength: 9.35, radius: 13);
 
   @override
   void paintUnit(

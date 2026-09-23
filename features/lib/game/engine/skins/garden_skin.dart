@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../hit_capsule.dart';
 import 'field_skin.dart';
 
 /// «Сад» — божьи коровки (спека § 4.4, референс 7g). Панцирь Ø108 px
@@ -17,6 +18,10 @@ class GardenSkin extends FieldSkin {
 
   @override
   String get id => 'garden';
+
+  /// Панцирь r 18 — круг чуть меньше; лапки декоративные.
+  @override
+  HitCapsule get hitbox => const HitCapsule.circle(16.5);
 
   @override
   void paintUnit(

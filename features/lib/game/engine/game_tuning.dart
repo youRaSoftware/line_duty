@@ -51,9 +51,13 @@ abstract final class GameTuning {
 
   // --- Сближение и столкновение -------------------------------------------
 
-  /// Расстояние между центрами: столкновение и предупреждение.
+  /// Метро: столкновение при расстоянии центров < [crashDistance] (круглый
+  /// хитбокс радиуса `crashDistance / 2`); у остальных тем хитбокс — капсула
+  /// по силуэту спрайта (`FieldSkin.hitbox`). Предупреждение — когда зазор
+  /// между хитбоксами меньше [warnGap] (для Метро это центры < 54).
   static const double crashDistance = AppDimens.unitSize * 0.92;
   static const double warnDistance = 54;
+  static const double warnGap = warnDistance - crashDistance;
 
   /// Звук/вибрация предупреждения — не чаще раза в столько секунд.
   static const double warnCooldown = 0.8;

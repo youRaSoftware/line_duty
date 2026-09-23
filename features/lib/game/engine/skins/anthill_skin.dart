@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../hit_capsule.dart';
 import 'field_skin.dart';
 
 /// «Муравейник» — муравьи (спека § 4.3, референсы 7f / 6e). Муравей идёт
@@ -16,6 +17,11 @@ class AnthillSkin extends FieldSkin {
 
   @override
   String get id => 'anthill';
+
+  /// От брюшка (−26.6) до головы (+26): тонкая длинная капсула; лапки —
+  /// декоративные.
+  @override
+  HitCapsule get hitbox => const HitCapsule(halfLength: 14, radius: 11);
 
   @override
   void paintUnit(

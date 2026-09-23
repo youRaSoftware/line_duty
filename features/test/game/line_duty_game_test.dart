@@ -4,6 +4,7 @@ import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:features/game/engine/field_components.dart';
 import 'package:features/game/engine/game_tuning.dart';
+import 'package:features/game/engine/hit_capsule.dart';
 import 'package:features/game/engine/line_duty_game.dart';
 import 'package:features/game/engine/pickup_component.dart';
 import 'package:features/game/engine/unit_component.dart';
@@ -154,6 +155,54 @@ void main() {
     _put(game, LaneColor.green, x, red.top - 5);
     await _tick(game, 0.3);
     expect(game.frozen, isTrue);
+  });
+
+  test(
+      'collisions follow the sprite silhouette: buses side by side vs nose to tail',
+      () async {
+    AppColors.apply(AppPalettes.city);
+    addTearDown(() => AppColors.apply(AppPalettes.metro));
+    final (LineDutyGame game, _) = await _game();
+    // Два автобуса едут вправо, борт к борту: центры на 30 ед., корпуса по
+    // 28 в ширину — зазор 4, столкновения нет.
+    final UnitComponent a = _put(game, LaneColor.red, 100, 300);
+    final UnitComponent b = _put(game, LaneColor.blue, 100, 330);
+    a.heading.setValues(1, 0);
+    b.heading.setValues(1, 0);
+    expect(a.gapTo(b), greaterThan(0));
+    game.update(1 / 60);
+    expect(game.frozen, isFalse);
+    // Те же 30 ед. нос к хвосту вдоль курса — корпуса по 46.7 в длину
+    // перекрываются, столкновение.
+    b.position.setValues(130, 300);
+    a.heading.setValues(1, 0);
+    b.heading.setValues(1, 0);
+    expect(a.gapTo(b), lessThan(0));
+    game.update(1 / 60);
+    expect(game.frozen, isTrue);
+  });
+
+  test('segment distance handles parallel, crossing and point cases', () {
+    expect(
+      HitCapsule.segmentDistance(
+          Vector2(0, 0), Vector2(10, 0), Vector2(0, 5), Vector2(10, 5)),
+      closeTo(5, 1e-9),
+    );
+    expect(
+      HitCapsule.segmentDistance(
+          Vector2(0, 0), Vector2(10, 10), Vector2(0, 10), Vector2(10, 0)),
+      closeTo(0, 1e-9),
+    );
+    expect(
+      HitCapsule.segmentDistance(
+          Vector2(0, 0), Vector2(0, 0), Vector2(3, 4), Vector2(3, 4)),
+      closeTo(5, 1e-9),
+    );
+    expect(
+      HitCapsule.segmentDistance(
+          Vector2(0, 0), Vector2(10, 0), Vector2(20, 0), Vector2(30, 0)),
+      closeTo(10, 1e-9),
+    );
   });
 
   test('finger over its own gate docks the route and ends the gesture',

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../hit_capsule.dart';
 import 'anthill_skin.dart';
 import 'aquarium_skin.dart';
 import 'city_skin.dart';
@@ -19,6 +20,10 @@ abstract class FieldSkin {
 
   /// Совпадает с `AppPalette.id`.
   String get id;
+
+  /// Хитбокс фигуры по силуэту спрайта (ориентирован по движению): по нему
+  /// считаются столкновения, кольцо «!» и подбор пикапов.
+  HitCapsule get hitbox;
 
   /// Фигура с центром [center]; [angle] — направление движения в радианах
   /// (вниз = π/2), [time] — секунды для анимации (хвост, лапки). Значок

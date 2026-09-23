@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 
+import '../game_tuning.dart';
+import '../hit_capsule.dart';
 import 'field_skin.dart';
 
 /// «Метро · ночь» (тема A): фигура — скруглённый квадрат цветом потока со
@@ -13,6 +15,11 @@ class MetroSkin extends FieldSkin {
 
   @override
   String get id => 'metro';
+
+  /// Круг, вписанный в квадрат 32 с запасом 8 %.
+  @override
+  HitCapsule get hitbox =>
+      const HitCapsule.circle(GameTuning.crashDistance / 2);
 
   @override
   void paintUnit(

@@ -232,7 +232,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
         return;
       }
       for (final UnitComponent u in units) {
-        if (u.position.distanceTo(p.position) < p.radius + u.radius) {
+        if (u.gapToPoint(p.position) < p.radius) {
           _collect(u, p);
           return;
         }
@@ -410,8 +410,9 @@ class LineDutyGame extends FlameGame with DragCallbacks {
         final UnitComponent a = units[i];
         final UnitComponent b = units[j];
         if (a.ghostLeft > 0 || b.ghostLeft > 0) continue;
-        final double d = a.position.distanceTo(b.position);
-        if (d < GameTuning.crashDistance) {
+        // Зазор между хитбоксами по силуэту (капсулы скина).
+        final double gap = a.gapTo(b);
+        if (gap < 0) {
           if (a.shielded || b.shielded) {
             // Щит прощает: держатель на время становится призраком.
             final UnitComponent holder = a.shielded ? a : b;
@@ -424,8 +425,12 @@ class LineDutyGame extends FlameGame with DragCallbacks {
           _crash(a, b, wrongGate: false);
           return;
         }
-        if (d < GameTuning.warnDistance) {
-          warnings.add((a.position + b.position) / 2);
+        if (gap < GameTuning.warnGap) {
+          final Vector2 pa =
+              a.hitbox.closestAxisPoint(a.position, a.heading, b.position);
+          final Vector2 pb =
+              b.hitbox.closestAxisPoint(b.position, b.heading, a.position);
+          warnings.add((pa + pb) / 2);
         }
       }
     }
