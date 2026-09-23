@@ -17,7 +17,8 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - Новое: меню с живым демо-полем, счёт и рекорд в игре, пауза (звук, вибрация), экран проигрыша с бейджем «Новый рекорд» и одним бесплатным продолжением
 - Новое: настройки — звуки, вибрация, язык (English / Русский), статистика (рекорд, забеги, доведённые фигуры) со сбросом, версия и лицензии
 - Новое: тёмная тема «Диспетчер метро», шрифты Unbounded и Golos Text (с кириллицей), иконка приложения и экран запуска
-- Исправлено: фигура, задевшая свои ворота краем, больше не разбивается «не о те ворота» из-за зазора между воротами
+- Исправлено: фигура, задевшая свои ворота краем, больше не разбивается «не о те ворота» из-за зазора между воротами или потому что соседние ворота оказались чуть ближе
+- Исправлено: в «Аквариуме» третий цвет рыбок стал маджента вместо лавандового, который путался с синим
 - Новое: темы оформления — к тёмному «Метро» добавились «Город» с автобусами и парковками, «Аквариум» с рыбками и гротами, «Муравейник» с муравьями и холмиками и «Сад» с божьими коровками и листьями; выбор темы в меню, тема запоминается
 - Новое: бонусы — на поле появляются шестиугольники, проведи через них фигуру: заморозка на 3 с, щит от одного столкновения, очки ×2 на 10 с, автопилот до своих ворот; индикаторы эффектов у счёта и бейдж подбора
 - Новое: обучение «Как играть» при первом запуске — четыре шага с картинками про фигуры и ворота, маршруты, опасности и счёт; открывается снова из настроек
@@ -31,7 +32,8 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - New: menu with a live demo field, score and best in game, pause (sound, vibration), game-over screen with a "New record" badge and one free continue
 - New: settings — sounds, vibration, language (English / Русский), statistics (best, runs, delivered) with reset, version and licenses
 - New: dark "Metro dispatcher" theme, Unbounded and Golos Text fonts (Cyrillic included), app icon and launch screen
-- Fixed: a unit that touches its own gate with its edge no longer crashes as "wrong gate" because of the gap between gates
+- Fixed: a unit that touches its own gate with its edge no longer crashes as "wrong gate" because of the gap between gates or because the neighbouring gate happened to be slightly closer
+- Fixed: the third fish colour in "Aquarium" is now magenta instead of a lavender that looked too close to blue
 - New: visual themes — "City" with buses and parking bays, "Aquarium" with fish and grottos, "Anthill" with ants and mounds and "Garden" with ladybugs and leaves join the dark "Metro"; pick a theme in the menu, the choice is remembered
 - New: bonuses — hexagons appear on the field, drive a unit through one: freeze for 3 s, a shield against one collision, points ×2 for 10 s, autopilot to its own gate; effect indicators next to the score and a pickup badge
 - New: a "How to play" tutorial on first launch — four illustrated steps about units and gates, routes, dangers and scoring; reopen it any time from settings

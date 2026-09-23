@@ -134,6 +134,28 @@ void main() {
     expect(game.frozen, isTrue);
   });
 
+  test('a unit touching both its own and a nearer foreign gate is delivered',
+      () async {
+    final (LineDutyGame game, _Listener listener) = await _game();
+    final GateComponent red = game.gates[0];
+    final GateComponent amber = game.gates[1];
+    // Спорная полоса: ближе к центру янтарных, но краем задевает красные.
+    final double x = red.position.x + red.size.x / 2 + 12;
+    expect((amber.position.x - x).abs(), lessThan((red.position.x - x).abs()));
+    _put(game, LaneColor.red, x, red.top - 5);
+    await _tick(game, 0.3);
+    expect(game.frozen, isFalse);
+    expect(listener.delivered, 1);
+    // Та же точка, но жёлтая фигура: свои ворота — янтарные, доставлена тоже.
+    _put(game, LaneColor.amber, x, red.top - 5);
+    await _tick(game, 0.3);
+    expect(listener.delivered, 2);
+    // А зелёная здесь никого своего не задевает — разбивается.
+    _put(game, LaneColor.green, x, red.top - 5);
+    await _tick(game, 0.3);
+    expect(game.frozen, isTrue);
+  });
+
   test('finger over its own gate docks the route and ends the gesture',
       () async {
     final (LineDutyGame game, _Listener listener) = await _game();

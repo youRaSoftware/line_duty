@@ -200,7 +200,8 @@ abstract final class AppPalettes {
     scrim: Color(0xD1090D14),
     laneRed: Color(0xFF4FD1A5),
     laneAmber: Color(0xFF5EA9F0),
-    laneGreen: Color(0xFFA08CF0),
+    // Спека давала лавандовый #A08CF0 — путался с синим, заменён на маджента.
+    laneGreen: Color(0xFFDC7BD6),
     laneBlue: Color(0xFFE9C25C),
   );
 
