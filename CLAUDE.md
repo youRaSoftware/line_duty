@@ -17,6 +17,9 @@
 ├── my_docs/
 │   ├── SPEC.md                 # Спека v2: механика, темы (палитры, спрайты), бонусы, экраны; v1 — SPEC_v1_metro.md
 │   ├── landing/line-duty/      # Пакет для лендинга pyf.app: MDX страницы (en/ru), политика, иконка, скриншоты, README
+│   ├── STORE_LISTINGS.md       # Тексты App Store / Google Play на 7 языках, факты для форм, Notes for Review, план скриншотов, чеклист
+│   ├── release_notes_1.0.0.txt # «Что нового» 1.0.0 на 7 языках
+│   ├── testflight_external_1.0.0.txt  # Заполнение формы внешнего тестирования TestFlight
 │   └── refs/                   # PNG-референсы: 1a/2a/2b/2c (метро), 4d иконка, 5a бонусы, 6b/6d/6e поля тем, 7b/7e/7f/7g спрайты
 ├── shared/line_duty_ui_reference.md  # UI/архитектурный референс для create-* скиллов
 └── skills/                     # create-feature-ui, create-feature-full, create-widget, analyze-feature, audit-section, llm-council
@@ -67,6 +70,8 @@ script/gen_dev_icons.sh                    # dev-иконки с плашкой 
 script/gen_launch_images.sh                # картинки нативного экрана запуска из store/
 script/make_flat_icon.swift                # скруглённая иконка → непрозрачный квадрат (App Store)
 script/make_adaptive_foreground.swift      # иконка → передний слой adaptive icon (70 %)
+script/make_feature_graphic.swift          # feature graphic 1024×500 для Google Play (store/play_feature_graphic_1024x500.png)
+script/store_shots.sh <udid> <outdir> [locale]  # скриншоты сторов через integration_test/store_shots_test.dart (prod, статус-бар 9:41)
 ```
 
 Проверка перед коммитом: `flutter analyze` и `dart format core core_ui data domain features lib navigation integration_test`.
@@ -74,8 +79,10 @@ script/make_adaptive_foreground.swift      # иконка → передний �
 Смоук-тест на симуляторе/устройстве (меню → игра → маршрут до ворот → пауза → настройки), `integration_test/game_smoke_test.dart`:
 
 ```bash
-flutter test integration_test -d <deviceId> --flavor dev --dart-define=environment=dev
+flutter test integration_test/game_smoke_test.dart -d <deviceId> --flavor dev --dart-define=environment=dev
 ```
+
+Файл указывать явно: в `integration_test/` лежит ещё `store_shots_test.dart` — не тест, а постановщик сцен для скриншотов сторов (запускается `script/store_shots.sh`, prod-флейвор). Готовые кадры — `store/screenshots/<iphone69|ipad13|play>/<locale>/`.
 
 Правила таких тестов (как в WasDrop): `binding.framePolicy = fullyLive` (иначе движок тикает только на `pump()`), никакого `pumpAndSettle` (Flame рисует непрерывно, он не вернётся), только `pump(Duration)`.
 

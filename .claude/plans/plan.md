@@ -66,7 +66,9 @@
 - [ ] Game Center (лидерборд, достижения) — по образцу WasDrop
 - [ ] Монетизация: реклама за продолжение (`AppConfig.monetizationEnabled`), премиум без рекламы
 - [x] Политика конфиденциальности (2026-09-25): страницы en/ru для pyf.app в `my_docs/landing/line-duty/`, ссылка в `AppConstants` и строка в настройках
-- [ ] Листинг App Store (тексты, скриншоты), Apple ID для «Оценить»
+- [x] Тексты App Store / Google Play на 7 языках, Notes for Review, «Что нового», feature graphic, скриншоты iPhone 6.9" / iPad 13" / Play (en-US) — `.claude/my_docs/STORE_LISTINGS.md` (2026-09-25)
+- [ ] Решить про iPad на 1.0: только iPhone (`TARGETED_DEVICE_FAMILY = 1`) или колонка по центру + пересъёмка iPad (STORE_LISTINGS.md § 6)
+- [ ] Заполнить App Store Connect и завести Google Play по чеклисту STORE_LISTINGS.md § 7; Apple ID приложения → `AppConstants.appStoreId` («Оценить»)
 - [ ] Переводы de / fr / hu / ja (по образцу WasDrop)
 
 ---

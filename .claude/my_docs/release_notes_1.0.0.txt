@@ -1,0 +1,22 @@
+Line Duty 1.0.0 — What's New (App Store ≤4000, Google Play ≤500)
+
+en-US:
+First release. Draw routes with one finger, dock units into their gates, keep them apart. Five themes, bonuses, saved runs, seven languages. No ads, no account, works offline.
+
+ru:
+Первый выпуск. Рисуй маршруты одним пальцем, стыкуй фигуры с воротами, не давай им столкнуться. Пять тем, бонусы, сохранение забега, семь языков. Без рекламы и аккаунта, работает офлайн.
+
+de-DE:
+Erste Version. Zeichne Routen mit einem Finger, bring Figuren in ihre Tore, halte sie auseinander. Fünf Themen, Boni, gespeicherte Runden, sieben Sprachen. Keine Werbung, kein Konto, offline spielbar.
+
+es-ES:
+Primera versión. Traza rutas con un dedo, lleva las figuras a sus puertas, evita los choques. Cinco temas, bonificaciones, partidas guardadas, siete idiomas. Sin anuncios ni cuenta, funciona sin conexión.
+
+fr-FR:
+Première version. Trace des routes d’un doigt, amène les pièces à leur porte, évite les chocs. Cinq thèmes, des bonus, des parties sauvegardées, sept langues. Sans pub ni compte, hors ligne.
+
+pt-BR:
+Primeira versão. Trace rotas com um dedo, leve as peças aos seus portões, evite colisões. Cinco temas, bônus, partidas salvas, sete idiomas. Sem anúncios nem conta, funciona offline.
+
+ja:
+初回リリース。指1本でルートを描き、ユニットをゲートへ導き、ぶつけない。5つのテーマ、ボーナス、プレイの保存、7言語対応。広告なし、アカウント不要、オフラインで遊べます。
