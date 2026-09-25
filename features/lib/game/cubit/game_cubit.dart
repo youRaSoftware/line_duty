@@ -16,6 +16,7 @@ part 'game_state.dart';
 /// запоминает флаг.
 class GameCubit extends Cubit<GameState> implements GameListener {
   final StatsRepository statsRepository;
+  final RunRepository runRepository;
   final SettingsService settings;
   final AudioService audio;
 
@@ -23,20 +24,57 @@ class GameCubit extends Cubit<GameState> implements GameListener {
   int _startBest = 0;
 
   /// Забег уже посчитан в статистике (после продолжения не считать снова).
-  bool _counted = false;
-  int _savedDelivered = 0;
+  bool _counted;
+  int _savedDelivered;
 
   /// Бейдж бонуса держится столько и гаснет.
   static const Duration toastDuration = Duration(milliseconds: 1200);
   Timer? _toastTimer;
 
+  /// [resumeFrom] — снимок незавершённого забега: счёт, продолжения и учёт
+  /// в статистике берутся из него, поле восстанавливает форма.
   GameCubit({
     required this.statsRepository,
+    required this.runRepository,
     required this.settings,
     required this.audio,
-  }) : super(GameState(tutorialOpen: !settings.value.tutorialSeen)) {
+    RunSnapshot? resumeFrom,
+  })  : _counted = resumeFrom?.counted ?? false,
+        _savedDelivered = resumeFrom?.savedDelivered ?? 0,
+        super(
+          resumeFrom == null
+              ? GameState(tutorialOpen: !settings.value.tutorialSeen)
+              : GameState(
+                  score: resumeFrom.score,
+                  delivered: resumeFrom.delivered,
+                  continues: resumeFrom.continues,
+                ),
+        ) {
     _init();
   }
+
+  /// Сохранить забег для продолжения после выхода: [field] — снимок поля от
+  /// движка (`LineDutyGame.capture`), счёт и продолжения — отсюда. Только
+  /// пока забег идёт; забег без очков не сохраняется (терять нечего), а
+  /// старый снимок при этом стирается.
+  Future<void> saveSnapshot(RunSnapshot field) async {
+    if (state.status == GameStatus.gameOver) return;
+    if (state.score == 0) {
+      await runRepository.clear();
+      return;
+    }
+    await runRepository.save(field);
+  }
+
+  /// Счёт и учёт для `LineDutyGame.capture`.
+  ({int score, int delivered, int continues, bool counted, int savedDelivered})
+      get snapshotFields => (
+            score: state.score,
+            delivered: state.delivered,
+            continues: state.continues,
+            counted: _counted,
+            savedDelivered: _savedDelivered,
+          );
 
   Future<void> _init() async {
     _stats = await statsRepository.getStats();
@@ -96,6 +134,7 @@ class GameCubit extends Cubit<GameState> implements GameListener {
       wrongGate: wrongGate,
     ));
     _saveRun();
+    runRepository.clear();
     audio.crash(isRecord: record);
   }
 
@@ -121,6 +160,7 @@ class GameCubit extends Cubit<GameState> implements GameListener {
   /// Новый забег (движок сбрасывает форма).
   void restart() {
     _saveRun();
+    runRepository.clear();
     _startBest = _stats.bestScore;
     _counted = false;
     _savedDelivered = 0;

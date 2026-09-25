@@ -118,12 +118,37 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     expect(game.paused, isFalse);
 
-    // Pause → menu.
+    // Pause → menu saves the run; the menu offers to resume it with the score.
+    final int scoreBefore = cubit.state.score;
     await tester.tap(find.byKey(GameHud.pauseButtonKey));
     await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text(LocaleKeys.pause_menu.tr()));
     await tester.pump(const Duration(milliseconds: 800));
     expect(find.byKey(MenuForm.playButtonKey), findsOneWidget);
+    expect(find.byKey(MenuForm.newRunKey), findsOneWidget,
+        reason: 'a saved run is offered');
+    expect((await appLocator<RunRepository>().load())?.score, scoreBefore);
+    await tester.tap(find.byKey(MenuForm.playButtonKey));
+    await tester.pump(const Duration(milliseconds: 900));
+    final GameCubit resumed = BlocProvider.of<GameCubit>(
+      tester.element(find.byType(GameWidget<LineDutyGame>)),
+    );
+    expect(resumed.state.score, scoreBefore, reason: 'resumed with the score');
+    expect(find.byKey(TutorialOverlay.nextKey), findsNothing);
+    debugPrint('SMOKE resumed with $scoreBefore');
+    // «Заново» стирает снимок; назад в меню — обычная «Играть».
+    await tester.tap(find.byKey(GameHud.pauseButtonKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.text(LocaleKeys.pause_restart.tr()));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(await appLocator<RunRepository>().load(), isNull);
+    await tester.tap(find.byKey(GameHud.pauseButtonKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.text(LocaleKeys.pause_menu.tr()));
+    await tester.pump(const Duration(milliseconds: 800));
+    expect(find.byKey(MenuForm.playButtonKey), findsOneWidget);
+    expect(find.byKey(MenuForm.newRunKey), findsNothing,
+        reason: 'a fresh run with no points is not offered');
 
     // Settings: sound toggle persists.
     await tester.tap(find.byKey(MenuForm.settingsButtonKey));

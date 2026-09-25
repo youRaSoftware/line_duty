@@ -11,8 +11,10 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MenuCubit>(
-      create: (BuildContext context) =>
-          MenuCubit(statsRepository: appLocator<StatsRepository>()),
+      create: (BuildContext context) => MenuCubit(
+        statsRepository: appLocator<StatsRepository>(),
+        runRepository: appLocator<RunRepository>(),
+      ),
       child: const MenuForm(),
     );
   }

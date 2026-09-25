@@ -56,6 +56,10 @@ class LineDutyGame extends FlameGame with DragCallbacks {
   PickupComponent? pickup;
   double _pickupIn = GameTuning.firstPickupDelay;
 
+  /// Снимок, который надо восстановить, как только появится разметка
+  /// (`onLoad`); форма ставит его до монтирования виджета.
+  RunSnapshot? pendingSnapshot;
+
   /// Активные эффекты: секунды заморозки и «×2»; щит — на фигуре.
   double freezeLeft = 0;
   double multiplierLeft = 0;
@@ -152,6 +156,93 @@ class LineDutyGame extends FlameGame with DragCallbacks {
       world.add(g);
     }
     _layout();
+    final RunSnapshot? pending = pendingSnapshot;
+    if (pending != null) {
+      pendingSnapshot = null;
+      restore(pending);
+    }
+  }
+
+  // --- Снимок забега --------------------------------------------------------
+
+  /// Состояние поля для сохранения: фигуры с маршрутами, пикап, таймеры.
+  /// Счёт и продолжения добавляет кубит.
+  RunSnapshot capture({
+    required int score,
+    required int delivered,
+    required int continues,
+    required bool counted,
+    required int savedDelivered,
+  }) {
+    final PickupComponent? p = pickup;
+    return RunSnapshot(
+      score: score,
+      delivered: delivered,
+      continues: continues,
+      counted: counted,
+      savedDelivered: savedDelivered,
+      freezeLeft: freezeLeft,
+      multiplierLeft: multiplierLeft,
+      spawnIn: _spawnIn,
+      pickupIn: _pickupIn,
+      pickup: p == null
+          ? null
+          : PickupSnapshot(
+              kind: p.kind,
+              x: p.position.x,
+              y: p.position.y,
+              life: p.life,
+            ),
+      units: <UnitSnapshot>[
+        for (final UnitComponent u in units)
+          if (!u.crashed)
+            UnitSnapshot(
+              color: u.color,
+              x: u.position.x,
+              y: u.position.y,
+              headingX: u.heading.x,
+              headingY: u.heading.y,
+              route: <double>[
+                for (final Vector2 p in u.route) ...<double>[p.x, p.y],
+              ],
+              docked: u.docked?.color,
+              shielded: u.shielded,
+              ghostLeft: u.ghostLeft,
+            ),
+      ],
+      savedAt: DateTime.now(),
+    );
+  }
+
+  /// Восстановить поле из снимка (после разметки: ворота уже есть).
+  void restore(RunSnapshot s) {
+    reset();
+    delivered = s.delivered;
+    freezeLeft = s.freezeLeft;
+    multiplierLeft = s.multiplierLeft;
+    _spawnIn = s.spawnIn;
+    _pickupIn = s.pickupIn;
+    final PickupSnapshot? p = s.pickup;
+    if (p != null) {
+      spawnPickupNow(p.kind, Vector2(p.x, p.y));
+      pickup!.life = p.life;
+    }
+    for (final UnitSnapshot su in s.units) {
+      final UnitComponent u =
+          UnitComponent(color: su.color, position: Vector2(su.x, su.y));
+      u.heading.setValues(su.headingX, su.headingY);
+      if (u.heading.length2 < 1e-6) u.heading.setValues(0, 1);
+      u.heading.normalize();
+      for (int i = 0; i + 1 < su.route.length; i += 2) {
+        u.route.add(Vector2(su.route[i], su.route[i + 1]));
+      }
+      final LaneColor? docked = su.docked;
+      if (docked != null && u.route.isNotEmpty) u.docked = gateFor(docked);
+      u.shielded = su.shielded;
+      u.ghostLeft = su.ghostLeft;
+      units.add(u);
+      world.add(u);
+    }
   }
 
   @override

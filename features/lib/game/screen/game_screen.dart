@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import '../cubit/game_cubit.dart';
 import 'game_form.dart';
 
+/// Экран игры; [resumeFrom] — снимок незавершённого забега (из меню по
+/// «Продолжить»), null — новый забег.
 class GameScreen extends StatelessWidget {
-  const GameScreen({super.key});
+  final RunSnapshot? resumeFrom;
+
+  const GameScreen({this.resumeFrom, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +18,12 @@ class GameScreen extends StatelessWidget {
       lazy: false,
       create: (BuildContext context) => GameCubit(
         statsRepository: appLocator<StatsRepository>(),
+        runRepository: appLocator<RunRepository>(),
         settings: appLocator<SettingsService>(),
         audio: appLocator<AudioService>(),
+        resumeFrom: resumeFrom,
       ),
-      child: const GameForm(),
+      child: GameForm(resumeFrom: resumeFrom),
     );
   }
 }

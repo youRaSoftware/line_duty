@@ -16,13 +16,16 @@ class MenuForm extends StatelessWidget {
   static const Key playButtonKey = Key('menu_play');
   static const Key settingsButtonKey = Key('menu_settings');
   static const Key soundButtonKey = Key('menu_sound');
+  static const Key newRunKey = Key('menu_new_run');
 
   const MenuForm({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final MenuCubit cubit = context.read<MenuCubit>();
     final MenuState state = context.watch<MenuCubit>().state;
     final SettingsService settings = appLocator<SettingsService>();
+    final RunSnapshot? saved = state.saved;
 
     return AppScaffold(
       body: Stack(
@@ -54,7 +57,11 @@ class MenuForm extends StatelessWidget {
                       const Spacer(flex: 2),
                       PrimaryButton(
                         key: playButtonKey,
-                        label: context.tr(LocaleKeys.menu_play),
+                        label: context.tr(
+                          saved == null
+                              ? LocaleKeys.menu_play
+                              : LocaleKeys.menu_resume,
+                        ),
                         height: AppDimens.playButtonHeight,
                         radius: AppDimens.playButtonRadius,
                         glow: true,
@@ -63,9 +70,26 @@ class MenuForm extends StatelessWidget {
                           size: 26,
                           color: AppColors.buttonText,
                         ),
-                        onPressed: () => context.goNamed('game'),
+                        onPressed: () => context.goNamed('game', extra: saved),
                       ),
-                      const SizedBox(height: 22),
+                      if (saved != null) ...<Widget>[
+                        const SizedBox(height: 4),
+                        AppTextButton(
+                          key: newRunKey,
+                          label: context.tr(
+                            LocaleKeys.menu_newRun,
+                            namedArgs: <String, String>{
+                              'score': '${saved.score}',
+                            },
+                          ),
+                          onPressed: () async {
+                            await cubit.discardSaved();
+                            if (context.mounted) context.goNamed('game');
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                      ] else
+                        const SizedBox(height: 22),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[

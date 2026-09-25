@@ -5,7 +5,9 @@
   },
   "menu": {
     "play": "PLAY",
-    "best": "BEST {score}"
+    "best": "BEST {score}",
+    "resume": "RESUME · {score}",
+    "newRun": "New run"
   },
   "hud": {
     "best": "BEST {score}"

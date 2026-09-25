@@ -470,6 +470,70 @@ void main() {
     expect(u.docked?.color, LaneColor.green);
   });
 
+  test('capture and restore round-trip the field', () async {
+    final (LineDutyGame game, _) = await _game();
+    final GateComponent red = game.gates.first;
+    final UnitComponent a = _put(game, LaneColor.red, 120, 300);
+    a.beginRoute();
+    a.addRoutePoint(Vector2(90, 400));
+    a.dockTo(red, red.position.x);
+    a.shielded = true;
+    final UnitComponent b = _put(game, LaneColor.blue, 250, 200);
+    b.heading.setValues(1, 0);
+    game.spawnPickupNow(BonusKind.multiplier, Vector2(200, 500));
+    game.pickup!.life = 3.5;
+    game.freezeLeft = 1.2;
+    game.delivered = 7;
+    final RunSnapshot s = game.capture(
+      score: 70,
+      delivered: 7,
+      continues: 0,
+      counted: true,
+      savedDelivered: 7,
+    );
+    expect(s.units, hasLength(2));
+    expect(s.pickup?.kind, BonusKind.multiplier);
+
+    final (LineDutyGame other, _) = await _game(seed: 5);
+    other.restore(s);
+    expect(other.units, hasLength(2));
+    final UnitComponent ra =
+        other.units.firstWhere((UnitComponent u) => u.color == LaneColor.red);
+    expect(ra.position, a.position);
+    expect(ra.route, a.route);
+    expect(ra.docked?.color, LaneColor.red);
+    expect(ra.shielded, isTrue);
+    final UnitComponent rb =
+        other.units.firstWhere((UnitComponent u) => u.color == LaneColor.blue);
+    expect(rb.heading.x, closeTo(1, 1e-6));
+    expect(other.pickup?.kind, BonusKind.multiplier);
+    expect(other.pickup?.life, closeTo(3.5, 1e-6));
+    expect(other.freezeLeft, closeTo(1.2, 1e-6));
+    expect(other.delivered, 7);
+    // Восстановленное поле живёт: щитоносец доезжает до своих ворот.
+    await _tick(other, 6);
+    expect(other.frozen, isFalse);
+  });
+
+  test('a pending snapshot is restored on load', () async {
+    final (LineDutyGame source, _) = await _game();
+    _put(source, LaneColor.green, 200, 300);
+    final RunSnapshot s = source.capture(
+      score: 0,
+      delivered: 0,
+      continues: 1,
+      counted: false,
+      savedDelivered: 0,
+    );
+    final LineDutyGame game = LineDutyGame(random: math.Random(2))
+      ..pendingSnapshot = s;
+    game.onGameResize(Vector2(360, 780));
+    await game.onLoad();
+    expect(game.pendingSnapshot, isNull);
+    expect(game.units, hasLength(1));
+    expect(game.units.first.color, LaneColor.green);
+  });
+
   test('demo mode routes units to their own gates and never crashes', () async {
     final LineDutyGame game = LineDutyGame(demo: true, random: math.Random(3));
     game.onGameResize(Vector2(360, 780));

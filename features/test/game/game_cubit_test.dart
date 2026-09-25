@@ -28,6 +28,36 @@ class _Settings implements SettingsRepository {
   Future<void> saveSettings(SettingsModel next) async => settings = next;
 }
 
+class _Runs implements RunRepository {
+  RunSnapshot? saved;
+
+  @override
+  Future<RunSnapshot?> load() async => saved;
+
+  @override
+  Future<void> save(RunSnapshot snapshot) async => saved = snapshot;
+
+  @override
+  Future<void> clear() async => saved = null;
+}
+
+RunSnapshot _snapshot(
+        {int score = 50, int continues = 1, bool counted = true}) =>
+    RunSnapshot(
+      score: score,
+      delivered: score ~/ 10,
+      continues: continues,
+      counted: counted,
+      savedDelivered: score ~/ 10,
+      freezeLeft: 0,
+      multiplierLeft: 0,
+      spawnIn: 1,
+      pickupIn: 5,
+      pickup: null,
+      units: const <UnitSnapshot>[],
+      savedAt: DateTime(2026, 9, 25),
+    );
+
 class _SilentAudio extends AudioService {
   _SilentAudio() : super(SettingsService(_Settings()));
 }
@@ -46,6 +76,7 @@ void main() {
 
   late _Stats stats;
   late _Settings settingsRepo;
+  late _Runs runs;
   late GameCubit cubit;
 
   setUp(() async {
@@ -53,12 +84,55 @@ void main() {
     settingsRepo = _Settings(const SettingsModel.empty().copyWith(
       tutorialSeen: true,
     ));
+    runs = _Runs();
     cubit = GameCubit(
       statsRepository: stats,
+      runRepository: runs,
       settings: await _service(settingsRepo),
       audio: _SilentAudio(),
     );
     await _settle();
+  });
+
+  test('resumes score, continues and stats accounting from a snapshot',
+      () async {
+    final GameCubit resumed = GameCubit(
+      statsRepository: stats,
+      runRepository: runs,
+      settings: await _service(settingsRepo),
+      audio: _SilentAudio(),
+      resumeFrom: _snapshot(score: 50, continues: 0, counted: true),
+    );
+    await _settle();
+    expect(resumed.state.score, 50);
+    expect(resumed.state.delivered, 5);
+    expect(resumed.state.canContinue, isFalse);
+    expect(resumed.state.tutorialOpen, isFalse);
+    // Забег уже посчитан: проигрыш не добавляет второй забег.
+    resumed.onCrash(wrongGate: false);
+    await _settle();
+    expect(stats.stats.gamesPlayed, 2);
+    await resumed.close();
+  });
+
+  test('saveSnapshot keeps the run; game over and restart clear it', () async {
+    cubit.onDelivered();
+    await cubit.saveSnapshot(_snapshot(score: cubit.state.score));
+    expect(runs.saved?.score, GameRules.scorePerDelivery);
+    cubit.onCrash(wrongGate: false);
+    await _settle();
+    expect(runs.saved, isNull, reason: 'a finished run is not resumable');
+    await cubit.saveSnapshot(_snapshot());
+    expect(runs.saved, isNull, reason: 'nothing to save after game over');
+    cubit.restart();
+    await cubit.saveSnapshot(_snapshot());
+    expect(runs.saved, isNull, reason: 'a run without points is not saved');
+    cubit.onDelivered();
+    await cubit.saveSnapshot(_snapshot());
+    expect(runs.saved, isNotNull);
+    cubit.restart();
+    await _settle();
+    expect(runs.saved, isNull);
   });
 
   tearDown(() => cubit.close());
@@ -68,6 +142,7 @@ void main() {
     final _Settings fresh = _Settings();
     final GameCubit first = GameCubit(
       statsRepository: stats,
+      runRepository: runs,
       settings: await _service(fresh),
       audio: _SilentAudio(),
     );
@@ -80,6 +155,7 @@ void main() {
 
     final GameCubit second = GameCubit(
       statsRepository: stats,
+      runRepository: runs,
       settings: await _service(fresh),
       audio: _SilentAudio(),
     );

@@ -3,11 +3,23 @@ part of 'menu_cubit.dart';
 class MenuState extends Equatable {
   final int bestScore;
 
-  const MenuState({this.bestScore = 0});
+  /// Незавершённый забег, который можно продолжить.
+  final RunSnapshot? saved;
 
-  MenuState copyWith({int? bestScore}) =>
-      MenuState(bestScore: bestScore ?? this.bestScore);
+  const MenuState({this.bestScore = 0, this.saved});
+
+  bool get canResume => saved != null;
+
+  MenuState copyWith({
+    int? bestScore,
+    RunSnapshot? saved,
+    bool clearSaved = false,
+  }) =>
+      MenuState(
+        bestScore: bestScore ?? this.bestScore,
+        saved: clearSaved ? null : (saved ?? this.saved),
+      );
 
   @override
-  List<Object?> get props => <Object?>[bestScore];
+  List<Object?> get props => <Object?>[bestScore, saved];
 }

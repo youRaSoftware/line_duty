@@ -15,6 +15,7 @@ class DataDI {
     // импортировать core) — держать в синхроне.
     final Box<dynamic> statsBox = await Hive.openBox<dynamic>('statsBox');
     final Box<dynamic> settingsBox = await Hive.openBox<dynamic>('settingsBox');
+    final Box<dynamic> runBox = await Hive.openBox<dynamic>('runBox');
 
     final GetIt locator = GetIt.instance;
 
@@ -24,12 +25,18 @@ class DataDI {
     locator.registerLazySingleton<SettingsHiveProvider>(
       () => SettingsHiveProvider(settingsBox),
     );
+    locator.registerLazySingleton<RunHiveProvider>(
+      () => RunHiveProvider(runBox),
+    );
 
     locator.registerLazySingleton<StatsRepository>(
       () => StatsRepositoryImpl(locator<StatsHiveProvider>()),
     );
     locator.registerLazySingleton<SettingsRepository>(
       () => SettingsRepositoryImpl(locator<SettingsHiveProvider>()),
+    );
+    locator.registerLazySingleton<RunRepository>(
+      () => RunRepositoryImpl(locator<RunHiveProvider>()),
     );
   }
 }

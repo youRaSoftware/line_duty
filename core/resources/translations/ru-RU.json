@@ -5,7 +5,9 @@
   },
   "menu": {
     "play": "ИГРАТЬ",
-    "best": "РЕКОРД {score}"
+    "best": "РЕКОРД {score}",
+    "resume": "ПРОДОЛЖИТЬ · {score}",
+    "newRun": "Новый забег"
   },
   "hud": {
     "best": "РЕКОРД {score}"

@@ -66,6 +66,7 @@ Please try:
 • Bonuses: hexagons appear on the field every ~20 s. Drive a unit through one and check the effect (Freeze, Shield, Points ×2, Autopilot), the indicators under the score and the badge.
 • The "How to play" tutorial on first launch and again from Settings → How to play.
 • Settings: sound, vibration, language (English / Русский); best score and statistics should survive a restart.
+• Saved runs: go to the menu mid-run (or background the app) — the menu should offer "Resume · score" and bring the field back exactly; "New run" should start fresh.
 
 Known: no sound of its own for bonus pickups yet (uses the delivery sound). No account needed, fully offline.
 

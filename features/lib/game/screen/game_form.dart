@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:core_ui/core_ui.dart';
+import 'package:domain/domain.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +14,16 @@ import '../widgets/tutorial_overlay.dart';
 
 /// Игровая форма: поле ([LineDutyGame]) на весь экран, HUD поверх в safe
 /// area, оверлеи паузы, проигрыша и онбординга. Движок стоит, пока статус
-/// не `playing` или открыт онбординг; уход приложения в фон ставит паузу.
+/// не `playing` или открыт онбординг; уход приложения в фон ставит паузу и
+/// сохраняет снимок забега (как и уход в меню), проигрыш и «Заново» его
+/// стирают. [resumeFrom] — снимок для восстановления поля.
 class GameForm extends StatefulWidget {
   /// Высота HUD — на столько спавны ниже safe area.
   static const double hudHeight = 64;
 
-  const GameForm({super.key});
+  final RunSnapshot? resumeFrom;
+
+  const GameForm({this.resumeFrom, super.key});
 
   @override
   State<GameForm> createState() => _GameFormState();
@@ -26,7 +31,8 @@ class GameForm extends StatefulWidget {
 
 class _GameFormState extends State<GameForm> with WidgetsBindingObserver {
   late final GameCubit _cubit = context.read<GameCubit>();
-  late final LineDutyGame _game = LineDutyGame(listener: _cubit);
+  late final LineDutyGame _game = LineDutyGame(listener: _cubit)
+    ..pendingSnapshot = widget.resumeFrom;
 
   @override
   void initState() {
@@ -51,7 +57,24 @@ class _GameFormState extends State<GameForm> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) _cubit.pause();
+    if (state != AppLifecycleState.resumed) {
+      _cubit.pause();
+      _saveSnapshot();
+    }
+  }
+
+  /// Снимок забега — пока он идёт (не проигрыш и не онбординг).
+  void _saveSnapshot() {
+    final GameState s = _cubit.state;
+    if (s.status == GameStatus.gameOver || s.tutorialOpen) return;
+    final f = _cubit.snapshotFields;
+    _cubit.saveSnapshot(_game.capture(
+      score: f.score,
+      delivered: f.delivered,
+      continues: f.continues,
+      counted: f.counted,
+      savedDelivered: f.savedDelivered,
+    ));
   }
 
   @override
@@ -73,7 +96,10 @@ class _GameFormState extends State<GameForm> with WidgetsBindingObserver {
     if (_cubit.continueRun()) _game.clearCrash();
   }
 
-  void _menu() => context.goNamed('menu');
+  void _menu() {
+    _saveSnapshot();
+    context.goNamed('menu');
+  }
 
   @override
   Widget build(BuildContext context) {
