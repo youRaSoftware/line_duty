@@ -23,7 +23,7 @@
 | Сбор данных | нет. App Privacy: **Data Not Collected**. Play Data safety: данные не собираются и не передаются |
 | Политика конфиденциальности | https://www.pyf.app/en/apps/line-duty/privacy (в приложении: Настройки → О приложении) |
 | Возрастной рейтинг | App Store 4+; Play (IARC) Everyone / PEGI 3 — нет насилия, страха, покупок, рекламы, пользовательского контента, общения |
-| Категории | App Store: Games → Arcade (вторая: Puzzle). Play: Arcade |
+| Категории | App Store: Games → **Casual** (вторая подкатегория: Puzzle) — подкатегории «Arcade» в ASC нет с 2019 года. Play: Arcade (теги: Casual, Puzzle, Single player, Offline) |
 | Export compliance | шифрования нет, `ITSAppUsesNonExemptEncryption = false` в Info.plist |
 | Языки интерфейса | English, Deutsch, Español, Français, Português (Brasil), Русский, 日本語 |
 | Контакт / поддержка | fyodorov.software@gmail.com, https://pyf.app |
@@ -430,7 +430,7 @@ Contact: fyodorov.software@gmail.com.
 ## 7. Чеклист форм
 
 ### App Store Connect
-- App Information: имя, подзаголовок по локалям (§ 3), категория Games / Arcade (+ Puzzle), Content Rights — нет стороннего контента, Age Rating — все «None», без неограниченного веб-доступа, без азартных игр → 4+.
+- App Information: имя, подзаголовок по локалям (§ 3), категория Games → Casual (+ Puzzle), Content Rights — нет стороннего контента, Age Rating — все «None», без неограниченного веб-доступа, без азартных игр → 4+.
 - App Privacy: «Data Not Collected» (после публикации политика по ссылке § 1). Privacy Policy URL — § 1.
 - Pricing: Free, все страны.
 - Version: Description, Keywords, Promotional Text, Support URL (https://pyf.app), Marketing URL (§ 1), Copyright, Version 1.0.0, What's New (§ 4), скриншоты 6.9" и 13" (§ 6).
