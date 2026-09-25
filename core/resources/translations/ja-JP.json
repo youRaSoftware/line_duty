@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "LINE DUTY",
+    "subtitle": "ルートを描く · ぶつけない"
+  },
+  "menu": {
+    "play": "プレイ",
+    "best": "ベスト {score}",
+    "resume": "つづきから · {score}",
+    "newRun": "最初から"
+  },
+  "hud": {
+    "best": "ベスト {score}"
+  },
+  "pause": {
+    "title": "ポーズ",
+    "resume": "再開",
+    "restart": "やり直す",
+    "menu": "メニュー",
+    "sound": "サウンド",
+    "vibration": "バイブ"
+  },
+  "gameOver": {
+    "title": "衝突",
+    "wrongGate": "ゲートちがい",
+    "score": "スコア",
+    "newRecord": "新記録",
+    "restart": "やり直す",
+    "menu": "メニュー",
+    "continueAd": "コンティニュー · 広告",
+    "continueFree": "コンティニュー"
+  },
+  "settings": {
+    "title": "設定",
+    "sound": "サウンド",
+    "sounds": "効果音",
+    "vibration": "バイブ",
+    "game": "ゲーム",
+    "language": "言語",
+    "languageTitle": "言語",
+    "languageSystem": "端末の設定",
+    "howToPlay": "遊び方",
+    "stats": "記録",
+    "best": "ベストスコア",
+    "gamesPlayed": "プレイ回数",
+    "delivered": "到着数",
+    "reset": "記録をリセット",
+    "about": "このアプリについて",
+    "version": "バージョン",
+    "privacy": "プライバシーポリシー",
+    "licenses": "ライセンス",
+    "resetTitle": "記録をリセットしますか？",
+    "resetBody": "ベストスコア、プレイ回数、到着数がゼロになります。",
+    "resetConfirm": "リセット",
+    "cancel": "キャンセル"
+  },
+  "tutorial": {
+    "step1Title": "ユニットとゲート",
+    "step1": "4色のユニットが上から現れ、下へ進みます。ユニットのマーク（丸・四角・三角・ひし形）は、同じ色のゲートと同じです。",
+    "step2Title": "ルートを描く",
+    "step2": "ユニットをドラッグして道を描くと、線に沿って進み、通った線は消えます。線を自分のゲートまで引けばルートがつながり、指を離せます。新しい線を引くと前の線は消えます。",
+    "step3Title": "ぶつけない",
+    "step3": "ユニット同士が触れるか、違うゲートに入るとゲームオーバー。近づきすぎると赤い「!」のリングで警告します。",
+    "step4Title": "スコア",
+    "step4": "到着1体ごとに+10。到着が増えるほど速く、頻繁に現れます。ミスのあと1回だけコンティニューできます。",
+    "step5Title": "ボーナス",
+    "step5": "フィールドに六角形が現れたら、ユニットで通り抜けましょう。フリーズは全員を3秒止め、シールドは衝突を1回無効に、×2は10秒間スコア2倍、オートパイロットはユニットを自動でゲートへ運びます。",
+    "next": "次へ",
+    "skip": "スキップ",
+    "start": "プレイ！"
+  },
+  "themes": {
+    "metro": "メトロ",
+    "city": "シティ",
+    "aquarium": "水族館",
+    "anthill": "アリの巣",
+    "garden": "ガーデン"
+  },
+  "bonus": {
+    "freeze": "フリーズ",
+    "shield": "シールド",
+    "multiplier": "スコア×2",
+    "autopilot": "オートパイロット"
+  }
+}

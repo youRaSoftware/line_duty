@@ -17,7 +17,7 @@ What to test in this build:
 • Five visual themes (Metro, City, Aquarium, Anthill, Garden) — switch them from the strip in the main menu; everything should recolour instantly, including the pause screen and settings.
 • Bonuses: hexagons appear on the field about every 20 seconds. Drive a unit through one — Freeze, Shield, Points ×2 or Autopilot. Check the indicators under the score and the badge.
 • "How to play" tutorial on first launch and again from Settings.
-• Sound, vibration and language (English / Русский) in Settings; the best score and statistics should survive restarting the app.
+• Sound, vibration and language (English, Deutsch, Español, Français, Português, Русский, 日本語) in Settings; the best score and statistics should survive restarting the app.
 
 No account or sign-in is needed. The game works fully offline and contains no ads or purchases.
 
@@ -27,7 +27,7 @@ Please report anything that feels off: routes that don't dock, collisions that l
 
 Line Duty — аркада на разведении потоков одним пальцем. Фигуры четырёх цветов выезжают сверху; нарисуй маршрут и доведи каждую до ворот её цвета. Линия стирается за фигурой, красное кольцо предупреждает о сближении, столкновение или чужие ворота — конец забега. Одно бесплатное продолжение за забег.
 
-Что проверить: рисование маршрутов и стыковку с воротами, пять тем в меню, бонусы (заморозка, щит, ×2, автопилот), обучение при первом запуске и из настроек, звук, вибрацию и язык, сохранение рекорда после перезапуска. Аккаунт не нужен, игра работает без сети, рекламы и покупок нет.
+Что проверить: рисование маршрутов и стыковку с воротами, пять тем в меню, бонусы (заморозка, щит, ×2, автопилот), обучение при первом запуске и из настроек, звук, вибрацию и язык (семь языков), сохранение рекорда после перезапуска. Аккаунт не нужен, игра работает без сети, рекламы и покупок нет.
 
 Пишите обо всём, что кажется неправильным: маршрут не стыкуется, столкновение выглядит нечестным, фигура застряла у края, цвета не сменились после выбора темы, текст не влезает, вылеты.
 
@@ -65,7 +65,7 @@ Please try:
 • All five themes from the strip in the main menu (Metro, City, Aquarium, Anthill, Garden) — the field, pause screen, game over and settings should recolour right away.
 • Bonuses: hexagons appear on the field every ~20 s. Drive a unit through one and check the effect (Freeze, Shield, Points ×2, Autopilot), the indicators under the score and the badge.
 • The "How to play" tutorial on first launch and again from Settings → How to play.
-• Settings: sound, vibration, language (English / Русский); best score and statistics should survive a restart.
+• Settings: sound, vibration, language (English, Deutsch, Español, Français, Português, Русский, 日本語); best score and statistics should survive a restart.
 • Saved runs: go to the menu mid-run (or background the app) — the menu should offer "Resume · score" and bring the field back exactly; "New run" should start fresh.
 
 Known: no sound of its own for bonus pickups yet (uses the delivery sound). No account needed, fully offline.

@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "LINE DUTY",
+    "subtitle": "TRACE ROTAS · EVITE COLISÕES"
+  },
+  "menu": {
+    "play": "JOGAR",
+    "best": "RECORDE {score}",
+    "resume": "CONTINUAR · {score}",
+    "newRun": "Nova partida"
+  },
+  "hud": {
+    "best": "RECORDE {score}"
+  },
+  "pause": {
+    "title": "PAUSA",
+    "resume": "CONTINUAR",
+    "restart": "REINICIAR",
+    "menu": "MENU",
+    "sound": "Som",
+    "vibration": "Vibração"
+  },
+  "gameOver": {
+    "title": "COLISÃO",
+    "wrongGate": "PORTÃO ERRADO",
+    "score": "PONTOS",
+    "newRecord": "NOVO RECORDE",
+    "restart": "REINICIAR",
+    "menu": "MENU",
+    "continueAd": "CONTINUAR · ANÚNCIO",
+    "continueFree": "CONTINUAR"
+  },
+  "settings": {
+    "title": "CONFIGURAÇÕES",
+    "sound": "SOM",
+    "sounds": "Sons",
+    "vibration": "Vibração",
+    "game": "JOGO",
+    "language": "Idioma",
+    "languageTitle": "IDIOMA",
+    "languageSystem": "Do sistema",
+    "howToPlay": "Como jogar",
+    "stats": "ESTATÍSTICAS",
+    "best": "Recorde",
+    "gamesPlayed": "Partidas",
+    "delivered": "Entregues",
+    "reset": "Zerar estatísticas",
+    "about": "SOBRE",
+    "version": "Versão",
+    "privacy": "Política de privacidade",
+    "licenses": "Licenças",
+    "resetTitle": "ZERAR ESTATÍSTICAS?",
+    "resetBody": "O recorde, as partidas e as entregas voltarão a zero.",
+    "resetConfirm": "Zerar",
+    "cancel": "Cancelar"
+  },
+  "tutorial": {
+    "step1Title": "PEÇAS E PORTÕES",
+    "step1": "Peças de quatro cores entram por cima e descem sozinhas. O símbolo de cada peça (círculo, quadrado, triângulo ou losango) é o mesmo do portão da sua cor.",
+    "step2Title": "TRACE UMA ROTA",
+    "step2": "Arraste uma peça para desenhar o caminho: ela segue a linha e a apaga ao passar. Leve a linha até o portão dela: a rota se encaixa e você pode soltar o dedo. Uma linha nova sobre a peça substitui a anterior.",
+    "step3Title": "EVITE COLISÕES",
+    "step3": "Duas peças se tocando ou um portão errado encerram a partida. Um anel vermelho com “!” avisa quando as peças ficam perto demais.",
+    "step4Title": "PONTOS",
+    "step4": "+10 por cada peça entregue. Quanto mais você entrega, mais rápido elas andam e mais vezes aparecem. Uma vez por partida dá para continuar depois de um erro.",
+    "step5Title": "BÔNUS",
+    "step5": "Hexágonos aparecem no campo: passe uma peça por cima. Congelar para todo mundo por 3 s, Escudo perdoa uma colisão, ×2 dobra os pontos por 10 s, Piloto automático leva a peça até o portão.",
+    "next": "PRÓXIMO",
+    "skip": "PULAR",
+    "start": "VAMOS JOGAR!"
+  },
+  "themes": {
+    "metro": "Metrô",
+    "city": "Cidade",
+    "aquarium": "Aquário",
+    "anthill": "Formigueiro",
+    "garden": "Jardim"
+  },
+  "bonus": {
+    "freeze": "Congelar",
+    "shield": "Escudo",
+    "multiplier": "Pontos ×2",
+    "autopilot": "Piloto automático"
+  }
+}

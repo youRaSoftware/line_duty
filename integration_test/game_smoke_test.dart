@@ -6,8 +6,8 @@
 // the field and closes on the last step → units spawn → a finger route
 // drawn from a unit to its own gate delivers it (score grows) → pause /
 // resume → back to the menu → settings toggle persists → «How to play»
-// reopens the tutorial from settings → picking a theme in the menu applies
-// the palette and persists.
+// reopens the tutorial from settings → language picker switches to Japanese
+// and back → picking a theme in the menu applies the palette and persists.
 
 import 'package:core/core.dart';
 import 'package:core_ui/core_ui.dart';
@@ -170,6 +170,24 @@ void main() {
     await tester.tap(find.byKey(TutorialOverlay.skipKey));
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.byKey(TutorialOverlay.skipKey), findsNothing);
+
+    // Language picker: Japanese applies live (system CJK font), persists,
+    // «System» brings the device language back.
+    await tester.tap(find.byKey(SettingsForm.languageRowKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.byKey(const Key('language_ja')));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(settings.value.localeCode, 'ja');
+    expect((await appLocator<SettingsRepository>().getSettings()).localeCode,
+        'ja');
+    expect(find.text('設定'), findsOneWidget,
+        reason: 'settings title is re-rendered in Japanese');
+    await tester.tap(find.byKey(SettingsForm.languageRowKey));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.byKey(const Key('language_system')));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(settings.value.localeCode, isNull);
+    expect(find.text(LocaleKeys.settings_title.tr()), findsOneWidget);
 
     await tester.tap(find.byKey(SettingsForm.backKey));
     await tester.pump(const Duration(milliseconds: 800));

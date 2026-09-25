@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "LINE DUTY",
+    "subtitle": "ROUTEN ZEICHNEN · ABSTAND HALTEN"
+  },
+  "menu": {
+    "play": "SPIELEN",
+    "best": "REKORD {score}",
+    "resume": "WEITER · {score}",
+    "newRun": "Neue Runde"
+  },
+  "hud": {
+    "best": "REKORD {score}"
+  },
+  "pause": {
+    "title": "PAUSE",
+    "resume": "WEITER",
+    "restart": "NEU STARTEN",
+    "menu": "MENÜ",
+    "sound": "Ton",
+    "vibration": "Vibration"
+  },
+  "gameOver": {
+    "title": "KOLLISION",
+    "wrongGate": "FALSCHES TOR",
+    "score": "PUNKTE",
+    "newRecord": "NEUER REKORD",
+    "restart": "NEU STARTEN",
+    "menu": "MENÜ",
+    "continueAd": "WEITER · WERBUNG",
+    "continueFree": "WEITER"
+  },
+  "settings": {
+    "title": "EINSTELLUNGEN",
+    "sound": "TON",
+    "sounds": "Töne",
+    "vibration": "Vibration",
+    "game": "SPIEL",
+    "language": "Sprache",
+    "languageTitle": "SPRACHE",
+    "languageSystem": "System",
+    "howToPlay": "Spielanleitung",
+    "stats": "STATISTIK",
+    "best": "Rekord",
+    "gamesPlayed": "Runden",
+    "delivered": "Angekommen",
+    "reset": "Statistik zurücksetzen",
+    "about": "ÜBER DIE APP",
+    "version": "Version",
+    "privacy": "Datenschutzerklärung",
+    "licenses": "Lizenzen",
+    "resetTitle": "STATISTIK ZURÜCKSETZEN?",
+    "resetBody": "Rekord, Runden und angekommene Figuren werden auf null gesetzt.",
+    "resetConfirm": "Zurücksetzen",
+    "cancel": "Abbrechen"
+  },
+  "tutorial": {
+    "step1Title": "FIGUREN & TORE",
+    "step1": "Figuren in vier Farben kommen oben herein und fahren nach unten. Das Symbol auf einer Figur – Kreis, Quadrat, Dreieck oder Raute – passt zum Tor ihrer Farbe.",
+    "step2Title": "ROUTE ZEICHNEN",
+    "step2": "Ziehe eine Figur, um ihren Weg zu zeichnen: Sie folgt der Linie und löscht sie hinter sich. Führe die Linie in ihr Tor – die Route dockt an, und du kannst loslassen. Eine neue Linie auf einer Figur ersetzt die alte.",
+    "step3Title": "ABSTAND HALTEN",
+    "step3": "Berühren sich zwei Figuren oder landet eine im falschen Tor, ist die Runde vorbei. Ein roter Ring mit „!“ warnt, wenn Figuren zu nah kommen.",
+    "step4Title": "PUNKTE",
+    "step4": "+10 für jede angekommene Figur. Je mehr du lieferst, desto schneller fahren sie und desto öfter erscheinen sie. Einmal pro Runde kannst du nach einem Fehler weitermachen.",
+    "step5Title": "BONI",
+    "step5": "Auf dem Feld erscheinen Sechsecke – fahre mit einer Figur hindurch. Einfrieren stoppt alle für 3 s, Schild verzeiht eine Kollision, ×2 verdoppelt die Punkte für 10 s, Autopilot fährt die Figur zu ihrem Tor.",
+    "next": "WEITER",
+    "skip": "ÜBERSPRINGEN",
+    "start": "LOS GEHT’S!"
+  },
+  "themes": {
+    "metro": "Metro",
+    "city": "Stadt",
+    "aquarium": "Aquarium",
+    "anthill": "Ameisenhaufen",
+    "garden": "Garten"
+  },
+  "bonus": {
+    "freeze": "Einfrieren",
+    "shield": "Schild",
+    "multiplier": "Punkte ×2",
+    "autopilot": "Autopilot"
+  }
+}

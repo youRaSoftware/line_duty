@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "LINE DUTY",
+    "subtitle": "TRACE DES ROUTES · ÉVITE LES CHOCS"
+  },
+  "menu": {
+    "play": "JOUER",
+    "best": "RECORD {score}",
+    "resume": "REPRENDRE · {score}",
+    "newRun": "Nouvelle partie"
+  },
+  "hud": {
+    "best": "RECORD {score}"
+  },
+  "pause": {
+    "title": "PAUSE",
+    "resume": "REPRENDRE",
+    "restart": "RECOMMENCER",
+    "menu": "MENU",
+    "sound": "Son",
+    "vibration": "Vibration"
+  },
+  "gameOver": {
+    "title": "COLLISION",
+    "wrongGate": "MAUVAISE PORTE",
+    "score": "SCORE",
+    "newRecord": "NOUVEAU RECORD",
+    "restart": "RECOMMENCER",
+    "menu": "MENU",
+    "continueAd": "CONTINUER · PUB",
+    "continueFree": "CONTINUER"
+  },
+  "settings": {
+    "title": "RÉGLAGES",
+    "sound": "SON",
+    "sounds": "Sons",
+    "vibration": "Vibration",
+    "game": "JEU",
+    "language": "Langue",
+    "languageTitle": "LANGUE",
+    "languageSystem": "Système",
+    "howToPlay": "Comment jouer",
+    "stats": "STATISTIQUES",
+    "best": "Record",
+    "gamesPlayed": "Parties",
+    "delivered": "Livrées",
+    "reset": "Réinitialiser les statistiques",
+    "about": "À PROPOS",
+    "version": "Version",
+    "privacy": "Politique de confidentialité",
+    "licenses": "Licences",
+    "resetTitle": "RÉINITIALISER LES STATISTIQUES ?",
+    "resetBody": "Le record, les parties et les livraisons seront remis à zéro.",
+    "resetConfirm": "Réinitialiser",
+    "cancel": "Annuler"
+  },
+  "tutorial": {
+    "step1Title": "PIÈCES ET PORTES",
+    "step1": "Des pièces de quatre couleurs arrivent par le haut et descendent toutes seules. Le symbole d’une pièce (rond, carré, triangle ou losange) correspond à la porte de sa couleur.",
+    "step2Title": "TRACE UNE ROUTE",
+    "step2": "Fais glisser une pièce pour dessiner son chemin : elle suit la ligne et l’efface derrière elle. Amène la ligne jusqu’à sa porte : la route s’y accroche et tu peux lever le doigt. Une nouvelle ligne sur une pièce remplace l’ancienne.",
+    "step3Title": "ÉVITE LES CHOCS",
+    "step3": "Si deux pièces se touchent ou si l’une entre dans la mauvaise porte, la partie est finie. Un anneau rouge avec « ! » prévient quand des pièces sont trop proches.",
+    "step4Title": "SCORE",
+    "step4": "+10 par pièce livrée. Plus tu en livres, plus elles vont vite et plus elles arrivent souvent. Une fois par partie, tu peux continuer après une erreur.",
+    "step5Title": "BONUS",
+    "step5": "Des hexagones apparaissent sur le terrain : fais-y passer une pièce. Gel arrête tout le monde 3 s, Bouclier pardonne une collision, ×2 double les points pendant 10 s, Pilote automatique conduit la pièce à sa porte.",
+    "next": "SUIVANT",
+    "skip": "PASSER",
+    "start": "C’EST PARTI !"
+  },
+  "themes": {
+    "metro": "Métro",
+    "city": "Ville",
+    "aquarium": "Aquarium",
+    "anthill": "Fourmilière",
+    "garden": "Jardin"
+  },
+  "bonus": {
+    "freeze": "Gel",
+    "shield": "Bouclier",
+    "multiplier": "Points ×2",
+    "autopilot": "Pilote auto"
+  }
+}

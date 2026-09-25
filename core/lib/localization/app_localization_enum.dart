@@ -3,10 +3,19 @@ import 'package:flutter/material.dart';
 /// Поддерживаемые языки интерфейса. Файлы переводов —
 /// `core/resources/translations/<lang>-<REGION>.json`, ключи —
 /// `locale_keys.g.dart` (генерация: `script/prebuild_script.sh`).
-/// Имя языка показывается на нём самом и не переводится.
+/// Имя языка показывается на нём самом и не переводится. Порядок — порядок
+/// строк в пикере: английский первым, дальше по алфавиту родного названия.
+/// Устройство с другим регионом того же языка (es-MX, pt-PT, de-AT…) получает
+/// файл языка — EasyLocalization подбирает по `languageCode`. Японский
+/// рисуется системным CJK-шрифтом (у Golos Text / Unbounded нет иероглифов).
 enum AppLocalizationEnum {
   en(locale: Locale('en', 'US'), languageDisplayName: 'English'),
-  ru(locale: Locale('ru', 'RU'), languageDisplayName: 'Русский');
+  de(locale: Locale('de', 'DE'), languageDisplayName: 'Deutsch'),
+  es(locale: Locale('es', 'ES'), languageDisplayName: 'Español'),
+  fr(locale: Locale('fr', 'FR'), languageDisplayName: 'Français'),
+  pt(locale: Locale('pt', 'BR'), languageDisplayName: 'Português (Brasil)'),
+  ru(locale: Locale('ru', 'RU'), languageDisplayName: 'Русский'),
+  ja(locale: Locale('ja', 'JP'), languageDisplayName: '日本語');
 
   final Locale locale;
   final String languageDisplayName;

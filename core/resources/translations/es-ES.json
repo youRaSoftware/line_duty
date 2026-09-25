@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "LINE DUTY",
+    "subtitle": "TRAZA RUTAS · EVITA CHOQUES"
+  },
+  "menu": {
+    "play": "JUGAR",
+    "best": "RÉCORD {score}",
+    "resume": "CONTINUAR · {score}",
+    "newRun": "Nueva partida"
+  },
+  "hud": {
+    "best": "RÉCORD {score}"
+  },
+  "pause": {
+    "title": "PAUSA",
+    "resume": "CONTINUAR",
+    "restart": "REINICIAR",
+    "menu": "MENÚ",
+    "sound": "Sonido",
+    "vibration": "Vibración"
+  },
+  "gameOver": {
+    "title": "CHOQUE",
+    "wrongGate": "PUERTA EQUIVOCADA",
+    "score": "PUNTOS",
+    "newRecord": "NUEVO RÉCORD",
+    "restart": "REINICIAR",
+    "menu": "MENÚ",
+    "continueAd": "CONTINUAR · ANUNCIO",
+    "continueFree": "CONTINUAR"
+  },
+  "settings": {
+    "title": "AJUSTES",
+    "sound": "SONIDO",
+    "sounds": "Sonidos",
+    "vibration": "Vibración",
+    "game": "JUEGO",
+    "language": "Idioma",
+    "languageTitle": "IDIOMA",
+    "languageSystem": "Del sistema",
+    "howToPlay": "Cómo jugar",
+    "stats": "ESTADÍSTICAS",
+    "best": "Récord",
+    "gamesPlayed": "Partidas",
+    "delivered": "Entregadas",
+    "reset": "Restablecer estadísticas",
+    "about": "ACERCA DE",
+    "version": "Versión",
+    "privacy": "Política de privacidad",
+    "licenses": "Licencias",
+    "resetTitle": "¿RESTABLECER ESTADÍSTICAS?",
+    "resetBody": "El récord, las partidas y las entregas volverán a cero.",
+    "resetConfirm": "Restablecer",
+    "cancel": "Cancelar"
+  },
+  "tutorial": {
+    "step1Title": "FIGURAS Y PUERTAS",
+    "step1": "Figuras de cuatro colores entran por arriba y bajan solas. El símbolo de cada figura (círculo, cuadrado, triángulo o rombo) coincide con la puerta de su color.",
+    "step2Title": "TRAZA UNA RUTA",
+    "step2": "Arrastra una figura para dibujar su camino: seguirá la línea y la borrará a su paso. Lleva la línea hasta su puerta: la ruta se acopla y puedes soltar el dedo. Una línea nueva sobre una figura sustituye a la anterior.",
+    "step3Title": "EVITA CHOQUES",
+    "step3": "Si dos figuras se tocan o una entra en la puerta equivocada, la partida termina. Un anillo rojo con «!» avisa cuando se acercan demasiado.",
+    "step4Title": "PUNTOS",
+    "step4": "+10 por cada figura entregada. Cuantas más entregues, más rápido irán y más a menudo aparecerán. Una vez por partida puedes continuar tras un error.",
+    "step5Title": "BONIFICACIONES",
+    "step5": "Aparecen hexágonos en el campo: pasa una figura por encima. Congelar detiene a todos 3 s, Escudo perdona un choque, ×2 duplica los puntos durante 10 s, Piloto automático lleva la figura a su puerta.",
+    "next": "SIGUIENTE",
+    "skip": "SALTAR",
+    "start": "¡A JUGAR!"
+  },
+  "themes": {
+    "metro": "Metro",
+    "city": "Ciudad",
+    "aquarium": "Acuario",
+    "anthill": "Hormiguero",
+    "garden": "Jardín"
+  },
+  "bonus": {
+    "freeze": "Congelar",
+    "shield": "Escudo",
+    "multiplier": "Puntos ×2",
+    "autopilot": "Piloto automático"
+  }
+}
