@@ -67,7 +67,7 @@
 - [ ] Монетизация: реклама за продолжение (`AppConfig.monetizationEnabled`), премиум без рекламы
 - [x] Политика конфиденциальности (2026-09-25): страницы en/ru для pyf.app в `my_docs/landing/line-duty/`, ссылка в `AppConstants` и строка в настройках
 - [x] Тексты App Store / Google Play на 7 языках, Notes for Review, «Что нового», feature graphic, скриншоты iPhone 6.9" / iPad 13" / Play (en-US) — `.claude/my_docs/STORE_LISTINGS.md` (2026-09-25)
-- [x] iPad: поле колонкой по центру (`GameTuning.maxZoom` 1.5, `fieldOffset`, края колонки), iPad-скриншоты пересняты (2026-09-25)
+- [x] iPad: зум ограничен `GameTuning.maxZoom` 1.5, поле во всю ширину и шире в единицах, фигуры телефонного размера; iPad-скриншоты пересняты (2026-09-25)
 - [ ] Заполнить App Store Connect и завести Google Play по чеклисту STORE_LISTINGS.md § 7; Apple ID приложения → `AppConstants.appStoreId` («Оценить»)
 - [ ] Переводы de / fr / hu / ja (по образцу WasDrop)
 

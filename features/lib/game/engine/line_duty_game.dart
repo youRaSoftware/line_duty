@@ -103,30 +103,23 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     return _skin;
   }
 
-  double get fieldWidth => AppDimens.fieldWidth;
+  /// Ширина поля в единицах: на телефоне `AppDimens.fieldWidth` = 360, на
+  /// планшете больше — зум упирается в [GameTuning.maxZoom], а поле всё
+  /// равно занимает всю ширину виджета; спавны и ворота стоят по долям
+  /// ширины, фигуры остаются телефонного размера.
+  double get fieldWidth => size.x / _zoom;
 
   double get fieldHeight => size.y / _zoom;
 
-  /// Логических px виджета на единицу поля. На телефонах поле занимает всю
-  /// ширину; на планшетах зум упирается в [GameTuning.maxZoom], поле
-  /// становится колонкой по центру (см. [fieldOffset]), а фигуры остаются
-  /// телефонного размера.
+  /// Логических px виджета на единицу поля.
   double get _zoom =>
       math.min(size.x / AppDimens.fieldWidth, GameTuning.maxZoom);
 
-  /// Сдвиг поля от левого края виджета в единицах поля (0 на телефонах).
-  double get fieldOffset => (size.x / _zoom - fieldWidth) / 2;
-
-  /// Поле уже виджета — колонка по центру, края поля стоит показать.
-  bool get columnMode => fieldOffset > 0.5;
-
   /// Точка виджета (логические px) → единицы поля.
-  Vector2 toField(Vector2 canvasPosition) =>
-      Vector2(canvasPosition.x / _zoom - fieldOffset, canvasPosition.y / _zoom);
+  Vector2 toField(Vector2 canvasPosition) => canvasPosition / _zoom;
 
   /// Единицы поля → точка виджета (логические px).
-  Vector2 toCanvas(Vector2 fieldPosition) =>
-      Vector2((fieldPosition.x + fieldOffset) * _zoom, fieldPosition.y * _zoom);
+  Vector2 toCanvas(Vector2 fieldPosition) => fieldPosition * _zoom;
 
   bool get frozen => crashPoint != null;
 
@@ -271,11 +264,10 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     _layout();
   }
 
-  /// Камера смотрит на поле из левого верхнего угла; в колонке точка (0, 0)
-  /// поля сдвинута вправо на [fieldOffset].
+  /// Камера смотрит на поле из левого верхнего угла.
   void _placeCamera() {
     camera.viewfinder.zoom = _zoom;
-    camera.viewfinder.position = Vector2(-fieldOffset, 0);
+    camera.viewfinder.position = Vector2.zero();
   }
 
   /// Отступы сверху (HUD + safe area) и снизу (жест-бар) в логических

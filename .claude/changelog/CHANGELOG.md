@@ -13,7 +13,7 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 
 **Что нового:**
 
-- Изменено: на iPad поле больше не растягивается на весь экран — игра идёт в колонке по центру, фигуры и ворота того же размера, что на телефоне
+- Изменено: на iPad фигуры и ворота стали телефонного размера, поле по-прежнему во всю ширину — ворота и спавны стоят шире, места для маршрутов больше
 - Новое: пять языков интерфейса — Deutsch, Español, Français, Português (Brasil), 日本語; выбор в настройках, по умолчанию язык устройства
 - Новое: игра «Диспетчер» — фигуры четырёх цветов выезжают сверху, рисуй им пальцем маршруты до ворот своего цвета; маршрут стирается за фигурой, красное кольцо предупреждает о сближении, касание двух фигур или чужие ворота — конец забега
 - Новое: меню с живым демо-полем, счёт и рекорд в игре, пауза (звук, вибрация), экран проигрыша с бейджем «Новый рекорд» и одним бесплатным продолжением
@@ -36,7 +36,7 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 
 **What's new:**
 
-- Changed: on iPad the field no longer stretches across the whole screen — the game runs in a centred column with units and gates the same size as on a phone
+- Changed: on iPad units and gates are now phone-sized while the field still spans the whole screen — gates and spawners sit wider apart, with more room for routes
 - New: five more interface languages — Deutsch, Español, Français, Português (Brasil), 日本語; pick one in Settings, the device language is used by default
 - New: the dispatcher game — units of four colours roll in from the top, draw their routes with a finger to the gate of their colour; the route erases behind the unit, a red ring warns of a near miss, two units touching or a wrong gate ends the run
 - New: menu with a live demo field, score and best in game, pause (sound, vibration), game-over screen with a "New record" badge and one free continue

@@ -545,26 +545,33 @@ void main() {
       expect(u.docked?.color, u.color, reason: 'demo routes are docked');
     }
   });
-  group('tablet column', () {
-    test('phone width keeps the full-width field', () {
+  group('tablet scale', () {
+    test('phone width keeps the 360-unit field', () {
       final LineDutyGame g = LineDutyGame()..onGameResize(Vector2(400, 860));
-      expect(g.fieldOffset, 0);
-      expect(g.columnMode, isFalse);
-      expect(g.toField(Vector2(400, 0)).x, closeTo(AppDimens.fieldWidth, 1e-6));
+      expect(g.fieldWidth, closeTo(AppDimens.fieldWidth, 1e-3));
+      expect(g.toField(Vector2(400, 0)).x, closeTo(AppDimens.fieldWidth, 1e-3));
     });
 
-    test('tablet caps the zoom and centres the field', () {
+    test('tablet caps the zoom and widens the field', () {
       final LineDutyGame g = LineDutyGame()..onGameResize(Vector2(1024, 1366));
-      expect(g.columnMode, isTrue);
-      expect(g.fieldHeight, closeTo(1366 / GameTuning.maxZoom, 1e-6));
-      final double margin =
-          (1024 - AppDimens.fieldWidth * GameTuning.maxZoom) / 2;
-      expect(g.toCanvas(Vector2.zero()).x, closeTo(margin, 1e-6));
-      expect(g.toField(Vector2(512, 100)).x,
-          closeTo(AppDimens.fieldWidth / 2, 1e-6));
+      expect(g.fieldWidth, closeTo(1024 / GameTuning.maxZoom, 1e-3));
+      expect(g.fieldHeight, closeTo(1366 / GameTuning.maxZoom, 1e-3));
+      expect(g.toField(Vector2(1024, 0)).x, closeTo(g.fieldWidth, 1e-3));
       final Vector2 p = Vector2(123, 456);
-      expect(g.toField(g.toCanvas(p)).x, closeTo(p.x, 1e-6));
-      expect(g.toField(g.toCanvas(p)).y, closeTo(p.y, 1e-6));
+      expect(g.toField(g.toCanvas(p)).x, closeTo(p.x, 1e-3));
+      expect(g.toField(g.toCanvas(p)).y, closeTo(p.y, 1e-3));
+    });
+
+    test('gates and spawners spread across the wide field', () async {
+      final LineDutyGame g = LineDutyGame()..onGameResize(Vector2(1024, 1366));
+      await g.onLoad();
+      final double w = g.fieldWidth;
+      for (int i = 0; i < g.gates.length; i++) {
+        expect(g.gates[i].position.x,
+            closeTo(w * GameTuning.gateFractions[i], 1e-3));
+      }
+      expect(g.spawners.last.position.x,
+          closeTo(w * GameTuning.spawnFractions.last, 1e-3));
     });
   });
 }

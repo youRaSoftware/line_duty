@@ -431,11 +431,11 @@ Contact: fyodorov.software@gmail.com.
 | Папка | Устройство | Размер | Статус |
 |---|---|---|---|
 | `store/screenshots/iphone69/en-US/01–06.png` | iPhone 17 Pro Max | 1320×2868 | готово |
-| `store/screenshots/ipad13/en-US/01–06.png` | iPad Pro 13" (M4) | 2064×2752 | готово (колонка по центру). Язык симулятора — английский, иначе дата в статус-баре на русском: `xcrun simctl spawn <udid> defaults write .GlobalPreferences AppleLanguages -array en`, затем перезагрузить симулятор |
+| `store/screenshots/ipad13/en-US/01–06.png` | iPad Pro 13" (M4) | 2064×2752 | готово (поле во всю ширину, фигуры телефонного размера). Язык симулятора — английский, иначе дата в статус-баре на русском: `xcrun simctl spawn <udid> defaults write .GlobalPreferences AppleLanguages -array en`, затем перезагрузить симулятор |
 | `store/screenshots/play/en-US/01–06.png` | обрезка iPhone-кадров до 9:16 (`sips --cropToHeightWidth 2347 1320`) | 1320×2347 | готово |
 | `store/play_feature_graphic_1024x500.png` | `swift script/make_feature_graphic.swift store/icon_rounded_1024.png <out>` | 1024×500 | готово |
 
-**iPad.** С 2026-09-25 поле на планшете — колонка 540 px по центру (`GameTuning.maxZoom`), фигуры телефонного размера; iPad-скриншоты пересняты с этой раскладкой и с английским языком симулятора.
+**iPad.** С 2026-09-25 зум на планшете ограничен (`GameTuning.maxZoom`): поле во всю ширину, но шире в единицах, фигуры и ворота телефонного размера; iPad-скриншоты пересняты с этой раскладкой и с английским языком симулятора. Перед съёмкой удалить dev-сборку с симулятора (`xcrun simctl uninstall <udid> com.lineduty.dev`), иначе «◀ Line Dev» в статус-баре.
 
 Локали без своих скриншотов в App Store Connect берут кадры основной локали (en-US). Если снимать ru/ja: `script/store_shots.sh <udid> store/screenshots/iphone69/ru-RU ru`.
 

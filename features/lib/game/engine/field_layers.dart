@@ -22,19 +22,6 @@ class DecorLayer extends Component with HasGameReference<LineDutyGame> {
       Size(game.fieldWidth, game.fieldHeight),
       time: game.time,
     );
-    if (game.columnMode) _renderEdges(canvas);
-  }
-
-  /// На планшете поле — колонка по центру: тонкие края, чтобы разворот
-  /// фигуры у невидимой границы не выглядел случайным.
-  void _renderEdges(Canvas canvas) {
-    final Paint paint = Paint()
-      ..color = AppColors.stroke
-      ..strokeWidth = 1.2
-      ..style = PaintingStyle.stroke;
-    canvas.drawLine(Offset.zero, Offset(0, game.fieldHeight), paint);
-    canvas.drawLine(Offset(game.fieldWidth, 0),
-        Offset(game.fieldWidth, game.fieldHeight), paint);
   }
 }
 

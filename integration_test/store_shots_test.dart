@@ -117,10 +117,11 @@ void main() {
       for (int i = 0; i < score; i++) {
         cubit().onDelivered();
       }
+      final double w = g.fieldWidth; // 360 on phones, wider on tablets
       g.restore(quiet(<UnitSnapshot>[
-        unitAt(LaneColor.red, 138, 165),
-        unitAt(LaneColor.blue, 224, 225),
-        unitAt(LaneColor.amber, 302, 110),
+        unitAt(LaneColor.red, w * 138 / 360, 165),
+        unitAt(LaneColor.blue, w * 224 / 360, 225),
+        unitAt(LaneColor.amber, w * 302 / 360, 110),
       ]));
       await tester.pump(const Duration(milliseconds: 200));
       routeHome(g, g.units[0], bend: 58);
@@ -136,10 +137,11 @@ void main() {
     await stageTwoRoutes();
     await shot('01');
     final LineDutyGame g = game();
+    final double mid = g.fieldWidth / 2;
     g.restore(quiet(<UnitSnapshot>[
-      unitAt(LaneColor.blue, 150, 380),
-      unitAt(LaneColor.red, 196, 388),
-      unitAt(LaneColor.green, 300, 160),
+      unitAt(LaneColor.blue, mid - 30, 380),
+      unitAt(LaneColor.red, mid + 16, 388),
+      unitAt(LaneColor.green, g.fieldWidth * 300 / 360, 160),
     ]));
     await tester.pump(const Duration(milliseconds: 120));
     expect(g.warnings, isNotEmpty, reason: 'warning ring is up');
