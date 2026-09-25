@@ -16,6 +16,7 @@
 ├── changelog/CHANGELOG.md      # User-facing changelog (Keep a Changelog + SemVer, RU/EN)
 ├── my_docs/
 │   ├── SPEC.md                 # Спека v2: механика, темы (палитры, спрайты), бонусы, экраны; v1 — SPEC_v1_metro.md
+│   ├── landing/line-duty/      # Пакет для лендинга pyf.app: MDX страницы (en/ru), политика, иконка, скриншоты, README
 │   └── refs/                   # PNG-референсы: 1a/2a/2b/2c (метро), 4d иконка, 5a бонусы, 6b/6d/6e поля тем, 7b/7e/7f/7g спрайты
 ├── shared/line_duty_ui_reference.md  # UI/архитектурный референс для create-* скиллов
 └── skills/                     # create-feature-ui, create-feature-full, create-widget, analyze-feature, audit-section, llm-council
@@ -79,7 +80,7 @@ flutter test integration_test -d <deviceId> --flavor dev --dart-define=environme
 Правила таких тестов (как в WasDrop): `binding.framePolicy = fullyLive` (иначе движок тикает только на `pump()`), никакого `pumpAndSettle` (Flame рисует непрерывно, он не вернётся), только `pump(Duration)`.
 
 ## Структура пакетов
-- **core/** — `AppConfig`/`Flavor`, `AppConstants` (ссылки, пока пустые), DI (`app_di.dart`), сервисы `SettingsService` / `AudioService`, локализация (`AppLocalizationEnum`, `LocaleKeys`; переводы в `resources/translations/`), константы роутов и Hive-боксов; реэкспортирует bloc/get_it/go_router/navigation/easy_localization
+- **core/** — `AppConfig`/`Flavor`, `AppConstants` (`privacyPolicyUrl` → страница на pyf.app, `appStoreId` пока пустой), DI (`app_di.dart`), сервисы `SettingsService` / `AudioService`, локализация (`AppLocalizationEnum`, `LocaleKeys`; переводы в `resources/translations/`), константы роутов и Hive-боксов; реэкспортирует bloc/get_it/go_router/navigation/easy_localization
 - **core_ui/** — `AppPalette`/`AppPalettes` (темы), `AppColors` (геттеры над текущей палитрой), `AppFonts`, `AppDimens`, `appTheme(palette)` / `systemUiStyle`, виджеты (`AppScaffold`, `GridBackground`, `PrimaryButton`, `SecondaryButton`, `DashedButton`, `AppTextButton`, `IconSquareButton`, `AppToggleRow`, `AppOverlay`, `RecordBadge`, `LaneGlyphIcon`/`LaneGlyphPainter`)
 - **domain/** — `LaneColor` (red/amber/green/blue + `LaneGlyph`), `GameRules` (очки за доставку, продолжения), `GameStatsModel` (рекорд, забеги, доведено), `SettingsModel` (звук, вибрация, язык, тема, обучение), `RunSnapshot` (снимок незавершённого забега: счёт/продолжения/учёт, таймеры, пикап, фигуры с маршрутами), интерфейсы `StatsRepository` / `SettingsRepository` / `RunRepository`
 - **data/** — Hive-провайдеры (`providers/local/`: stats, settings, `RunHiveProvider` — снимок забега одной Map под ключом `snapshot` в боксе `runBox`), реализации репозиториев, `DataDI.init()`

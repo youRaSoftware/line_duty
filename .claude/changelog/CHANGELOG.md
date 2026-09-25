@@ -18,6 +18,7 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - Новое: настройки — звуки, вибрация, язык (English / Русский), статистика (рекорд, забеги, доведённые фигуры) со сбросом, версия и лицензии
 - Новое: тёмная тема «Диспетчер метро», шрифты Unbounded и Golos Text (с кириллицей), иконка приложения и экран запуска
 - Исправлено: фигура, задевшая свои ворота краем, больше не разбивается «не о те ворота» из-за зазора между воротами или потому что соседние ворота оказались чуть ближе
+- Новое: в настройках появилась ссылка на политику конфиденциальности
 - Новое: забег сохраняется — сверни или закрой приложение, выйди в меню, и в следующий раз кнопка «Продолжить» вернёт поле, счёт, бонусы и фигуры на свои места; «Новый забег» начинает с чистого листа
 - Изменено: базы ловят по своей форме — арка, холмик, кольцо или прямоугольник, как нарисовано: свои ворота принимают фигуру, едва она их задела, чужие разбивают только при заезде внутрь, проезд вдоль ряда безопасен, а фигура, ушедшая ниже ряда мимо всех баз, разбивается
 - Изменено: когда нарисованный маршрут кончается, фигура едет строго вниз, а над своими воротами сама доворачивает ко входу
@@ -38,6 +39,7 @@ On release, rename `[Unreleased]` to `[X.Y.Z] — YYYY-MM-DD` and start a fresh 
 - New: settings — sounds, vibration, language (English / Русский), statistics (best, runs, delivered) with reset, version and licenses
 - New: dark "Metro dispatcher" theme, Unbounded and Golos Text fonts (Cyrillic included), app icon and launch screen
 - Fixed: a unit that touches its own gate with its edge no longer crashes as "wrong gate" because of the gap between gates or because the neighbouring gate happened to be slightly closer
+- New: a privacy policy link in Settings
 - New: runs are saved — background or close the app or go back to the menu, and next time "Resume" brings back the field, score, bonuses and units where they were; "New run" starts fresh
 - Changed: bases catch by their drawn shape — arch, mound, ring or rectangle: your own gate takes a unit as soon as it touches, a foreign gate only kills when the unit drives inside, riding along the row is safe, and a unit that drops below the row past every base crashes
 - Changed: when a drawn route ends the unit heads straight down, and above its own gate it steers itself into the entrance

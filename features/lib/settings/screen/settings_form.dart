@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../game/widgets/tutorial_overlay.dart';
 import '../cubit/settings_cubit.dart';
@@ -20,6 +23,7 @@ class SettingsForm extends StatelessWidget {
   static const Key backKey = Key('settings_back');
   static const Key languageRowKey = Key('settings_language');
   static const Key howToPlayKey = Key('settings_how_to_play');
+  static const Key privacyRowKey = Key('settings_privacy');
 
   const SettingsForm({super.key});
 
@@ -134,6 +138,16 @@ class SettingsForm extends StatelessWidget {
                           SettingsValueRow(
                             label: context.tr(LocaleKeys.settings_version),
                             value: state.version,
+                          ),
+                          SettingsLinkRow(
+                            key: privacyRowKey,
+                            label: context.tr(LocaleKeys.settings_privacy),
+                            onPressed: () => unawaited(
+                              launchUrl(
+                                Uri.parse(AppConstants.privacyPolicyUrl),
+                                mode: LaunchMode.externalApplication,
+                              ),
+                            ),
                           ),
                           SettingsLinkRow(
                             label: context.tr(LocaleKeys.settings_licenses),
