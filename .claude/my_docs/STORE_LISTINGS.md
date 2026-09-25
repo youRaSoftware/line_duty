@@ -51,7 +51,7 @@ Play: короткое описание — поле «Short description», по
 
 ### en-US
 
-**Subtitle** (≤30): Draw routes, keep them apart (28)
+**Subtitle** (≤30): Lead each unit to its gate (26)
 
 **Promotional Text** (≤170):
 One finger, four colours, five themes. Draw routes, dock units into their gates and never let them touch. No ads, no account, works offline.
@@ -96,7 +96,7 @@ Privacy Policy: https://www.pyf.app/en/apps/line-duty/privacy
 
 ### ru
 
-**Subtitle**: Диспетчер на кончике пальца (27) — варианты: «Веди фигуры к своим воротам» (27), «Разведи потоки одним пальцем» (28)
+**Subtitle**: Веди фигуры к своим воротам (27)
 
 **Promotional Text**:
 Один палец, четыре цвета, пять тем. Рисуй маршруты, стыкуй фигуры с воротами и не давай им коснуться. Без рекламы и аккаунта, работает офлайн.
@@ -141,7 +141,7 @@ Line Duty — аркада-диспетчер одним пальцем. Фиг�
 
 ### de-DE
 
-**Subtitle**: Routen ziehen, Abstand halten (28)
+**Subtitle**: Führe Figuren in ihre Tore (26)
 
 **Promotional Text**:
 Ein Finger, vier Farben, fünf Themen. Zeichne Routen, bring Figuren in ihre Tore und lass sie nie zusammenstoßen. Keine Werbung, kein Konto, offline spielbar.
@@ -186,7 +186,7 @@ Datenschutzerklärung: https://www.pyf.app/en/apps/line-duty/privacy
 
 ### es-ES
 
-**Subtitle**: Traza rutas, evita choques (26)
+**Subtitle**: Lleva cada figura a su puerta (29)
 
 **Promotional Text**:
 Un dedo, cuatro colores, cinco temas. Traza rutas, lleva las figuras a sus puertas y no dejes que se toquen. Sin anuncios ni cuenta, funciona sin conexión.
@@ -231,7 +231,7 @@ Política de privacidad: https://www.pyf.app/en/apps/line-duty/privacy
 
 ### fr-FR
 
-**Subtitle**: Trace des routes, sans chocs (26)
+**Subtitle**: Guide chaque pièce à sa porte (29)
 
 **Promotional Text**:
 Un doigt, quatre couleurs, cinq thèmes. Trace des routes, amène les pièces à leur porte et ne les laisse jamais se toucher. Sans pub ni compte, hors ligne.
@@ -276,7 +276,7 @@ Politique de confidentialité : https://www.pyf.app/en/apps/line-duty/privacy
 
 ### pt-BR
 
-**Subtitle**: Trace rotas, evite colisões (27)
+**Subtitle**: Leve cada peça ao seu portão (28)
 
 **Promotional Text**:
 Um dedo, quatro cores, cinco temas. Trace rotas, leve as peças aos seus portões e nunca deixe que se toquem. Sem anúncios nem conta, funciona offline.
@@ -321,7 +321,7 @@ Política de privacidade: https://www.pyf.app/en/apps/line-duty/privacy
 
 ### ja
 
-**Subtitle**: ルートを描いて、ぶつけない (13)
+**Subtitle**: ユニットを自分のゲートへ (12)
 
 **Promotional Text**:
 指1本、4色、5つのテーマ。ルートを描いてユニットをゲートへ導き、絶対にぶつけないで。広告なし、アカウント不要、オフラインで遊べます。
