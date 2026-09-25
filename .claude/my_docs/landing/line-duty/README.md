@@ -28,7 +28,7 @@ Frontmatter повторяет схему Fruity Drop: `status: coming-soon`, `a
 | `screenshot-4.png` | поле Аквариум (рыбки) |
 | `screenshot-5.png` | обучение «Как играть», шаг «Рисуй маршрут» |
 
-Скриншоты сняты с prod-сборки на iPhone 17 Pro (1206×2622, без плашки DEV), язык интерфейса — английский. Если нужны русские — `flutter test integration_test/landing_shots_test.dart …` в проекте игры с `setLocale('ru')` (тест лежит в истории git, в репозитории его нет).
+Скриншоты сняты с prod-сборки на iPhone 17 Pro (1206×2622, без плашки DEV), язык интерфейса — английский, статус-бар 9:41. Пересъёмка: временный интеграционный тест по образцу `integration_test/game_smoke_test.dart` (setThemeId / setLocale, `debugPrint('SHOT …')` как маркер) + `xcrun simctl io <udid> screenshot`; перед запуском `xcrun simctl status_bar <udid> override --time 9:41 --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4` и закрыть другие приложения, иначе в статус-баре будет «◀ <app>».
 
 ## 3. Реестр приложений
 
