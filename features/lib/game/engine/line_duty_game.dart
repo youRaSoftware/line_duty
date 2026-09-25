@@ -107,7 +107,26 @@ class LineDutyGame extends FlameGame with DragCallbacks {
 
   double get fieldHeight => size.y / _zoom;
 
-  double get _zoom => size.x / AppDimens.fieldWidth;
+  /// Логических px виджета на единицу поля. На телефонах поле занимает всю
+  /// ширину; на планшетах зум упирается в [GameTuning.maxZoom], поле
+  /// становится колонкой по центру (см. [fieldOffset]), а фигуры остаются
+  /// телефонного размера.
+  double get _zoom =>
+      math.min(size.x / AppDimens.fieldWidth, GameTuning.maxZoom);
+
+  /// Сдвиг поля от левого края виджета в единицах поля (0 на телефонах).
+  double get fieldOffset => (size.x / _zoom - fieldWidth) / 2;
+
+  /// Поле уже виджета — колонка по центру, края поля стоит показать.
+  bool get columnMode => fieldOffset > 0.5;
+
+  /// Точка виджета (логические px) → единицы поля.
+  Vector2 toField(Vector2 canvasPosition) =>
+      Vector2(canvasPosition.x / _zoom - fieldOffset, canvasPosition.y / _zoom);
+
+  /// Единицы поля → точка виджета (логические px).
+  Vector2 toCanvas(Vector2 fieldPosition) =>
+      Vector2((fieldPosition.x + fieldOffset) * _zoom, fieldPosition.y * _zoom);
 
   bool get frozen => crashPoint != null;
 
@@ -140,7 +159,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
   @override
   Future<void> onLoad() async {
     camera.viewfinder.anchor = Anchor.topLeft;
-    camera.viewfinder.position = Vector2.zero();
+    _placeCamera();
     world.add(DecorLayer());
     world.add(RouteLayer());
     world.add(OverlayLayer());
@@ -248,8 +267,15 @@ class LineDutyGame extends FlameGame with DragCallbacks {
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
-    camera.viewfinder.zoom = _zoom;
+    _placeCamera();
     _layout();
+  }
+
+  /// Камера смотрит на поле из левого верхнего угла; в колонке точка (0, 0)
+  /// поля сдвинута вправо на [fieldOffset].
+  void _placeCamera() {
+    camera.viewfinder.zoom = _zoom;
+    camera.viewfinder.position = Vector2(-fieldOffset, 0);
   }
 
   /// Отступы сверху (HUD + safe area) и снизу (жест-бар) в логических
@@ -599,8 +625,6 @@ class LineDutyGame extends FlameGame with DragCallbacks {
 
   // --- Рисование маршрута ------------------------------------------------
 
-  Vector2 _toField(Vector2 canvasPosition) => canvasPosition / _zoom;
-
   UnitComponent? _pick(Vector2 p) {
     UnitComponent? best;
     double bestD = GameTuning.pickRadius;
@@ -617,7 +641,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
   @override
   void onDragStart(DragStartEvent event) {
     super.onDragStart(event);
-    routeStart(_toField(event.canvasPosition));
+    routeStart(toField(event.canvasPosition));
   }
 
   @override
@@ -625,7 +649,7 @@ class LineDutyGame extends FlameGame with DragCallbacks {
     super.onDragUpdate(event);
     // Именно start: Flame считает `canvasEndPosition` как позицию + дельту,
     // то есть на шаг впереди настоящего пальца.
-    routeMove(_toField(event.canvasStartPosition));
+    routeMove(toField(event.canvasStartPosition));
   }
 
   @override

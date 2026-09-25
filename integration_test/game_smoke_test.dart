@@ -81,10 +81,14 @@ void main() {
     debugPrint(
         'SMOKE unit ${unit.color} at ${unit.position}, gate at ${gate.position}');
 
-    // Drag from the unit straight to its gate (screen = field × zoom).
+    // Drag from the unit straight to its gate (field → widget via the game,
+    // so the tablet column offset is honoured too).
     final Rect canvas = tester.getRect(find.byType(GameWidget<LineDutyGame>));
-    final double zoom = canvas.width / AppDimens.fieldWidth;
-    Offset toScreen(Vector2 p) => canvas.topLeft + Offset(p.x, p.y) * zoom;
+    Offset toScreen(Vector2 p) {
+      final Vector2 c = game.toCanvas(p);
+      return canvas.topLeft + Offset(c.x, c.y);
+    }
+
     final Vector2 target = gate.position - Vector2(0, gate.size.y);
     final TestGesture gesture =
         await tester.startGesture(toScreen(unit.position));

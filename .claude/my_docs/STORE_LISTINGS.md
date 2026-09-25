@@ -431,11 +431,11 @@ Contact: fyodorov.software@gmail.com.
 | Папка | Устройство | Размер | Статус |
 |---|---|---|---|
 | `store/screenshots/iphone69/en-US/01–06.png` | iPhone 17 Pro Max | 1320×2868 | готово |
-| `store/screenshots/ipad13/en-US/01–06.png` | iPad Pro 13" (M4) | 2064×2752 | снято, **но см. вопрос про iPad ниже**; в статус-баре дата на языке симулятора («Пт 25 сент.») — перед финальной съёмкой переключить язык симулятора на английский (`xcrun simctl spawn <udid> defaults write .GlobalPreferences AppleLanguages -array en` и перезагрузить) |
+| `store/screenshots/ipad13/en-US/01–06.png` | iPad Pro 13" (M4) | 2064×2752 | готово (колонка по центру). Язык симулятора — английский, иначе дата в статус-баре на русском: `xcrun simctl spawn <udid> defaults write .GlobalPreferences AppleLanguages -array en`, затем перезагрузить симулятор |
 | `store/screenshots/play/en-US/01–06.png` | обрезка iPhone-кадров до 9:16 (`sips --cropToHeightWidth 2347 1320`) | 1320×2347 | готово |
 | `store/play_feature_graphic_1024x500.png` | `swift script/make_feature_graphic.swift store/icon_rounded_1024.png <out>` | 1024×500 | готово |
 
-**Открытый вопрос — iPad.** Сборка объявляет iPad (`TARGETED_DEVICE_FAMILY = 1,2`), но поле растягивается на всю ширину 4:3: фигуры и ворота огромные, путь от спавна до ворот вдвое короче, чем на телефоне, — играется иначе. Варианты: (а) на 1.0 оставить только iPhone (`TARGETED_DEVICE_FAMILY = 1` во всех конфигурациях, iPad-скриншоты тогда не нужны); (б) сделать колонку по центру с ограниченной шириной (как у WasDrop) и переснять iPad. Рекомендация — (а) для 1.0, (б) в 1.1.
+**iPad.** С 2026-09-25 поле на планшете — колонка 540 px по центру (`GameTuning.maxZoom`), фигуры телефонного размера; iPad-скриншоты пересняты с этой раскладкой и с английским языком симулятора.
 
 Локали без своих скриншотов в App Store Connect берут кадры основной локали (en-US). Если снимать ru/ja: `script/store_shots.sh <udid> store/screenshots/iphone69/ru-RU ru`.
 
