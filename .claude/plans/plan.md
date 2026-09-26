@@ -68,7 +68,9 @@
 - [x] Политика конфиденциальности (2026-09-25): страницы en/ru для pyf.app в `my_docs/landing/line-duty/`, ссылка в `AppConstants` и строка в настройках
 - [x] Тексты App Store / Google Play на 7 языках, Notes for Review, «Что нового», feature graphic, скриншоты iPhone 6.9" / iPad 13" / Play (en-US) — `.claude/my_docs/STORE_LISTINGS.md` (2026-09-25)
 - [x] iPad: зум ограничен `GameTuning.maxZoom` 1.5, поле во всю ширину и шире в единицах, фигуры телефонного размера; iPad-скриншоты пересняты (2026-09-25)
-- [ ] Заполнить App Store Connect и завести Google Play по чеклисту STORE_LISTINGS.md § 7; Apple ID приложения → `AppConstants.appStoreId` («Оценить»)
+- [x] App Store Connect заполнен, 1.0.0 отправлена на ревью 2026-09-26 (App Privacy: Data Not Collected; заметка ревьюеру — `app_review_notes_1.0.0.txt`)
+- [ ] Google Play: завести приложение по чеклисту STORE_LISTINGS.md § 7 (тексты, feature graphic, скриншоты `store/screenshots/play` и `ipad13`)
+- [ ] После одобрения: Apple ID приложения → `AppConstants.appStoreId` («Оценить»), ссылки сторов в MDX лендинга и `apps.ts`, `status: released`, переименовать `[Unreleased]` в changelog в `[1.0.0] — дата`
 - [ ] Переводы de / fr / hu / ja (по образцу WasDrop)
 
 ---
