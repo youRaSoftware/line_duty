@@ -1,0 +1,20 @@
+App Store Connect → App Review Information → Notes (Line Duty 1.0.0)
+
+Sign-in required: off (no account in the app).
+Contact: Yury Fyodorov, +375333221548, fyodorov.software@gmail.com
+
+--- Notes (paste as is) ---
+
+Line Duty is a one-finger arcade game. Units of four colours enter from the top; the player draws a route for each with a finger and leads it into the gate of its colour at the bottom. Two units touching, a wrong gate or a unit passing the gates ends the run.
+
+The app is fully offline: no account, no sign-in, no ads, no in-app purchases, no analytics and no data collection. The only external link is the privacy policy in Settings → About, which opens in the browser. Nothing is required to test — launch, tap PLAY, follow the five-step "How to play" on first launch (or skip it), then drag a unit and draw a line to the gate with the same glyph.
+
+Test tips: units start slow, so the first minute is easy; the "Continue" button after a mistake is free once per run. Themes are switched from the strip in the main menu. Leaving the app mid-run saves it; the menu then offers "Resume". The language can be changed in Settings → Game → Language (seven languages).
+
+Contact: fyodorov.software@gmail.com
+
+--- App Privacy ---
+
+Data Collection → "No, we do not collect data from this app".
+Privacy Policy URL: https://www.pyf.app/en/apps/line-duty/privacy
+Result on the product page: "Data Not Collected".
